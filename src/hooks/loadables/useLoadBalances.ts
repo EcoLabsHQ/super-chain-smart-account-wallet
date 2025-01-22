@@ -50,7 +50,7 @@ export const useLoadBalances = (): AsyncResult<SafeBalanceResponse> => {
       }
 
       let balances = await getBalances(chainId, safeAddress, currency, {
-        trusted: isTrustedTokenList,
+        trusted: false,
       })
 
       balances.items = balances.items.map((balance) => {
