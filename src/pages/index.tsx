@@ -1,28 +1,20 @@
-import { useEffect } from 'react'
 import type { NextPage } from 'next'
-import { useRouter } from 'next/router'
-import { AppRoutes } from '@/config/routes'
-import local from '@/services/local-storage/local'
-import { addedSafesSlice, type AddedSafesState } from '@/store/addedSafesSlice'
+import Head from 'next/head'
 
-const IndexPage: NextPage = () => {
-  const router = useRouter()
-  const { chain } = router.query
+import Badges from '@/components/badges'
 
-  useEffect(() => {
-    if (!router.isReady || router.pathname !== AppRoutes.index) {
-      return
-    }
-    const addedSafes = local.getItem<AddedSafesState>(addedSafesSlice.name)
-    const pathname = AppRoutes.welcome.index
+const Home: NextPage = () => {
+  return (
+    <>
+      <Head>
+        <title>Super Account - Badges</title>
+      </Head>
 
-    router.replace({
-      pathname,
-      query: chain ? { chain } : undefined,
-    })
-  }, [router, chain])
-
-  return <></>
+      <main>
+        <Badges />
+      </main>
+    </>
+  )
 }
 
-export default IndexPage
+export default Home
