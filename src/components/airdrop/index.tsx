@@ -38,7 +38,11 @@ function Claim() {
   const [isClaiming, setIsClaiming] = useState(false)
   const [isShowStars, setIsShowStars] = useState(false)
 
-  const { data: airdropData, isLoading: isCheckLoading } = useQuery({
+  const {
+    data: airdropData,
+    isLoading: isCheckLoading,
+    refetch: refetchAirdrop,
+  } = useQuery({
     queryKey: ['check-airdrop', safeAddress],
     queryFn: () => checkAirdropEligibility(safeAddress),
   })
@@ -63,14 +67,14 @@ function Claim() {
           wallet: walletClient,
         },
       })
-      console.log('airdropData', SUNNY_TOKEN_ADDRESS, safeAddress, airdropData?.value, airdropData.proofs)
-      await airdropContract.write.claimERC20([
+      const hash = await airdropContract.write.claimERC20([
         SUNNY_TOKEN_ADDRESS as Address,
         safeAddress as Address,
         airdropData?.value,
         airdropData.proofs,
       ])
-
+      await publicClient.waitForTransactionReceipt({ hash: hash! })
+      await refetchAirdrop()
       setIsClaiming(false)
       setIsShowStars(true)
     } catch (error) {
