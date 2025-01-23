@@ -1,5 +1,17 @@
 import React, { useState } from 'react'
-import { Alert, Box, Button, CircularProgress, Grid, List, ListItem, Portal, SvgIcon, Typography } from '@mui/material'
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Grid,
+  List,
+  ListItem,
+  Portal,
+  Skeleton,
+  SvgIcon,
+  Typography,
+} from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { checkAirdropEligibility } from '@/services/airdrop'
 import Sunny from '@/public/images/superchain/$SUNNY.svg'
@@ -87,7 +99,18 @@ function Claim() {
   }
 
   if (isCheckLoading) {
-    return <Typography>Loading...</Typography>
+    return (
+      <Grid container gap="24px" paddingY="72px" paddingX="120px">
+        <Typography variant="h1" fontSize={24} fontWeight={600}>
+          SUNNY Community Claim #1
+        </Typography>
+        <Grid item xs={12}>
+          <Skeleton variant="text" width={300} height={40} />
+          <Skeleton variant="rectangular" width="100%" height={200} sx={{ marginTop: 2 }} />
+          <Skeleton variant="rectangular" width="100%" height={200} sx={{ marginTop: 2 }} />
+        </Grid>
+      </Grid>
+    )
   }
 
   return (
@@ -131,7 +154,7 @@ function Claim() {
           >
             <Typography variant="h4" fontSize={20} fontWeight={600}>
               {airdropData.claimed
-                ? 'Congrats! You have claimed your AIrdrop'
+                ? 'Congrats! You have claimed your Airdrop'
                 : 'Congrats! You are eligible for the airdrop'}
             </Typography>
             <Typography fontSize={16} fontWeight={400} variant="body2" color="textSecondary">
