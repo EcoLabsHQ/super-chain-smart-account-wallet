@@ -16,20 +16,20 @@ const WelcomeLogin = () => {
     useCurrentWalletHasSuperChainSmartAccount()
   const [shouldRedirect, setShouldRedirect] = useState(false)
   const [redirectPath, setRedirectPath] = useState<null | string>(null)
-  const onLogin = useCallback(() => {
-    refetch()
+  const onLogin = useCallback(async () => {
+    await refetch()
     setShouldRedirect(true)
   }, [])
 
   const handleConnect = async () => {
     open()
-    onLogin()
+    await onLogin()
   }
 
   const handleAcceptInvite = async () => {
     setRedirectPath(AppRoutes.invites)
     if (wallet) {
-      onLogin()
+      await onLogin()
     } else {
       handleConnect()
     }
@@ -49,7 +49,7 @@ const WelcomeLogin = () => {
       router.push(destination)
       setShouldRedirect(false)
     }
-  }, [hasSuperChainSmartAccount, isLoading, router, isConnected, shouldRedirect, redirectPath])
+  }, [hasSuperChainSmartAccount, isLoading, router, isConnected, shouldRedirect, redirectPath, superChainSmartAccount])
 
   return (
     <Paper className={css.loginCard} data-testid="welcome-login">
