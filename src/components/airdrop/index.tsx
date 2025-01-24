@@ -94,7 +94,7 @@ function Claim() {
           address: SUNNY_TOKEN_ADDRESS,
           decimals: 18,
           symbol: 'SUNNYLFG',
-          image: 'https://staging.account.superchain.com/tokens/sunny.svg',
+          image: 'https://staging.account.superchain.eco/tokens/sunny.svg',
         },
       })
     } catch (error) {
