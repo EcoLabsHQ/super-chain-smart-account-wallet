@@ -12,12 +12,11 @@ const WelcomeLogin = () => {
   const { open } = useAppKit()
   const { isConnected } = useAppKitAccount()
   const wallet = useWallet()
-  const { hasSuperChainSmartAccount, superChainSmartAccount, isLoading, refetch } =
+  const { hasSuperChainSmartAccount, superChainSmartAccount, isLoading, refetch, isRefetching } =
     useCurrentWalletHasSuperChainSmartAccount()
   const [shouldRedirect, setShouldRedirect] = useState(false)
   const [redirectPath, setRedirectPath] = useState<null | string>(null)
   const onLogin = useCallback(async () => {
-    await refetch()
     setShouldRedirect(true)
   }, [])
 
@@ -36,20 +35,22 @@ const WelcomeLogin = () => {
   }
 
   useEffect(() => {
-    if (!shouldRedirect || !isConnected) return
+    if (!shouldRedirect || !isConnected || isRefetching || isLoading || !wallet) return
+    ;(async () => {
+      await refetch()
 
-    const destination = redirectPath
-      ? { pathname: redirectPath, query: router.query }
-      : !isLoading &&
-        (!hasSuperChainSmartAccount
-          ? { pathname: AppRoutes.newSafe.create, query: router.query }
-          : { pathname: AppRoutes.home, query: { safe: superChainSmartAccount } })
+      const destination = redirectPath
+        ? { pathname: redirectPath, query: router.query }
+        : !hasSuperChainSmartAccount
+        ? { pathname: AppRoutes.newSafe.create, query: router.query }
+        : { pathname: AppRoutes.home, query: { safe: superChainSmartAccount } }
 
-    if (destination) {
-      router.push(destination)
-      setShouldRedirect(false)
-    }
-  }, [hasSuperChainSmartAccount, isLoading, router, isConnected, shouldRedirect, redirectPath, superChainSmartAccount])
+      if (destination) {
+        router.push(destination)
+        setShouldRedirect(false)
+      }
+    })()
+  }, [hasSuperChainSmartAccount, isLoading, router, isConnected, shouldRedirect, redirectPath, isRefetching, wallet])
 
   return (
     <Paper className={css.loginCard} data-testid="welcome-login">
