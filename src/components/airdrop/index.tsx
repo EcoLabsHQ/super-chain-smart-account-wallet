@@ -71,7 +71,7 @@ function Claim() {
         SUNNY_TOKEN_ADDRESS as Address,
         safeAddress as Address,
         airdropData?.value,
-        airdropData.proofs,
+        airdropData?.proofs,
       ])
       await publicClient.waitForTransactionReceipt({ hash: hash! })
       await refetchAirdrop()
@@ -157,12 +157,12 @@ function Claim() {
             }}
           >
             <Typography variant="h4" fontSize={20} fontWeight={600}>
-              {airdropData.claimed
+              {airdropData?.claimed
                 ? 'Congrats! You have claimed your Airdrop'
                 : 'Congrats! You are eligible for the airdrop'}
             </Typography>
             <Typography fontSize={16} fontWeight={400} variant="body2" color="textSecondary">
-              {airdropData.claimed
+              {airdropData?.claimed
                 ? '$SUNNY is a SuperchainERC20 community token that aims to push Superchain Interop innovation and create a shared Superchain culture.'
                 : '$SUNNY is a SuperchainERC20 community token that aims to push Superchain Interop innovation and create a shared Superchain culture.'}
             </Typography>
@@ -182,11 +182,11 @@ function Claim() {
           >
             <Box display="flex" flexDirection="column" gap="8px">
               <Typography fontSize="16px" fontWeight={400}>
-                {airdropData.claimed ? 'You have already claimed:' : 'You will receive:'}
+                {airdropData?.claimed ? 'You have already claimed:' : 'You will receive:'}
               </Typography>
               <Box display="flex" fontSize="30px" flexDirection="row" alignItems="center" gap="8px">
                 <Typography fontSize="24px" fontWeight={600}>
-                  {formatUnits(airdropData?.value, 18)}
+                  {formatUnits(BigInt(airdropData?.value), 18)}
                 </Typography>
                 <SvgIcon component={Sunny} inheritViewBox fontSize="inherit" />
               </Box>
