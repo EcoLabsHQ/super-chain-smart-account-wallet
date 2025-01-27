@@ -6,6 +6,7 @@ type CheckAirdropEligibilityResponse = {
   value: number
   proofs: string[]
   claimed: boolean
+  reasons: string[]
 }
 
 export async function checkAirdropEligibility(address: string): Promise<CheckAirdropEligibilityResponse> {

@@ -213,30 +213,16 @@ function Claim() {
               Your Super Activities
             </Typography>
             <List>
-              <ListItem>
-                <Box fontSize="24px" display="flex" gap={1} alignItems="center">
-                  <SvgIcon component={BeautySuccess} inheritViewBox fontSize="inherit" />
-                  <Typography fontSize="16px" fontWeight={400}>
-                    Lorem Ipsum Lorem Ipsum
-                  </Typography>
-                </Box>
-              </ListItem>
-              <ListItem>
-                <Box fontSize="24px" display="flex" gap={1} alignItems="center">
-                  <SvgIcon component={BeautySuccess} inheritViewBox fontSize="inherit" />
-                  <Typography fontSize="16px" fontWeight={400}>
-                    Lorem Ipsum Lorem Ipsum
-                  </Typography>
-                </Box>
-              </ListItem>
-              <ListItem>
-                <Box fontSize="24px" display="flex" gap={1} alignItems="center">
-                  <SvgIcon component={BeautySuccess} inheritViewBox fontSize="inherit" />
-                  <Typography fontSize="16px" fontWeight={400}>
-                    Lorem Ipsum Lorem Ipsum
-                  </Typography>
-                </Box>
-              </ListItem>
+              {airdropData.reasons.map((reason, index) => (
+                <ListItem key={index}>
+                  <Box fontSize="24px" display="flex" gap={1} alignItems="center">
+                    <SvgIcon component={BeautySuccess} inheritViewBox fontSize="inherit" />
+                    <Typography fontSize="16px" fontWeight={400}>
+                      {reason}
+                    </Typography>
+                  </Box>
+                </ListItem>
+              ))}
             </List>
           </Grid>
           {!airdropData.claimed && (
