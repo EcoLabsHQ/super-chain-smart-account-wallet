@@ -45,6 +45,7 @@ function Claim() {
   } = useQuery({
     queryKey: ['check-airdrop', safeAddress],
     queryFn: () => checkAirdropEligibility(safeAddress),
+    enabled: !!safeAddress,
   })
 
   const handleClaimClick = async () => {
@@ -213,7 +214,7 @@ function Claim() {
               Your Super Activities
             </Typography>
             <List>
-              {airdropData.reasons.map((reason, index) => (
+              {airdropData?.reasons.map((reason, index) => (
                 <ListItem key={index}>
                   <Box fontSize="24px" display="flex" gap={1} alignItems="center">
                     <SvgIcon component={BeautySuccess} inheritViewBox fontSize="inherit" />
@@ -225,7 +226,7 @@ function Claim() {
               ))}
             </List>
           </Grid>
-          {!airdropData.claimed && (
+          {!airdropData?.claimed && (
             <Grid item xs={12}>
               <Alert severity="warning">
                 ️Sunny Claim #1 will be available to claim until Feb 12, 2025. All remaining tokens will be burned
