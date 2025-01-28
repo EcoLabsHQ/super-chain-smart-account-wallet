@@ -17,7 +17,7 @@ const environmentConfig = {
     SUNNY_AIRDROP_ADDRESS: '0x89622D291439Bf4deD4264169AD4530363a023Cb',
     SUNNY_TOKEN_ADDRESS: '0x2ee45205567ae257e9a21755d4db02afacb555e4',
     ERC4337_MODULE_ADDRESS: '0x75cf11467937ce3F2f357CE24ffc3DBF8fD5c226',
-    JSON_RPC_PROVIDER: 'https://rpc.ankr.com/optimism',
+    JSON_RPC_PROVIDER: process.env.NEXT_PUBLIC_JSON_RPC_PROVIDER,
     SUBGRAPH_URL: 'https://api.studio.thegraph.com/query/72352/super-accounts/version/latest',
     CHAIN_ID: '10',
   },
