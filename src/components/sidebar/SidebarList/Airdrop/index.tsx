@@ -3,7 +3,6 @@ import {
   SidebarListItemCounter,
   SidebarListItemText,
   SidebarListItemButton as DefaultSidebarListItemButton,
-  SidebarListItemIcon as DefaultSidebarListItemIcon,
   SidebarListItemText as DefaultSidebarListItemText,
   SidebarListItemCounter as DefaultSidebarListItemCounter,
 } from '..'
@@ -15,6 +14,7 @@ import css from './styles.module.css'
 import useSafeAddress from '@/hooks/useSafeAddress'
 import { useQuery } from '@tanstack/react-query'
 import { checkAirdropEligibility } from '@/services/airdrop'
+import lightPalette from '@/components/theme/lightPalette'
 
 const getSubdirectory = (pathname: string): string => {
   return pathname.split('/')[1]
@@ -43,8 +43,10 @@ export const SidebarListItemButton = ({
 const SidebarListItemIcon = ({
   children,
   badge = false,
+  color = '#FF0420',
+  stroke = '#FFFFFF',
   ...rest
-}: Omit<ListItemIconProps, 'className'> & { badge?: boolean }): ReactElement => (
+}: Omit<ListItemIconProps, 'className'> & { badge?: boolean; stroke?: string }): ReactElement => (
   <ListItemIcon
     className={css.icon}
     sx={{
@@ -52,7 +54,8 @@ const SidebarListItemIcon = ({
         width: '16px',
         height: '16px',
         '& path': {
-          fill: '#FF0420',
+          fill: color,
+          stroke,
         },
       },
     }}
@@ -82,7 +85,7 @@ export const SidebarAirdropComponent = ({ item }: { item: any }) => {
   const isSelected = currentSubdirectory === getSubdirectory(item.href)
   return (
     <>
-      {airdropData?.eligible ? (
+      {!airdropData?.eligible && airdropData?.claimed ? (
         <SidebarListItemButton
           selected={isSelected}
           href={{ pathname: getRoute(item.href), query: { safe: router.query.safe } }}
@@ -98,7 +101,11 @@ export const SidebarAirdropComponent = ({ item }: { item: any }) => {
         </SidebarListItemButton>
       ) : (
         <DefaultSidebarListItemButton>
-          {item.icon && <DefaultSidebarListItemIcon badge={false}>{item.icon}</DefaultSidebarListItemIcon>}
+          {item.icon && (
+            <SidebarListItemIcon badge={false} stroke={lightPalette.logo.main} color="#FFFFFF">
+              {item.icon}
+            </SidebarListItemIcon>
+          )}
 
           <DefaultSidebarListItemText data-testid="sidebar-list-item" bold>
             {item.label}
