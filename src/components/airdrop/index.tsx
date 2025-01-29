@@ -117,9 +117,15 @@ function Claim() {
       </Grid>
     )
   }
-
   return (
-    <Grid container gap="24px" paddingY="72px" paddingX="120px">
+    <Grid
+      container
+      gap="24px"
+      sx={{
+        paddingY: { xs: 6, lg: '72px' },
+        paddingX: { xs: 3, lg: '120px' },
+      }}
+    >
       {isShowStars && (
         <Portal>
           <Box
@@ -173,7 +179,7 @@ function Claim() {
             xs={12}
             sx={{
               display: 'flex',
-              flexDirection: 'row',
+              flexDirection: { xs: 'column', md: 'row' },
               justifyContent: 'space-between',
               backgroundColor: 'white',
               borderRadius: '6px',
