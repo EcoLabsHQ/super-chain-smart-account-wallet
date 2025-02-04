@@ -16,6 +16,7 @@ import Image from 'next/image'
 import FailedTxnModal from '@/components/common/ErrorModal'
 import { useAppSelector } from '@/store'
 import { selectSuperChainAccount } from '@/store/superChainAccountSlice'
+import { ResponseBadge } from '@/types/super-chain'
 
 export type ClaimData = {
   badgeImages: string[]
@@ -31,7 +32,7 @@ function BadgesActions({
   setFilter: (filter: string) => void
   setNetwork: (network: string) => void
 }) {
-  const { safeAddress } = useSafeInfo()
+  const { safeAddress, safeLoaded } = useSafeInfo()
   const { data: superChainAccount } = useAppSelector(selectSuperChainAccount)
 
   const router = useRouter()
@@ -43,9 +44,29 @@ function BadgesActions({
     mutationFn: async () => {
       return await badgesService.attestBadges(safeAddress as Address)
     },
+    onError: (error) => {
+      console.error(error)
+    },
     onSuccess: (data) => {
       queryClient.refetchQueries({ queryKey: ['superChainAccount', safeAddress] })
-      queryClient.refetchQueries({ queryKey: ['badges', safeAddress] })
+      queryClient.cancelQueries({ queryKey: ['badges', safeAddress, safeLoaded] })
+      queryClient.setQueryData(['badges', safeAddress, safeLoaded], (old: { currentBadges: ResponseBadge[] }) => {
+        const badgeUpdates = old.currentBadges.map((badge) => {
+          const update = data.badgeUpdates.find((update: ResponseBadge) => update.badgeId === badge.badgeId)
+          if (update) {
+            return {
+              ...badge,
+              level: update.level,
+              points: update.points,
+              claimable: false,
+            }
+          }
+          return badge
+        })
+        return {
+          currentBadges: [...old.currentBadges, ...badgeUpdates],
+        }
+      })
       setClaimData(data)
       setIsClaimModalOpen(true)
     },
