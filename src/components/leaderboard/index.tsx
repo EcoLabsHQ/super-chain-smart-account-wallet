@@ -26,8 +26,7 @@ function Leaderboard({ handleUserSelect }: { handleUserSelect: (_: string) => vo
   }
 
   if (leaderboardError) return
-
-  if (leaderboardIsLoading || rankIsLoading || !data || !rank || !user) {
+  if (leaderboardIsLoading || rankIsLoading || !data) {
     return (
       <main>
         <Stack spacing={2}>
@@ -54,25 +53,29 @@ function Leaderboard({ handleUserSelect }: { handleUserSelect: (_: string) => vo
     <main>
       <Stack spacing={2}>
         <Stack spacing={1}>
-          <Typography fontSize={12} fontWeight={600} color="gray">
-            YOUR RANKING
-          </Typography>
-          <RankingProfile
-            isMainProfile
-            onClick={() => handleUserSelect(address)}
-            position={rank!}
-            points={user!.total_points}
-            name={user!.superChainId}
-            level={user!.level.toString()}
-            badges={user.total_badges}
-            noun={{
-              accessory: user!.noun.accessory,
-              background: user!.noun.background,
-              body: user!.noun.body,
-              glasses: user!.noun.glasses,
-              head: user!.noun.head,
-            }}
-          />
+          {user && (
+            <>
+              <Typography fontSize={12} fontWeight={600} color="gray">
+                YOUR RANKING
+              </Typography>
+              <RankingProfile
+                isMainProfile
+                onClick={() => handleUserSelect(address)}
+                position={rank!}
+                points={user!.total_points}
+                name={user!.superChainId}
+                level={user!.level.toString()}
+                badges={user!.total_badges}
+                noun={{
+                  accessory: user!.noun.accessory,
+                  background: user!.noun.background,
+                  body: user!.noun.body,
+                  glasses: user!.noun.glasses,
+                  head: user!.noun.head,
+                }}
+              />
+            </>
+          )}
         </Stack>
         <Stack spacing={1} height="100%">
           <Typography fontSize={12} fontWeight={600} color="gray">
