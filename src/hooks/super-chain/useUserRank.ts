@@ -40,8 +40,8 @@ export const useUserRank = (userAddress: Address) => {
         },
       }
     },
+    enabled: !!userAddress,
   })
-  console.debug(response)
 
   return { rank: response?.rank, user: response?.data, loading: isLoading, error }
 }
