@@ -1,22 +1,22 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import NewSafe from '@/components/welcome/NewSafe'
-import useCurrentWalletHasSuperChainSmartAccount from '@/hooks/super-chain/useCurrentWalletHasSuperChainSmartAccount'
 import { useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { AppRoutes } from '@/config/routes'
+import useSafeInfo from '@/hooks/useSafeInfo'
 
 const Welcome: NextPage = () => {
-  const { hasSuperChainSmartAccount, superChainSmartAccount } = useCurrentWalletHasSuperChainSmartAccount()
+  const { safe, safeAddress } = useSafeInfo()
   const router = useRouter()
   useEffect(() => {
-    if (hasSuperChainSmartAccount) {
+    if (safeAddress) {
       router.push({
         pathname: AppRoutes.home,
-        query: { safe: superChainSmartAccount },
+        query: { safe: safeAddress },
       })
     }
-  }, [hasSuperChainSmartAccount, superChainSmartAccount])
+  }, [safeAddress])
 
   return (
     <>
