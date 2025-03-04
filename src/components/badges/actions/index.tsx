@@ -42,8 +42,6 @@ function BadgesActions({
   const queryClient = useQueryClient()
   const { mutate, isPending, isError } = useMutation({
     mutationFn: async () => {
-      alert('Badge claims are temporarily out of service. Please check back tomorrow.')
-      return
       return await badgesService.attestBadges(safeAddress as Address)
     },
     onError: (error) => {
