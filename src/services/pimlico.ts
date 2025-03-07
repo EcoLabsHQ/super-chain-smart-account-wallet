@@ -9,7 +9,7 @@ import { sepolia, optimism } from 'viem/chains'
 
 const IDENTIFIER = '5afe003433613232343763663835306565386462343564646561393063346135'
 
-function modifyPaymasterData(request: any, appendString: string): any {
+function addIdentifier(request: any, appendString: string): any {
   if (request.method === 'eth_sendUserOperation' && Array.isArray(request.params)) {
     const modifiedRequest = { ...request }
     modifiedRequest.params = request.params.map((param: any) => {
@@ -33,9 +33,9 @@ const pimlicoTransport = () => {
       if (init?.body) {
         try {
           let requestBody = JSON.parse(init.body as string)
-          requestBody = modifyPaymasterData(requestBody, IDENTIFIER)
+          requestBody = addIdentifier(requestBody, IDENTIFIER)
           init.body = JSON.stringify(requestBody)
-        } catch (error) {}
+        } catch (error) { }
       }
     },
     fetchOptions: {
@@ -89,21 +89,6 @@ export async function getSmartAccountClient(
     paymaster: paymasterClient(),
     userOperation: {
       estimateFeesPerGas: async () => (await paymasterClient().getUserOperationGasPrice()).fast,
-      // prepareUserOperation: async (client, parameters_) => {
-
-      //   console.log("Identifier op", parameters_);
-      //   parameters_.calls!.forEach((element: any) => {
-
-      //     const encodedData = ethers.solidityPacked(
-      //       ['bytes', 'bytes'],
-      //       [element.data, '0x' + IDENTIFIER]
-      //     );
-      //     element.data = encodedData
-      //     console.log("Identifier op", element);
-      //   });
-
-      //   return await viemPrepareUserOperation(client, parameters_)
-      // }
     },
   })
 
