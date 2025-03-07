@@ -6,9 +6,6 @@ import { createPimlicoClient } from 'permissionless/clients/pimlico'
 import { type Address, createPublicClient, http, WalletClient, Transport, Account, Chain } from 'viem'
 import { entryPoint07Address } from 'viem/account-abstraction'
 import { sepolia, optimism } from 'viem/chains'
-import { prepareUserOperation as viemPrepareUserOperation } from "viem/account-abstraction"
-import { ethers } from 'ethers'
-
 
 
 const IDENTIFIER = '5afe003433613232343763663835306565386462343564646561393063346135'
@@ -38,15 +35,10 @@ const pimlicoTransport = () => {
     onFetchRequest(request, init) {
       if (init?.body) {
         try {
-
           let requestBody = JSON.parse(init.body as string);
-
           requestBody = modifyPaymasterData(requestBody, IDENTIFIER)
           init.body = JSON.stringify(requestBody);
-
-          console.log("🔹 Request modificado:", requestBody);
         } catch (error) {
-          console.error("❌ Error modificando el request body:", error);
         }
       }
 
@@ -103,30 +95,24 @@ export async function getSmartAccountClient(
     paymaster: paymasterClient(),
     userOperation: {
       estimateFeesPerGas: async () => (await paymasterClient().getUserOperationGasPrice()).fast,
-      prepareUserOperation: async (client, parameters_) => {
+      // prepareUserOperation: async (client, parameters_) => {
 
-        console.log("Identifier op", parameters_);
-        parameters_.calls!.forEach((element: any) => {
+      //   console.log("Identifier op", parameters_);
+      //   parameters_.calls!.forEach((element: any) => {
 
-          const encodedData = ethers.solidityPacked(
-            ['bytes', 'bytes'],
-            [element.data, '0x' + IDENTIFIER]
-          );
-          element.data = encodedData
-          console.log("Identifier op", element);
-        });
+      //     const encodedData = ethers.solidityPacked(
+      //       ['bytes', 'bytes'],
+      //       [element.data, '0x' + IDENTIFIER]
+      //     );
+      //     element.data = encodedData
+      //     console.log("Identifier op", element);
+      //   });
 
-        return await viemPrepareUserOperation(client, parameters_)
-      }
+      //   return await viemPrepareUserOperation(client, parameters_)
+      // }
     },
   })
 
-  paymasterClient().getPaymasterData
-  const originalSendUserOperation = smartAccountClient.sendUserOperation;
-  smartAccountClient.sendUserOperation = async (userOp) => {
-    console.log('OEEEEEEEEEEEEEEEEEEEEEEEEEE');
-    return originalSendUserOperation(userOp);
-  };
 
   return smartAccountClient
 }
