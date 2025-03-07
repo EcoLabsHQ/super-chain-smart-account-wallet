@@ -35,7 +35,7 @@ const pimlicoTransport = () => {
           let requestBody = JSON.parse(init.body as string)
           requestBody = addIdentifier(requestBody, IDENTIFIER)
           init.body = JSON.stringify(requestBody)
-        } catch (error) {}
+        } catch (error) { }
       }
     },
     fetchOptions: {
