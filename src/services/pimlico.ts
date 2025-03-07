@@ -7,41 +7,36 @@ import { type Address, createPublicClient, http, WalletClient, Transport, Accoun
 import { entryPoint07Address } from 'viem/account-abstraction'
 import { sepolia, optimism } from 'viem/chains'
 
-
 const IDENTIFIER = '5afe003433613232343763663835306565386462343564646561393063346135'
 
 function modifyPaymasterData(request: any, appendString: string): any {
-  if (request.method === "eth_sendUserOperation" && Array.isArray(request.params)) {
-    const modifiedRequest = { ...request };
+  if (request.method === 'eth_sendUserOperation' && Array.isArray(request.params)) {
+    const modifiedRequest = { ...request }
     modifiedRequest.params = request.params.map((param: any) => {
-      if (typeof param === "object" && param !== null && "signature" in param) {
+      if (typeof param === 'object' && param !== null && 'signature' in param) {
         return {
           ...param,
-          signature: `${param.signature}${appendString}`
-        };
+          signature: `${param.signature}${appendString}`,
+        }
       }
-      return param;
-    });
+      return param
+    })
 
-    return modifiedRequest;
+    return modifiedRequest
   }
-  return request;
+  return request
 }
-
-
 
 const pimlicoTransport = () => {
   return http(`${BACKEND_BASE_URI}/user-op-reverse-proxy`, {
     onFetchRequest(request, init) {
       if (init?.body) {
         try {
-          let requestBody = JSON.parse(init.body as string);
+          let requestBody = JSON.parse(init.body as string)
           requestBody = modifyPaymasterData(requestBody, IDENTIFIER)
-          init.body = JSON.stringify(requestBody);
-        } catch (error) {
-        }
+          init.body = JSON.stringify(requestBody)
+        } catch (error) {}
       }
-
     },
     fetchOptions: {
       credentials: 'include',
@@ -54,7 +49,6 @@ export const publicClient = createPublicClient({
   transport: http(JSON_RPC_PROVIDER),
   chain: optimism,
 })
-
 
 export const paymasterClient = () =>
   createPimlicoClient({
@@ -112,7 +106,6 @@ export async function getSmartAccountClient(
       // }
     },
   })
-
 
   return smartAccountClient
 }
