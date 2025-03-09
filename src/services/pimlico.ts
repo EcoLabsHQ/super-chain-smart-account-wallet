@@ -6,7 +6,6 @@ import { createPimlicoClient } from 'permissionless/clients/pimlico'
 import { type Address, createPublicClient, http, WalletClient, Transport, Account, Chain } from 'viem'
 import { entryPoint07Address } from 'viem/account-abstraction'
 import { sepolia, optimism } from 'viem/chains'
-import { prepareUserOperation as viemPrepareUserOperation } from "viem/account-abstraction"
 
 const pimlicoTransport = () => {
   return http(`${BACKEND_BASE_URI}/user-op-reverse-proxy`, {
@@ -39,7 +38,6 @@ export const pimlicoBundlerClient = () =>
       version: '0.7',
     },
   })
-
 
 export async function getSmartAccountClient(
   client: WalletClient<Transport, Chain | undefined, Account>,
