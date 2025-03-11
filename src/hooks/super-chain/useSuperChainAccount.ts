@@ -49,7 +49,6 @@ function useSuperChainAccount() {
           // ...
         })
 
-
         const safeTransactionData: MetaTransactionData = {
           to: SUPER_CHAIN_ACCOUNT_MODULE_ADDRESS,
           value: '0',
@@ -64,7 +63,6 @@ function useSuperChainAccount() {
         const userOperationHash = await safe4337Pack.executeTransaction({
           executable: signedSafeOperation,
         })
-
 
         return userOperationHash
       },
