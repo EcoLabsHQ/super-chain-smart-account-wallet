@@ -61,8 +61,7 @@ export async function getSmartAccountClient(
     userOperation: {
       estimateFeesPerGas: async () => (await paymasterClient().getUserOperationGasPrice()).fast,
     },
-    // middleware: {
-    //   sponsorUserOperation: async (args: any) => {
+
     //     return paymasterClient().sponsorUserOperation({
     //       ...args,
     //       sponsorshipPolicyId: 'sp_burly_overlord',
