@@ -11,3 +11,17 @@
   font-weight: bold;
   src: url('/fonts/DMSans700.woff2') format('woff2');
 }
+
+@font-face {
+  font-family: 'Sora';
+  font-display: ;
+  font-weight: 400;
+  src: url('/fonts/Sora-Regular.ttf') format('ttf');
+}
+
+@font-face {
+  font-family: 'Sora';
+  font-display: swap;
+  font-weight: bold;
+  src: url('/fonts/Sora-Bold.ttf') format('ttf');
+}
