@@ -38,10 +38,12 @@ function BadgesActions({
   claimable,
   setFilter,
   setNetwork,
+  network,
 }: {
   claimable: boolean
   setFilter: (filter: string) => void
   setNetwork: (network: string) => void
+  network: string
 }) {
   const { safeAddress, safeLoaded } = useSafeInfo()
   const { data: superChainAccount } = useAppSelector(selectSuperChainAccount)
@@ -158,6 +160,7 @@ function BadgesActions({
                 fullWidth
                 onChange={(e) => setNetwork(e.target.value)}
                 defaultValue="all"
+                value={network}
                 displayEmpty
                 sx={{
                   borderRadius: '20px',
@@ -232,7 +235,10 @@ function BadgesActions({
               </Select>
               <Box
                 component="button"
-                onClick={() => setFilter('')} // O cualquier lógica para limpiar los filtros
+                onClick={() => {
+                  setFilter('')
+                  setNetwork('all')
+                }}
                 sx={{
                   borderRadius: '20px',
                   minWidth: '100px',
