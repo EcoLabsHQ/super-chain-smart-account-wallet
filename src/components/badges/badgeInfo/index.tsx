@@ -105,7 +105,7 @@ function BadgeInfo({
               left: 0,
               width: '100%',
               height: '100%',
-              backgroundImage: `url('/static/badges/LifeTerm/OpUser/Badge.svg')`,
+              backgroundImage: `url('/static/badges/All-Time/OP-Mainnet-User/Badge.svg')`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               filter: 'blur(68px)',
@@ -153,8 +153,8 @@ function BadgeInfo({
                               key={i}
                               src={
                                 isMainBadge
-                                  ? '/static/badges/LifeTerm/OpUser/Badge.svg'
-                                  : '/static/badges/LifeTerm/OpUser/Stack.svg'
+                                  ? '/static/badges/All-Time/OP-Mainnet-User/Badge.svg'
+                                  : '/static/badges/All-Time/OP-Mainnet-User/Badge-Stack.svg'
                               }
                               alt={isMainBadge ? currentBadge.metadata.platform : `Tier ${i}`}
                               width={72}
@@ -180,10 +180,12 @@ function BadgeInfo({
             <Typography fontSize="18px" fontWeight={600} textAlign="start" fontFamily="Sora">
               {currentBadge?.metadata.name}
             </Typography>
-            <NetworkChip network={currentBadge.metadata.chain} style="info"></NetworkChip>
+            <NetworkChip network={currentBadge.metadata.chain} style="info" isFavorite={currentBadge.isFavorite} />
 
-            <Box display="flex" justifyContent="center" alignItems="center" gap={1}></Box>
-            <Typography color="#75757A">{currentBadge?.metadata.description}</Typography>
+            <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
+              <Typography color="#75757A">{currentBadge?.metadata.description}</Typography>
+              <Chip label="Claimable" />
+            </Box>
             <Box
               width="100%"
               border={1}

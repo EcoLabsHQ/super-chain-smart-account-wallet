@@ -61,7 +61,7 @@ function Badge({
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundImage: `url('/static/badges/LifeTerm/OpUser/Badge.svg')`,
+            backgroundImage: `url('/static/badges/All-Time/OP-Mainnet-User/Badge.svg')`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             filter: 'blur(68px)',
@@ -122,8 +122,8 @@ function Badge({
                             key={i}
                             src={
                               isMainBadge
-                                ? '/static/badges/LifeTerm/OpUser/Badge.svg'
-                                : '/static/badges/LifeTerm/OpUser/Stack.svg'
+                                ? '/static/badges/All-Time/OP-Mainnet-User/Badge.svg'
+                                : '/static/badges/All-Time/OP-Mainnet-User/Badge-Stack.svg'
                             }
                             alt={isMainBadge ? data.metadata.platform : `Tier ${i}`}
                             width={72}
