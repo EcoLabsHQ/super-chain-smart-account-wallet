@@ -203,7 +203,7 @@ function BadgeInfo({
 
             <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
               <Typography color="#75757A">{currentBadge?.metadata.description}</Typography>
-              <Chip label="Claimable" />
+              {currentBadge.claimable && <Chip label="Claimable" />}
             </Box>
             <Box
               width="100%"
