@@ -9,10 +9,6 @@ import { selectSuperChainAccount } from '@/store/superChainAccountSlice'
 import CheckCircleIcon from '@/public/images/common/check-circle.svg'
 import { GradientProgress } from '../..'
 
-const claimData = {
-  claimedBadges: ['5 transactions made on OP Mainnet'],
-}
-
 function ClaimModal({
   open,
   onClose,
@@ -25,10 +21,28 @@ function ClaimModal({
   onLevelUp: () => void
 }) {
   const { data: superChainAccount } = useAppSelector(selectSuperChainAccount)
-  const progress =
-    (Number(superChainAccount.points) /
-      (Number(superChainAccount.points) + Number(superChainAccount.pointsToNextLevel))) *
-    100
+  const progress = (Number(superChainAccount.points) / Number(superChainAccount.pointsToNextLevel)) * 100
+
+  const claimData = {
+    claimedBadges: data?.badgeUpdates.flatMap((badge: any) => {
+      const previousLevel = Number(badge.previousLevel || 0)
+      const currentLevel = Number(badge.level || 0)
+      const levelDifference = currentLevel - previousLevel
+
+      return Array(levelDifference)
+        .fill(null)
+        .map((_, index) => {
+          const badgeTierIndex = previousLevel + index
+          const updatedBadge = data.updatedBadges.find((updatedBadge: any) => badge.id === updatedBadge.id)
+          return (
+            updatedBadge?.metadata?.condition.replace(
+              '{{variable}}',
+              updatedBadge.badgeTiers[badgeTierIndex]?.metadata.minValue,
+            ) || ''
+          )
+        })
+    }),
+  }
 
   return (
     <Dialog
@@ -58,7 +72,7 @@ function ClaimModal({
             sx={{ borderStyle: 'dashed', backgroundColor: 'transparent' }}
             padding="12px"
           >
-            {claimData.claimedBadges.map((tx, index) => (
+            {claimData.claimedBadges?.map((tx, index) => (
               <Box key={index}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" paddingY="4px">
                   <Typography color="#4B4B4E" fontSize="14px">
@@ -83,7 +97,7 @@ function ClaimModal({
 
         <Box display="flex" justifyContent="space-between" alignItems="center" paddingLeft="12px" fontSize="16px">
           <Typography color="#75757A" fontWeight={500} fontSize="18px" pr={1}>
-            You have recieved:
+            You have received:
           </Typography>
           <Box
             sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
@@ -93,7 +107,7 @@ function ClaimModal({
             paddingX="8px"
           >
             <Typography fontSize="16px" fontWeight={600} p="4px 2px">
-              {data?.totalPoints ?? 10 /*TODO Remove this*/}
+              {data?.totalPoints ?? 0}
             </Typography>
             <SvgIcon component={SuperChainPoints} inheritViewBox fontSize="inherit" />
           </Box>
@@ -103,9 +117,9 @@ function ClaimModal({
           {!data?.isLevelUp && (
             <>
               <Typography variant="body2" align="center" mt={1} color="#75757A">
-                {Number(superChainAccount.points)} /{' '}
-                {Number(superChainAccount.points) + Number(superChainAccount.pointsToNextLevel)} Superchain Points to
-                level {Number(superChainAccount.level) + 1}
+                {Number(superChainAccount.points) + Number(data?.totalPoints ?? 0)} /{' '}
+                {Number(superChainAccount.pointsToNextLevel)} Superchain Points to level{' '}
+                {Number(superChainAccount.level) + 1}
               </Typography>
               <Button
                 onClick={onClose}
