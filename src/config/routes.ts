@@ -7,11 +7,7 @@ export const AppRoutes = {
   index: '/',
   imprint: '/imprint',
   home: '/home',
-  badges: {
-    allTime: '/badges',
-    season7: '/badges/season-7'
-
-  },
+  badges: '/badges',
   cookie: '/cookie',
   contacts: '/contacts',
   addOwner: '/addOwner',

@@ -4,7 +4,6 @@
   position: relative;
   overflow-y: visible;
   margin-bottom: 60px;
-  border-radius: 12px;
 }
 
 .pointsBox {
@@ -22,7 +21,8 @@
 }
 
 .levelUpButton {
- 
+  position: absolute;
+  bottom: -60px;
   left: 50%;
   transform: translateX(-50%);
   padding: 8px 40px 8px 40px;

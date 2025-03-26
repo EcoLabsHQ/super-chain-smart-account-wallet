@@ -6,9 +6,6 @@ import css from './styles.module.css'
 import type { ClaimData } from '../../actions'
 import { useAppSelector } from '@/store'
 import { selectSuperChainAccount } from '@/store/superChainAccountSlice'
-import CheckCircleIcon from '@/public/images/common/check-circle.svg'
-import { GradientProgress } from '../..'
-
 function ClaimModal({
   open,
   onClose,
@@ -21,28 +18,6 @@ function ClaimModal({
   onLevelUp: () => void
 }) {
   const { data: superChainAccount } = useAppSelector(selectSuperChainAccount)
-  const progress = (Number(superChainAccount.points) / Number(superChainAccount.pointsToNextLevel)) * 100
-
-  const claimData = {
-    claimedBadges: data?.badgeUpdates.flatMap((badge: any) => {
-      const previousLevel = Number(badge.previousLevel || 0)
-      const currentLevel = Number(badge.level || 0)
-      const levelDifference = currentLevel - previousLevel
-
-      return Array(levelDifference)
-        .fill(null)
-        .map((_, index) => {
-          const badgeTierIndex = previousLevel + index
-          const updatedBadge = data.updatedBadges.find((updatedBadge: any) => badge.id === updatedBadge.id)
-          return (
-            updatedBadge?.metadata?.condition.replace(
-              '{{variable}}',
-              updatedBadge.badgeTiers[badgeTierIndex]?.metadata.minValue,
-            ) || ''
-          )
-        })
-    }),
-  }
 
   return (
     <Dialog
@@ -60,93 +35,50 @@ function ClaimModal({
         justifyContent="center"
         alignItems="center"
       >
-        <Box gap="12px" display="flex" flexDirection="column" justifyContent="center" alignItems="center" width="100%">
+        <Box gap="12px" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
           <Typography id="modal-modal-title" fontSize={24} fontWeight={600} component="h2">
             Claim success
           </Typography>
-          <Box
-            width="100%"
-            border={1}
-            borderRadius="12px"
-            borderColor="#E1E2EA"
-            sx={{ borderStyle: 'dashed', backgroundColor: 'transparent' }}
-            padding="12px"
-          >
-            {claimData.claimedBadges?.map((tx, index) => (
-              <Box key={index}>
-                <Box display="flex" justifyContent="space-between" alignItems="center" paddingY="4px">
-                  <Typography color="#4B4B4E" fontSize="14px">
-                    {tx}
-                  </Typography>
-                  <SvgIcon
-                    inheritViewBox
-                    component={CheckCircleIcon}
-                    sx={{
-                      color: '#A3E635',
-                      fontSize: '16px',
-                      width: '16px',
-                      height: '16px',
-                      borderRadius: '50%',
-                    }}
-                  />
-                </Box>
-              </Box>
-            ))}
-          </Box>
-        </Box>
-
-        <Box display="flex" justifyContent="space-between" alignItems="center" paddingLeft="12px" fontSize="16px">
-          <Typography color="#75757A" fontWeight={500} fontSize="18px" pr={1}>
-            You have received:
+          <Typography color="GrayText" id="modal-modal-description" fontSize={16}>
+            You have received the following rewards
           </Typography>
-          <Box
-            sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
-            border={1}
-            borderRadius="100px"
-            borderColor="#E1E2EA"
-            paddingX="8px"
-          >
-            <Typography fontSize="16px" fontWeight={600} p="4px 2px">
-              {data?.totalPoints ?? 0}
-            </Typography>
-            <SvgIcon component={SuperChainPoints} inheritViewBox fontSize="inherit" />
-          </Box>
         </Box>
-        <Box flex={1} width="100%">
-          <GradientProgress variant="determinate" value={progress} />
-          {!data?.isLevelUp && (
-            <>
-              <Typography variant="body2" align="center" mt={1} color="#75757A">
-                {Number(superChainAccount.points) + Number(data?.totalPoints ?? 0)} /{' '}
-                {Number(superChainAccount.pointsToNextLevel)} Superchain Points to level{' '}
-                {Number(superChainAccount.level) + 1}
-              </Typography>
-              <Button
-                onClick={onClose}
-                variant="contained"
-                sx={{ width: '100%', mt: '30px', borderRadius: '30px', height: '60px' }}
-              >
-                Continue
-              </Button>
-            </>
-          )}
-          {data?.isLevelUp && (
-            <>
-              <Typography variant="body2" align="center" mt={1} color="#75757A">
-                You have enough Superchain Points to level-up!
-              </Typography>
-              <button
-                onClick={onLevelUp}
-                className={css.levelUpButton}
-                style={{ width: '100%', marginTop: '30px', borderRadius: '30px', height: '60px' }}
-              >
-                Level-up
-                <Shiny className={css.shine} />
-              </button>
-            </>
-          )}
+        <Box display="flex" gap="24px" flexWrap="wrap" maxWidth="360px">
+          {data?.badgeImages.map((badge, index) => {
+            return <img key={index} src={badge} alt="Badge" />
+          })}
         </Box>
+        <Box
+          className={css.pointsBox}
+          display="flex"
+          gap="6px"
+          justifyContent="center"
+          alignItems="center"
+          padding="8px 14px 8px 16px"
+        >
+          <strong>{data?.totalPoints}</strong>
+          <SvgIcon component={SuperChainPoints} inheritViewBox fontSize="medium" />
+        </Box>
+        {!data?.isLevelUp && (
+          <Typography color="GrayText" fontSize={16}>
+            You still need
+            <strong>
+              {' '}
+              {Number(superChainAccount.pointsToNextLevel) - Number(superChainAccount.points)} SC Point to level-up{' '}
+            </strong>
+          </Typography>
+        )}
       </Box>
+      {data?.isLevelUp ? (
+        <button onClick={onLevelUp} className={css.levelUpButton}>
+          Level-up
+          <Shiny className={css.shine} />
+        </button>
+      ) : (
+        <Button onClick={onClose} variant="contained" className={css.outsideButton}>
+          Continue
+        </Button>
+      )}
     </Dialog>
   )
 }

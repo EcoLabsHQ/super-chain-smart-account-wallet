@@ -1,27 +1,20 @@
 .badgeContainer {
-  border-radius: 12px;
   width: clamp(200px, 100%, 250px);
-  border: 1px solid #e1e2ea;
-  overflow: hidden;
+  padding: 24px;
+
+  cursor: pointer;
+}
+
+.badgeComplete {
   display: flex;
   flex-direction: column;
-  cursor: pointer;
-}
-
-@media (max-width: 600px) {
-  .badgeContainer {
-    width: 100%;
-  }
-}
-
-.badgeContainerInfo {
-  width: clamp(200px, 100%, 250px);
-  cursor: pointer;
+  justify-content: space-between;
+  border: 2px solid #11d535;
+  background-color: #fafffb;
 }
 
 .badgeContainer > div {
   padding: 0;
-  width: 100%;
 }
 
 .hearth {
