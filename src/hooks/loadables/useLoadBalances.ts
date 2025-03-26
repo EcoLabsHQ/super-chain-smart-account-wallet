@@ -11,6 +11,7 @@ import { FEATURES, hasFeature } from '@/utils/chains'
 import { POLLING_INTERVAL } from '@/config/constants'
 import useIntervalCounter from '../useIntervalCounter'
 import useSafeInfo from '../useSafeInfo'
+import { SUNNY_TOKEN_ADDRESS } from '@/features/superChain/constants'
 
 const useTokenListSetting = (): boolean | undefined => {
   const chain = useCurrentChain()
@@ -28,6 +29,10 @@ const tokensLogoToInject = [
   {
     address: '0x4200000000000000000000000000000000000042',
     logoUri: '/tokens/0x4200000000000000000000000000000000000042.png',
+  },
+  {
+    address: SUNNY_TOKEN_ADDRESS,
+    logoUri: '/tokens/sunny.png',
   },
 ]
 
@@ -50,13 +55,29 @@ export const useLoadBalances = (): AsyncResult<SafeBalanceResponse> => {
       }
 
       let balances = await getBalances(chainId, safeAddress, currency, {
-        trusted: isTrustedTokenList,
+        trusted: false,
+        exclude_spam: true,
       })
 
-      balances.items = balances.items.map((balance) => {
-        const logo = tokensLogoToInject.find((token) => token.address === balance.tokenInfo.address)
-        return logo ? { ...balance, tokenInfo: { ...balance.tokenInfo, logoUri: logo.logoUri } } : balance
-      })
+      balances.items = balances.items
+        .map((balance) => {
+          const logo = tokensLogoToInject.find(
+            (token) => token.address.toLowerCase() === balance.tokenInfo.address.toLowerCase(),
+          )
+          return logo ? { ...balance, tokenInfo: { ...balance.tokenInfo, logoUri: logo.logoUri } } : balance
+        })
+        .filter((balance) => {
+          const isSunnyToken = balance.tokenInfo.address.toLowerCase() === SUNNY_TOKEN_ADDRESS.toLowerCase()
+          const fiatValue = parseFloat(balance.fiatBalance)
+          return isSunnyToken || fiatValue !== 0
+        })
+      const sunnyTokenIndex = balances.items.findIndex(
+        (item) => item.tokenInfo.address.toLowerCase() === SUNNY_TOKEN_ADDRESS.toLowerCase(),
+      )
+      if (sunnyTokenIndex > -1) {
+        const [sunnyToken] = balances.items.splice(sunnyTokenIndex, 1)
+        balances.items.unshift(sunnyToken)
+      }
       return balances
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,21 +1,20 @@
-import type { ReactElement } from 'react'
+import type { ReactElement, ReactNode } from 'react'
 import React from 'react'
 import { AppRoutes } from '@/config/routes'
 import AccountIcon from '@/public/images/sidebar/account.svg'
 import BadgesIcon from '@/public/images/sidebar/badges.svg'
 import LeaderboardIcon from '@/public/images/sidebar/leaderboard.svg'
 import ContactsIcon from '@/public/images/sidebar/contacts.svg'
-// import AssetsIcon from '@/public/images/sidebar/assets.svg'
 import TransactionIcon from '@/public/images/sidebar/transactions.svg'
-// import ABIcon from '@/public/images/sidebar/address-book.svg'
-// import AppsIcon from '@/public/images/apps/apps-icon.svg'
-// import SettingsIcon from '@/public/images/sidebar/settings.svg'
 import { SvgIcon } from '@mui/material'
+import SunnyIcon from '@/public/images/sidebar/sunny.svg'
+import { SidebarAirdropComponent } from '../SidebarList/Airdrop'
 
 export type NavItem = {
   label: string
   icon?: ReactElement
   href: string
+  customComponent?: ReactNode
 }
 
 export const navItems: NavItem[] = [
@@ -49,6 +48,20 @@ export const navItems: NavItem[] = [
     label: 'Transactions',
     icon: <SvgIcon component={TransactionIcon} inheritViewBox />,
     href: AppRoutes.transactions.history,
+  },
+  {
+    label: '$SUNNY Claim',
+    icon: <SvgIcon component={SunnyIcon} inheritViewBox />,
+    href: AppRoutes.sunnyClaim,
+    customComponent: (
+      <SidebarAirdropComponent
+        item={{
+          label: '$SUNNY Claim',
+          icon: <SvgIcon component={SunnyIcon} inheritViewBox />,
+          href: AppRoutes.sunnyClaim,
+        }}
+      />
+    ),
   },
 
   // {
