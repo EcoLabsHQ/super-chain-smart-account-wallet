@@ -1,8 +1,7 @@
 import { Box, Stack, SvgIcon, Typography } from '@mui/material'
-import React, { useMemo, type SyntheticEvent } from 'react'
+import React, { type SyntheticEvent } from 'react'
 import SuperChainPoints from '@/public/images/common/superChain.svg'
 import css from './styles.module.css'
-import useSafeInfo from '@/hooks/useSafeInfo'
 import type { ResponseBadge } from '@/types/super-chain'
 import classNames from 'classnames'
 import Image from 'next/image'
@@ -99,6 +98,7 @@ function Badge({
 
                 return (
                   <Box
+                    key={index}
                     sx={{
                       position: 'relative',
                       width: '100%',

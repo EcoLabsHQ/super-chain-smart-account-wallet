@@ -1,7 +1,6 @@
 import React from 'react'
 import { Box, Button, Dialog, Typography } from '@mui/material'
 import css from './styles.module.css'
-import StarAnimation from '../StarsAnimation'
 import Perks from '@/components/superChain/Perks'
 import { useQuery } from '@tanstack/react-query'
 import badgesService from '@/features/superChain/services/badges.service'

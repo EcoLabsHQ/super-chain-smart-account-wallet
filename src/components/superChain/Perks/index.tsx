@@ -1,8 +1,5 @@
-import { Box, Skeleton, SvgIcon, Tooltip, Typography } from '@mui/material'
-import PerkRaffle from '@/public/images/superchain/perk-raffle.svg'
-import PerkSponsored from '@/public/images/superchain/perk-gas.svg'
+import { Box, Skeleton, SvgIcon, Typography } from '@mui/material'
 import React, { useMemo } from 'react'
-import css from './styles.module.css'
 import type { Perks } from '@/features/superChain/services/badges.service'
 import LockOpenIcon from '@mui/icons-material/LockOpen'
 
