@@ -115,7 +115,7 @@ const SafeHeader = (): ReactElement => {
                   variant="determinate"
                   color="inherit"
                   value={70}
-                  sx={{ width: '100%', height: 34, backgroundColor: 'white', color: '#E8EDF5', borderRadius: '6px' }}
+                  sx={{ width: '100%', height: 34, backgroundColor: 'white', color: '#F1F2F5', borderRadius: '100px' }}
                 />
                 <Box
                   sx={{
@@ -128,6 +128,8 @@ const SafeHeader = (): ReactElement => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: 'white',
+                    border: '1px solid var(--color-border-light)',
+                    borderRadius: '100px',
                   }}
                 >
                   <Typography color="black" fontWeight={600} variant="body2" component="div">
@@ -261,7 +263,7 @@ const SafeHeader = (): ReactElement => {
                           Number(superChainSmartAccount.data.weeklyRelayedTransactions.maxRelayedTransactions))
                     : 100,
                 )}
-                sx={{ width: '100%', height: 34, backgroundColor: 'white', color: '#E8EDF5', borderRadius: '6px' }}
+                sx={{ width: '100%', height: 34, backgroundColor: 'white', color: '#F1F2F5', borderRadius: '100px' }}
               />
               <Box
                 sx={{
@@ -274,6 +276,8 @@ const SafeHeader = (): ReactElement => {
                   alignItems: 'center',
                   justifyContent: 'center',
                   color: 'white',
+                  border: '1px solid var(--color-border-light)',
+                  borderRadius: '100px',
                 }}
               >
                 <Typography color="black" fontWeight={600} variant="body2" component="div">

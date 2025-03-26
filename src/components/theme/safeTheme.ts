@@ -88,6 +88,13 @@ const createSafeTheme = (mode: PaletteMode): Theme => {
           }),
         },
       },
+      MuiListItem: {
+        styleOverrides: {
+          selected: ({ theme }) => ({
+            borderRadius: '100px',
+          }),
+        },
+      },
       MuiButton: {
         variants: [
           {
@@ -268,6 +275,9 @@ const createSafeTheme = (mode: PaletteMode): Theme => {
       },
       MuiIconButton: {
         styleOverrides: {
+          root: ({ theme }) => ({
+            borderRadius: '100px',
+          }),
           sizeSmall: {
             padding: '4px',
           },
