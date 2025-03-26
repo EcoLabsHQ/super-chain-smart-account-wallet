@@ -27,14 +27,15 @@ import { selectSuperChainAccount } from '@/store/superChainAccountSlice'
 import commonCss from '@/components/tx-flow/common/styles.module.css'
 import Save from '@/public/images/common/save.svg'
 import useSuperChainAccount from '@/hooks/super-chain/useSuperChainAccount'
-import { Address } from 'viem'
+import { Address, encodeFunctionData } from 'viem'
 import { TxModalContext } from '@/components/tx-flow'
 import LoadingModal from '@/components/common/LoadingModal'
 import FailedTxnModal from '@/components/common/ErrorModal'
 import SuccessTxnModal from '@/components/common/SuccessTxnModal'
 import useSafeInfo from '@/hooks/useSafeInfo'
 import { useQueryClient } from '@tanstack/react-query'
-
+import { SUPER_CHAIN_MODULE_ABI } from '@/features/superChain/constants'
+import useWallet from '@/hooks/wallets/useWallet'
 const TRAIT_LIMITS = {
   head: { min: 0, max: ImageData.images.heads.length - 1 },
   body: { min: 0, max: ImageData.images.bodies.length - 1 },
@@ -55,7 +56,7 @@ const UpdateAvatarModal = () => {
   const { safe } = useSafeInfo()
   const { address } = safe
   const queryClient = useQueryClient()
-  const { getSponsoredWriteableSuperChainSmartAccount } = useSuperChainAccount()
+  const { getSponsoredCallableSuperChainSmartAccount } = useSuperChainAccount()
   const [seed, setSeed] = useState<NounProps>({
     background: Math.floor(Math.random() * ImageData.bgcolors.length),
     body: Math.floor(Math.random() * ImageData.images.bodies.length),
@@ -115,16 +116,26 @@ const UpdateAvatarModal = () => {
     })
   }
 
+  const wallet = useWallet()
   const handleSubmit = async () => {
-    const superChainSmartAccountSponsored = getSponsoredWriteableSuperChainSmartAccount()
+    const superChainSmartAccountSponsored = getSponsoredCallableSuperChainSmartAccount()
     setModalState(ModalState.Loading)
     try {
-      const transaction = await superChainSmartAccountSponsored?.write.UpdateNounAvatar([
-        data.smartAccount as Address,
-        seed,
-      ])
+      if (!wallet) return
 
-      setTransactionHash(transaction!)
+      const txData = encodeFunctionData({
+        abi: SUPER_CHAIN_MODULE_ABI,
+        functionName: 'UpdateNounAvatar',
+        args: [data.smartAccount as Address, seed],
+      })
+
+      const userOperationHash = await superChainSmartAccountSponsored.callContract(
+        wallet,
+        data.smartAccount as Address,
+        txData,
+      )
+
+      setTransactionHash(userOperationHash)
       setModalState(ModalState.Success)
       queryClient.refetchQueries({ queryKey: ['superChainAccount', address.value] })
     } catch (e) {

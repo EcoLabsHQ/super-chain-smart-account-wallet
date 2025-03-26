@@ -121,7 +121,7 @@ export const useTxActions = (): TxActions => {
       if (isRelayed) {
         await dispatchTxRelay(safeTx, safe, txId, txOptions.gasLimit)
       } else {
-        await dispatchTxExecution(safeTx, txOptions, txId, wallet, chainId, safeAddress)
+        await dispatchTxExecution(safeTx, txOptions, txId, wallet, chainId, safeAddress, safe)
       }
 
       return txId

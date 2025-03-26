@@ -32,6 +32,9 @@ export const useUserRank = (userAddress: Address) => {
     queryKey: ['userRank', userAddress],
     queryFn: async () => {
       const response = await axios.get<UserRank>(`${BACKEND_BASE_URI}/leaderboard/${userAddress}`)
+      if (response.data === null) {
+        return null
+      }
       return {
         rank: response.data.rank,
         data: {
@@ -40,8 +43,8 @@ export const useUserRank = (userAddress: Address) => {
         },
       }
     },
+    enabled: !!userAddress,
   })
-  console.debug(response)
 
   return { rank: response?.rank, user: response?.data, loading: isLoading, error }
 }

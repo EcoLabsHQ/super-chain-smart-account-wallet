@@ -1,5 +1,19 @@
-import { Box, Grid, Skeleton, SvgIcon, Typography } from '@mui/material'
-import Badge from '@/public/images/common/superChain.svg'
+import { Box, Typography, Card, CardContent, Divider, Chip } from '@mui/material'
+import Image from 'next/image'
+import NavTabs from '@/components/common/NavTabs'
+import { AppRoutes } from '@/config/routes'
+import { GradientProgress } from '..'
+
+export const badgesNavItems = [
+  {
+    label: 'All-Time',
+    href: AppRoutes.badges.allTime,
+  },
+  {
+    label: 'Season 7',
+    href: AppRoutes.badges.season7,
+  },
+]
 
 function BadgesHeader({
   level,
@@ -7,79 +21,136 @@ function BadgesHeader({
   pointsToNextLevel,
   completeBadges,
   totalBadges,
+  season,
   isLoading,
 }: {
-  level?: number
-  points?: number
+  level: number
+  points: number
   completeBadges: number
-  pointsToNextLevel?: number
-  totalBadges?: number
+  pointsToNextLevel: number
+  totalBadges: number
+  season?: { code: string; name: string }
   isLoading: boolean
 }) {
-  return (
-    <Grid item pb={2} xs={12}>
-      <Grid container display="flex" justifyContent="space-between">
-        <Grid xs={6} lg={3} display="flex" flexDirection="column" gap={1}>
-          <Typography variant="h3" fontSize={16} fontWeight={600} color="primary.light">
-            Current level
-          </Typography>
+  const progress = (points / pointsToNextLevel) * 100
 
-          {isLoading ? (
-            <Skeleton variant="text" width={44} height={44} />
-          ) : (
-            <Typography variant="h4" fontWeight={600} color="secondary" fontSize={44}>
-              {level}
-            </Typography>
-          )}
-        </Grid>
-        <Grid xs={6} lg={3} display="flex" flexDirection="column" gap={1}>
-          <Typography variant="h3" fontSize={16} fontWeight={600} color="primary.light">
-            Your SC Points
-          </Typography>
-          <Grid xs={6} lg={3} display="flex" justifyContent="flex-start" alignItems="center" gap={1}>
-            {isLoading ? (
-              <Skeleton variant="text" width={88} height={44} />
-            ) : (
-              <>
-                <Typography variant="h4" fontWeight={600} fontSize={44}>
-                  {points}
-                </Typography>
-                <SvgIcon component={Badge} inheritViewBox fontSize="large" />
-              </>
-            )}
-          </Grid>
-        </Grid>
-        <Grid xs={6} lg={3} display="flex" flexDirection="column" gap={1}>
-          <Typography variant="h3" fontSize={16} fontWeight={600} color="primary.light">
-            SC Points to next level
-          </Typography>
-          <Box display="flex" justifyContent="flex-start" alignItems="center" gap={1}>
-            {isLoading ? (
-              <Skeleton variant="text" width={88} height={44} />
-            ) : (
-              <>
-                <Typography variant="h4" fontWeight={600} fontSize={44}>
-                  {pointsToNextLevel}
-                </Typography>
-                <SvgIcon component={Badge} inheritViewBox fontSize="large" />
-              </>
-            )}
-          </Box>
-        </Grid>
-        <Grid xs={6} lg={3} display="flex" flexDirection="column" gap={1}>
-          <Typography variant="h3" fontSize={16} fontWeight={600} color="primary.light">
-            Total badges
-          </Typography>
-          {isLoading ? (
-            <Skeleton variant="text" width={44} height={44} />
-          ) : (
-            <Typography variant="h4" fontWeight={600} fontSize={44}>
+  return (
+    <Box p={1} sx={{ width: '100%' }}>
+      <Typography variant="h2" fontWeight={700} gutterBottom pb={4}>
+        Badges
+      </Typography>
+      <NavTabs tabs={badgesNavItems} />
+      <Divider sx={{ mb: 2, width: '100%' }} />
+
+      <Box display="flex" gap={2} flexDirection={{ xs: 'column', sm: 'row' }} alignItems="stretch" width="100%">
+        <Card
+          sx={{
+            width: { xs: '100%', sm: 'auto' },
+            maxWidth: { sm: '300px' },
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            border: '1px solid',
+            borderColor: (theme) => (!season ? theme.palette.grey[500] : '#6B5DE7'),
+            backgroundColor: (theme) => (!season ? theme.palette.grey[50] : '#F4F0FF'),
+          }}
+        >
+          <CardContent>
+            <Box display="flex" justifyContent="space-between" alignItems="center">
+              <Typography variant="h6" color="text.secondary" gutterBottom>
+                Badges
+              </Typography>
+
+              {season && (
+                <Chip
+                  label={
+                    <Box display="flex" alignItems="center" gap={0.5}>
+                      <Typography
+                        fontWeight={600}
+                        fontSize={13}
+                        sx={{
+                          color: '#6B5DE7',
+                          margin: '-5px',
+                        }}
+                      >
+                        {season.name}
+                      </Typography>
+                      <Image
+                        src="/images/badges/stars_custom.svg"
+                        alt="Star Icon"
+                        width={14}
+                        height={14}
+                        style={{ margin: '2px' }}
+                      />
+                    </Box>
+                  }
+                  sx={{
+                    backgroundColor: '#F4F0FF',
+                    fontWeight: 600,
+                    borderRadius: '20px',
+                    border: '1px solid #6B5DE7',
+                  }}
+                />
+              )}
+            </Box>
+
+            <Typography variant="h1" sx={{ fontSize: '40px', mt: 2 }} fontWeight={600}>
               {completeBadges}/{totalBadges}
             </Typography>
-          )}
-        </Grid>
-      </Grid>
-    </Grid>
+          </CardContent>
+        </Card>
+
+        <Box flex={1} minWidth={0}>
+          <Card
+            sx={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              border: '1px solid',
+              borderColor: (theme) => theme.palette.grey[500],
+              backgroundColor: (theme) => theme.palette.grey[50],
+            }}
+          >
+            <CardContent>
+              <Typography variant="h6" color="text.secondary" gutterBottom>
+                Level
+              </Typography>
+              <Box display="flex" alignItems="center" gap={2}>
+                <Box display="flex" flexDirection="column" alignItems="center">
+                  <Image src="/images/badges/star.svg" alt="Badge" width={50} height={50} />
+
+                  <Typography
+                    variant="h3"
+                    fontWeight={700}
+                    color="white"
+                    sx={{
+                      position: 'absolute',
+                      transform: 'translateY(-50%)',
+                      backgroundColor: 'transparent',
+                      pt: '50px',
+                    }}
+                  >
+                    {level}
+                  </Typography>
+                </Box>
+
+                <Divider orientation="vertical" flexItem sx={{ height: '50px', mx: 2 }} />
+
+                <Box flex={1}>
+                  <GradientProgress variant="determinate" value={progress} />
+                  <Typography variant="body2" align="center" mt={1} color="text.secondary">
+                    {points} / {pointsToNextLevel} Superchain Points to level {level + 1}
+                  </Typography>
+                </Box>
+              </Box>
+            </CardContent>
+          </Card>
+        </Box>
+      </Box>
+    </Box>
   )
 }
 
