@@ -118,7 +118,7 @@ const createSafeTheme = (mode: PaletteMode): Theme => {
             padding: '12px 24px',
           },
           root: ({ theme }) => ({
-            borderRadius: theme.shape.borderRadius,
+            borderRadius: '100px',
             fontWeight: 'bold',
             lineHeight: 1.25,
             borderColor: theme.palette.primary.main,
@@ -205,6 +205,14 @@ const createSafeTheme = (mode: PaletteMode): Theme => {
         },
       },
       MuiCard: {
+        variants: [
+          {
+            props: { variant: 'outlined' },
+            style: ({ theme }) => ({
+              border: `1px solid ${theme.palette.border.light}`,
+            }),
+          },
+        ],
         styleOverrides: {
           root: ({ theme }) => ({
             borderRadius: theme.shape.borderRadius,
@@ -239,7 +247,7 @@ const createSafeTheme = (mode: PaletteMode): Theme => {
         },
         styleOverrides: {
           outlined: ({ theme }) => ({
-            borderWidth: 2,
+            borderWidth: 1,
             borderColor: theme.palette.border.light,
           }),
           root: ({ theme }) => ({
