@@ -1,13 +1,16 @@
-import { Box, Card, CardActions, CardContent, IconButton, Stack, SvgIcon, Typography } from '@mui/material'
+import { Box, Stack, SvgIcon, Typography } from '@mui/material'
 import React, { useMemo, type SyntheticEvent } from 'react'
 import SuperChainPoints from '@/public/images/common/superChain.svg'
-import Hearth from '@/public/images/common/hearth.svg'
-import HeartFilled from '@/public/images/common/hearth-filled.svg'
 import css from './styles.module.css'
 import useSafeInfo from '@/hooks/useSafeInfo'
 import type { ResponseBadge } from '@/types/super-chain'
 import classNames from 'classnames'
-import Complete from '@/public/images/common/complete.svg'
+import Image from 'next/image'
+import SeasonChip from '../seasonChip'
+import NetworkChip from '../networkChip'
+import HeartFilled from '@/public/images/common/hearth-filled.svg'
+import CheckCircleIcon from '@/public/images/common/check-circle.svg'
+
 function Badge({
   data,
   switchFavorite,
@@ -19,16 +22,10 @@ function Badge({
   setCurrentBadge: (badge: ResponseBadge & { isFavorite: boolean }) => void
   isFavorite: boolean
 }) {
-  const { safeAddress, safeLoading } = useSafeInfo()
   const handleSwitchFavorite = async (event: SyntheticEvent) => {
     event.stopPropagation()
     switchFavorite()
   }
-  const unClaimed = useMemo(() => {
-    if (data?.claimableTier === null || data?.tier === null || data.claimableTier === 0 || Number(data.tier) === 0)
-      return false
-    return Number(data?.tier) === data?.claimableTier
-  }, [data])
 
   const handlePickBadge = () => {
     const badge: ResponseBadge = {
@@ -37,15 +34,272 @@ function Badge({
     setCurrentBadge({ ...badge, isFavorite })
   }
 
-  const renderNextTier = data.claimableTier === Number(data.tier)
+  const isCompleted = Number(data.tier) === data.badgeTiers.length
 
+  console.debug(data)
   return (
-    <Card
-      onClick={handlePickBadge}
-      className={classNames(css.badgeContainer, data.badgeTiers.length === Number(data.tier) && css.badgeComplete)}
-    >
-      <CardContent>
-        <Stack padding={0} justifyContent="center" alignItems="center" spacing={1} position="relative">
+    <Box sx={{ maxWidth: '100%' }} onClick={handlePickBadge} className={classNames(css.badgeContainer)}>
+      <Box
+        sx={{
+          position: 'relative',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '112px',
+          overflow: 'hidden',
+          borderTopLeftRadius: '12px',
+          borderTopRightRadius: '12px',
+        }}
+      >
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundImage: `url('/static/badges/All-Time/OP-Mainnet-User/Badge.svg')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            filter: 'blur(68px)',
+            opacity: 1,
+            zIndex: 0,
+          }}
+        />
+        <SeasonChip season={data.metadata.season} style="badge" />
+        <NetworkChip network={data.metadata.chain.toLowerCase()} style="badge" isFavorite={isFavorite} />
+        {isFavorite ? (
+          <SvgIcon
+            component={HeartFilled}
+            sx={{ color: 'red', fontSize: '20px' }}
+            inheritViewBox
+            style={{ position: 'absolute', top: '12px', right: '10px' }}
+          />
+        ) : (
+          <></>
+        )}
+
+        <Box
+          sx={{
+            position: 'relative',
+            zIndex: 1,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100%',
+            width: '100%',
+          }}
+        >
+          <Box height="100%" width="100%">
+            {Number(data.tier) > 0 ? (
+              [...Array(Number(data.tier))].map((_, index) => {
+                const totalBadges = Number(data.tier)
+                const centerIndex = (totalBadges - 1) / 2
+                const spacing = 24
+
+                return (
+                  <Box
+                    sx={{
+                      position: 'relative',
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <Box sx={{ position: 'relative' }}>
+                      {Array.from({ length: totalBadges }).map((_, i) => {
+                        const offset = (i - centerIndex) * spacing
+
+                        const isMainBadge = i === 0
+
+                        return (
+                          <Image
+                            key={i}
+                            src={
+                              isMainBadge
+                                ? '/static/badges/All-Time/OP-Mainnet-User/Badge.svg'
+                                : '/static/badges/All-Time/OP-Mainnet-User/Badge-Stack.svg'
+                            }
+                            alt={isMainBadge ? data.metadata.platform : `Tier ${i}`}
+                            width={72}
+                            height={72}
+                            style={{
+                              position: 'absolute',
+                              left: '50%',
+                              transform: `translate(-50%, -50%) translateX(${offset}px)`,
+                              zIndex: isMainBadge ? 999 : totalBadges - i,
+                            }}
+                          />
+                        )
+                      })}
+                    </Box>
+                  </Box>
+                )
+              })
+            ) : (
+              <Box
+                sx={{
+                  position: 'relative',
+                  width: '100%',
+                  height: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Box sx={{ position: 'relative' }}>
+                  <Image
+                    src="/static/badges/All-Time/OP-Mainnet-User/Badge.svg"
+                    width={72}
+                    height={72}
+                    style={{
+                      position: 'absolute',
+                      left: '50%',
+                      transform: `translate(-50%, -50%)`,
+                      zIndex: 999,
+                    }}
+                    alt={data.metadata.platform}
+                  />
+                </Box>
+              </Box>
+            )}
+          </Box>
+        </Box>
+      </Box>
+      <Box sx={{ display: 'flex', flexDirection: 'column', paddingBottom: '0px', width: '100%', height: '100%' }}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          gap="12px"
+          padding="24px"
+          sx={{ flexGrow: 1, width: '100%', boxSizing: 'border-box' }}
+        >
+          <Typography
+            fontSize="18px"
+            fontWeight={600}
+            textAlign="start"
+            fontFamily="Sora"
+            sx={{ wordBreak: 'break-word' }}
+          >
+            {data.metadata.name}
+          </Typography>
+          <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
+            {data.badgeTiers.map((_, index) => (
+              <Box
+                key={index}
+                sx={{
+                  flex: 1,
+                  height: '6px',
+                  backgroundColor: index < Number(data.tier) ? '#39D551' : '#EBECF1',
+                  borderRadius: '100px',
+                }}
+              />
+            ))}
+          </Box>
+          <Typography color="text.secondary" sx={{ wordBreak: 'break-word' }}>
+            {data.metadata.description}
+          </Typography>
+        </Box>
+        {isCompleted ? (
+          <Box
+            width="100%"
+            border={1}
+            borderRadius="100px"
+            borderColor="#39D551"
+            bgcolor="#EBFBEE"
+            sx={{
+              borderStyle: 'solid',
+              marginTop: 'auto',
+              marginBottom: '24px',
+              marginX: '24px',
+              maxWidth: 'calc(100% - 48px)',
+            }}
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            paddingLeft="12px"
+            fontSize="16px"
+          >
+            <Stack direction="row" alignItems="center" gap={1}>
+              <SvgIcon
+                inheritViewBox
+                component={CheckCircleIcon}
+                sx={{
+                  color: '#A3E635',
+                  fontSize: '16px',
+                  width: '16px',
+                  height: '16px',
+                  border: 'none',
+                  borderRadius: '50%',
+                }}
+              />
+              <Typography fontWeight={500} fontSize="12px">
+                Completed
+              </Typography>
+            </Stack>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+              border={1}
+              borderRadius="100px"
+              borderColor="#39D551"
+              borderBottom="none"
+              borderRight="none"
+              borderTop="none"
+              paddingX="8px"
+            >
+              <Typography fontSize="12px" fontWeight={500}>
+                {data.badgeTiers[data.claimableTier ? data.claimableTier - 1 : 0].metadata.points}
+              </Typography>
+              <SvgIcon component={SuperChainPoints} inheritViewBox fontSize="inherit" />
+            </Box>
+          </Box>
+        ) : (
+          <Box
+            width="100%"
+            border={1}
+            borderRadius="100px"
+            borderColor="#E1E2EA"
+            sx={{
+              borderStyle: 'dashed',
+              marginTop: 'auto',
+              marginBottom: '24px',
+              marginX: '24px',
+              maxWidth: 'calc(100% - 48px)',
+            }}
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+            paddingLeft="12px"
+            fontSize="16px"
+          >
+            <Typography fontWeight={500} color="#4B4B4E" fontSize="12px">
+              Rewards next tier
+            </Typography>
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+              border={1}
+              borderRadius="100px"
+              borderColor="#E1E2EA"
+              paddingX="8px"
+            >
+              <Typography fontSize="12px" fontWeight={500}>
+                {data.badgeTiers[data.claimableTier ? data.claimableTier - 1 : 0].metadata.points}
+              </Typography>
+              <SvgIcon component={SuperChainPoints} inheritViewBox fontSize="inherit" />
+            </Box>
+          </Box>
+        )}
+      </Box>
+    </Box>
+  )
+}
+
+export default Badge
+
+{
+  /* <Stack padding={0} justifyContent="center" alignItems="center" spacing={1} position="relative">
           <IconButton disabled={safeLoading} onClick={(e) => handleSwitchFavorite(e)} className={css.hearth}>
             <SvgIcon component={isFavorite ? HeartFilled : Hearth} color="secondary" inheritViewBox fontSize="small" />
           </IconButton>
@@ -100,30 +354,5 @@ function Badge({
               )}
             </Box>
           )}
-        </Stack>
-      </CardContent>
-      <CardActions>
-        <Box width="100%" display="flex" gap={1} pt={3} justifyContent="center" alignItems="center">
-          {data.badgeTiers.length !== Number(data.tier) ? (
-            <>
-              <strong>
-                {renderNextTier
-                  ? data.badgeTiers[data.claimableTier || 0].points
-                  : !!Number(data.tier)
-                  ? data.points
-                  : data.badgeTiers[0].points}
-              </strong>{' '}
-              <SvgIcon component={SuperChainPoints} inheritViewBox fontSize="medium" />
-            </>
-          ) : (
-            <>
-              <strong>Complete</strong> <SvgIcon component={Complete} inheritViewBox fontSize="medium" />
-            </>
-          )}
-        </Box>
-      </CardActions>
-    </Card>
-  )
+        </Stack> */
 }
-
-export default Badge
