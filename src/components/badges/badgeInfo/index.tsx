@@ -198,7 +198,12 @@ function BadgeInfo({
             </Typography>
             <Stack direction="row" alignItems="center" gap={1}>
               {currentBadge.metadata.chains.map((chain) => (
-                <NetworkChip network={chain} style="info" isFavorite={currentBadge.isFavorite} />
+                <NetworkChip
+                  key={currentBadge.badgeId}
+                  network={chain}
+                  style="info"
+                  isFavorite={currentBadge.isFavorite}
+                />
               ))}
             </Stack>
 
