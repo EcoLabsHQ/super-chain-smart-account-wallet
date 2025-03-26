@@ -216,7 +216,7 @@ const createSafeTheme = (mode: PaletteMode): Theme => {
           {
             props: { variant: 'outlined' },
             style: ({ theme }) => ({
-              border: `1px solid ${theme.palette.border.light}`,
+              border: `1px solid ${theme.palette.border.light} !important`,
             }),
           },
         ],
@@ -229,6 +229,7 @@ const createSafeTheme = (mode: PaletteMode): Theme => {
           }),
         },
       },
+
       MuiDialog: {
         defaultProps: {
           fullWidth: true,
