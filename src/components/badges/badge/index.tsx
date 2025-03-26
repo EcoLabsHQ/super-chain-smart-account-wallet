@@ -57,7 +57,7 @@ function Badge({
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundImage: `url('/static/badges/All-Time/OP-Mainnet-User/Badge.svg')`,
+            backgroundImage: `url(${data.metadata.image})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             filter: 'blur(68px)',
@@ -66,7 +66,7 @@ function Badge({
           }}
         />
         <SeasonChip season={data.metadata.season} style="badge" />
-        <NetworkChip network={data.metadata.chain.toLowerCase()} style="badge" isFavorite={isFavorite} />
+        <NetworkChip network={data.metadata.chains[0].toLowerCase()} style="badge" isFavorite={isFavorite} />
         {isFavorite ? (
           <SvgIcon
             component={HeartFilled}
@@ -117,11 +117,7 @@ function Badge({
                         return (
                           <Image
                             key={i}
-                            src={
-                              isMainBadge
-                                ? '/static/badges/All-Time/OP-Mainnet-User/Badge.svg'
-                                : '/static/badges/All-Time/OP-Mainnet-User/Badge-Stack.svg'
-                            }
+                            src={isMainBadge ? data.metadata.image : data.metadata['stack-image']}
                             alt={isMainBadge ? data.metadata.platform : `Tier ${i}`}
                             width={72}
                             height={72}
@@ -151,7 +147,7 @@ function Badge({
               >
                 <Box sx={{ position: 'relative' }}>
                   <Image
-                    src="/static/badges/All-Time/OP-Mainnet-User/Badge.svg"
+                    src={data.metadata.image}
                     width={72}
                     height={72}
                     style={{
@@ -185,7 +181,7 @@ function Badge({
           >
             {data.metadata.name}
           </Typography>
-          <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
+          {/* <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
             {data.badgeTiers.map((_, index) => (
               <Box
                 key={index}
@@ -197,7 +193,7 @@ function Badge({
                 }}
               />
             ))}
-          </Box>
+          </Box> */}
           <Typography color="text.secondary" sx={{ wordBreak: 'break-word' }}>
             {data.metadata.description}
           </Typography>

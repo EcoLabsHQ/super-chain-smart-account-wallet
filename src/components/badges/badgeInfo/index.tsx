@@ -97,7 +97,7 @@ function BadgeInfo({
               left: 0,
               width: '100%',
               height: '100%',
-              backgroundImage: `url('/static/badges/All-Time/OP-Mainnet-User/Badge.svg')`,
+              backgroundImage: `url(${currentBadge.metadata.image})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               filter: 'blur(68px)',
@@ -144,11 +144,7 @@ function BadgeInfo({
                           return (
                             <Image
                               key={i}
-                              src={
-                                isMainBadge
-                                  ? '/static/badges/All-Time/OP-Mainnet-User/Badge.svg'
-                                  : '/static/badges/All-Time/OP-Mainnet-User/Badge-Stack.svg'
-                              }
+                              src={isMainBadge ? currentBadge.metadata.image : currentBadge.metadata['stack-image']}
                               alt={isMainBadge ? currentBadge.metadata.platform : `Tier ${i}`}
                               width={72}
                               height={72}
@@ -178,7 +174,7 @@ function BadgeInfo({
                 >
                   <Box sx={{ position: 'relative' }}>
                     <Image
-                      src="/static/badges/All-Time/OP-Mainnet-User/Badge.svg"
+                      src={currentBadge.metadata.image}
                       width={72}
                       height={72}
                       style={{
@@ -200,7 +196,11 @@ function BadgeInfo({
             <Typography fontSize="18px" fontWeight={600} textAlign="start" fontFamily="Sora">
               {currentBadge?.metadata.name}
             </Typography>
-            <NetworkChip network={currentBadge.metadata.chain} style="info" isFavorite={currentBadge.isFavorite} />
+            <Stack direction="row" alignItems="center" gap={1}>
+              {currentBadge.metadata.chains.map((chain) => (
+                <NetworkChip network={chain} style="info" isFavorite={currentBadge.isFavorite} />
+              ))}
+            </Stack>
 
             <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
               <Typography color="#75757A">{currentBadge?.metadata.description}</Typography>
