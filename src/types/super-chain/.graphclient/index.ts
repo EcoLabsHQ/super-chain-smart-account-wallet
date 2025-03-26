@@ -2252,8 +2252,6 @@ export type BadgeMetadata = {
   platform: string
   chain: string
   condition: string
-  chains: string[]
-  season: string
 }
 
 export type GetUserBadgesQuery = {

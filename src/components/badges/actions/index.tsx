@@ -1,20 +1,8 @@
-import {
-  Box,
-  Button,
-  Checkbox,
-  Divider,
-  Grid,
-  InputAdornment,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  SvgIcon,
-  TextField,
-  Typography,
-} from '@mui/material'
+import { Box, Button, Grid, InputAdornment, MenuItem, Select, SvgIcon, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 
 import SearchIcon from '@/public/images/common/search.svg'
+import History from '@/public/images/common/history.svg'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import useSafeInfo from '@/hooks/useSafeInfo'
 import badgesService from '@/features/superChain/services/badges.service'
@@ -29,42 +17,20 @@ import FailedTxnModal from '@/components/common/ErrorModal'
 import { useAppSelector } from '@/store'
 import { selectSuperChainAccount } from '@/store/superChainAccountSlice'
 import { ResponseBadge } from '@/types/super-chain'
-import AutorenewIcon from '@mui/icons-material/Autorenew'
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
-import CheckBoxIcon from '@mui/icons-material/CheckBox'
-import { networks } from '..'
 
 export type ClaimData = {
+  badgeImages: string[]
   totalPoints: number
   isLevelUp: boolean
-  badgeUpdates: {
-    badgeId: string
-    level: number
-    points: number
-    previousLevel: number
-  }[]
-  updatedBadges: {
-    badgeId: string
-    metadata: {
-      condition: string
-    }
-    badgeTiers: {
-      metadata: {
-        minValue: string
-      }
-    }[]
-  }[]
 }
 function BadgesActions({
   claimable,
   setFilter,
-  setNetworks,
-  selectedNetworks,
+  setNetwork,
 }: {
   claimable: boolean
   setFilter: (filter: string) => void
-  setNetworks: (networks: string[]) => void
-  selectedNetworks: string[]
+  setNetwork: (network: string) => void
 }) {
   const { safeAddress, safeLoaded } = useSafeInfo()
   const { data: superChainAccount } = useAppSelector(selectSuperChainAccount)
@@ -120,11 +86,6 @@ function BadgesActions({
     setIsLevelUpModalOpen(true)
   }
 
-  const handleChange = (event: SelectChangeEvent<string[]>) => {
-    const value = event.target.value
-    setNetworks(typeof value === 'string' ? value.split(',') : value)
-  }
-
   return (
     <>
       <ClaimModal onLevelUp={handleLevelUp} data={claimData} open={isClaimModalOpen} onClose={handleCloseClaimModal} />
@@ -136,43 +97,22 @@ function BadgesActions({
       <LoadingModal open={isPending} title="Updating badges" />
       <FailedTxnModal open={isError} onClose={handleCloseLevelUpModal} handleRetry={() => mutate()} />
       <Grid container spacing={1} item>
-        <Divider sx={{ mt: 1, mb: 2, width: '100%' }} />
+        <Grid item>
+          <Typography variant="h3" fontSize={16} fontWeight={600}>
+            Badges
+          </Typography>
+        </Grid>
         <Grid container spacing={2} item>
-          <Grid item xs={12} lg={2.3}>
+          <Grid item xs={12} lg={7}>
             <TextField
-              placeholder="Search"
-              sx={{
-                borderRadius: '20px',
-                overflow: 'hidden',
-                backgroundColor: '#F4F4F5',
-                '& .MuiFilledInput-root': {
-                  borderRadius: '20px',
-                  backgroundColor: '#F4F4F5',
-                  padding: '6px 12px',
-                  minHeight: '36px',
-                  '&:hover': {
-                    backgroundColor: '#E0E0E0',
-                  },
-                  '&.Mui-focused': {
-                    backgroundColor: '#FFFFFF',
-                  },
-                  '& input': {
-                    padding: '4px 0',
-                    '&::placeholder': {
-                      color: 'black',
-                      fontWeight: 'bold',
-                      opacity: 1,
-                    },
-                  },
-                },
-              }}
+              placeholder="Search by name or network"
               variant="filled"
               onChange={(e) => setFilter(e.target.value)}
               hiddenLabel
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SvgIcon component={SearchIcon} inheritViewBox color="primary" fontSize="small" />
+                    <SvgIcon component={SearchIcon} inheritViewBox color="border" />
                   </InputAdornment>
                 ),
                 disableUnderline: true,
@@ -180,133 +120,63 @@ function BadgesActions({
               fullWidth
             />
           </Grid>
-          <Grid item xs={12} lg={3}>
+          <Grid item xs={12} lg={5}>
             <Box display="flex" gap={2}>
               <Select
-                multiple
                 fullWidth
-                value={selectedNetworks}
-                onChange={handleChange}
-                displayEmpty
-                renderValue={(selected) => (
-                  <Box sx={{ fontWeight: 600, color: 'black' }}>
-                    {selected.length > 0 ? `${selected.length} selected` : 'Select networks'}
+                onChange={(e) => setNetwork(e.target.value)}
+                defaultValue="all"
+                placeholder="Placeholder Text"
+              >
+                <MenuItem value="all">
+                  <strong>Select network</strong>
+                </MenuItem>
+                <MenuItem value="optimism">
+                  <Box display="flex" gap={1} alignItems="center">
+                    <Image
+                      src="https://safe-transaction-assets.safe.global/chains/10/chain_logo.png"
+                      alt="Optimism Logo"
+                      width={24}
+                      height={24}
+                      loading="lazy"
+                    />
+                    <strong>Optimism</strong>
                   </Box>
-                )}
-                MenuProps={{
-                  PaperProps: {
-                    sx: {
-                      borderRadius: '16px', // 🎯 Aquí se aplica el border radius al menú desplegable
-                    },
-                  },
-                }}
-                sx={{
-                  borderRadius: '25px',
-                  backgroundColor: '#F4F4F5',
-                  minHeight: '34px',
-                  border: '1px solid transparent',
-                  boxShadow: 'none',
-                  maxWidth: { xs: '100%', lg: '200px' },
-                  lineHeight: '2em',
-                  '& .MuiSelect-select': {
-                    padding: '6px 12px',
-                    minHeight: '34px',
-                    display: 'flex',
-                    alignItems: 'center',
-                  },
-                  '&:hover': {
-                    backgroundColor: '#E0E0E0',
-                  },
-                  '&.Mui-focused': {
-                    backgroundColor: '#FFFFFF',
-                    border: '1px solid black',
-                  },
-                  '&:before, &:after': {
-                    border: 'none !important',
-                    display: 'none !important',
-                  },
-                  '& .MuiOutlinedInput-notchedOutline': {
-                    border: 'none !important',
-                  },
-                }}
-              >
-                {networks.map((net, idx) => (
-                  <MenuItem key={net.value} value={net.value} divider>
-                    <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
-                      <Box display="flex" gap={1} alignItems="center">
-                        <Image src={net.icon} alt={`${net.label} Logo`} width={20} height={20} />
-                        <Typography fontSize={14}>{net.label}</Typography>
-                      </Box>
-
-                      <Checkbox
-                        checked={selectedNetworks.includes(net.value)}
-                        icon={<CheckBoxOutlineBlankIcon sx={{ fontSize: 18 }} />}
-                        checkedIcon={<CheckBoxIcon sx={{ fontSize: 18 }} />}
-                        sx={{
-                          padding: 0,
-                          color: '#999',
-                          '&.Mui-checked': {
-                            color: '#111',
-                          },
-                        }}
-                      />
-                    </Box>
-                  </MenuItem>
-                ))}
+                </MenuItem>
+                <MenuItem value="base">
+                  <Box display="flex" gap={1} alignItems="center">
+                    <Image
+                      src="https://safe-transaction-assets.safe.global/chains/8453/chain_logo.png"
+                      alt="Base Logo"
+                      width={24}
+                      height={24}
+                      loading="lazy"
+                    />
+                    <strong>Base</strong>
+                  </Box>
+                </MenuItem>
+                <MenuItem value="mode">
+                  <Box display="flex" gap={1} alignItems="center">
+                    <Image
+                      src="https://account.superchain.eco/chains/34443/chain_logo.svg"
+                      alt="Mode Logo"
+                      width={24}
+                      height={24}
+                      loading="lazy"
+                    />
+                    <strong>Mode</strong>
+                  </Box>
+                </MenuItem>
               </Select>
-              <Box
-                component="button"
-                onClick={() => {
-                  setFilter('')
-                  setNetworks([])
-                }}
-                sx={{
-                  borderRadius: '20px',
-                  minWidth: '100px',
-                  minHeight: '36px',
-                  padding: '6px 16px',
-                  backgroundColor: 'transparent',
-                  color: 'black',
-                  fontWeight: 600,
-                  border: 'none',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  '&:hover': {
-                    backgroundColor: '#E0E0E0',
-                  },
-                }}
-              >
-                Clear All
-              </Box>
-            </Box>
-          </Grid>
-
-          <Grid item xs={12} lg={6.7}>
-            <Box display="flex" justifyContent="flex-end" width="100%">
               <Button
                 fullWidth
                 disabled={!claimable || isPending}
-                variant="contained"
+                variant={isPending ? 'outlined' : 'contained'}
+                color="secondary"
                 onClick={() => mutate()}
-                endIcon={<SvgIcon component={AutorenewIcon} inheritViewBox color="inherit" />}
-                sx={{
-                  borderRadius: '20px',
-                  minHeight: '36px',
-                  backgroundColor: 'black',
-                  color: 'white',
-                  maxWidth: { xs: '100%', lg: '250px' },
-                  '&:hover': {
-                    backgroundColor: '#333',
-                  },
-                  '&.Mui-disabled': {
-                    backgroundColor: '#A0A0A0',
-                    color: '#E0E0E0',
-                  },
-                }}
+                endIcon={<SvgIcon component={History} inheritViewBox color="primary" />}
               >
-                {isPending ? 'Loading' : 'Claim Badges'}
+                {isPending ? 'Loading' : claimable ? 'Claim Badges' : 'No claimable Badges'}
               </Button>
             </Box>
           </Grid>
