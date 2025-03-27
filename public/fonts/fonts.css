@@ -8,6 +8,13 @@
 @font-face {
   font-family: 'DM Sans';
   font-display: swap;
+  font-weight: 500;
+  src: url('/fonts/DMSans-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  font-display: swap;
   font-weight: bold;
   src: url('/fonts/DMSans700.woff2') format('woff2');
 }
