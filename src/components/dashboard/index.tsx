@@ -2,7 +2,7 @@ import FirstSteps from '@/components/dashboard/FirstSteps'
 import useSafeInfo from '@/hooks/useSafeInfo'
 import { useEffect, type ReactElement } from 'react'
 import dynamic from 'next/dynamic'
-import { Grid } from '@mui/material'
+import { Box, Grid } from '@mui/material'
 import Overview from '@/components/dashboard/Overview/Overview'
 import CreationDialog from '@/components/dashboard/CreationDialog'
 import { useRouter } from 'next/router'
@@ -49,20 +49,14 @@ const Dashboard = (): ReactElement => {
   if (isActivating) return <ActivatingSuperAccount />
 
   return (
-    <>
-      <Grid container spacing={3} rowSpacing={5}>
-        {supportsRecovery && <RecoveryHeader />}
-
-        <Grid item xs={12}>
+    <main style={{ padding: '0px' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: 'calc(100vh - var(--header-height))', p: 3 }}>
+        <Box sx={{ mb: 5 }}>
           <Overview />
-        </Grid>
-
-        <Grid item xs={12}>
-          <FirstSteps />
-        </Grid>
+        </Box>
 
         {safe.deployed && (
-          <>
+          <Grid container spacing={3} flex={1}>
             <Grid item xs={12} lg={8}>
               <Balances />
             </Grid>
@@ -70,16 +64,19 @@ const Dashboard = (): ReactElement => {
             <Grid item xs={12} lg={4}>
               <SuperChainEOAS />
             </Grid>
-            <Grid item xs={12}>
-              <SafeAppsDashboardSection />
-            </Grid>
-          </>
+          </Grid>
         )}
-      </Grid>
+
+        {safe.deployed && (
+          <Box sx={{ mt: 5 }}>
+            <SafeAppsDashboardSection />
+          </Box>
+        )}
+      </Box>
       {showCreationModal ? <CreationDialog /> : null}
       {showEOAAddedModal ? <EOAAddedModal /> : null}
       {isWrongChain && <WrongNetworkModal />}
-    </>
+    </main>
   )
 }
 

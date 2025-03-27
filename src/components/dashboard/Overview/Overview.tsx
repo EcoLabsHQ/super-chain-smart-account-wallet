@@ -77,7 +77,14 @@ const Overview = (): ReactElement => {
 
               <Grid item xs={5} alignItems="flex-end" sm="auto">
                 <QrCodeButton>
-                  <Button size="small" variant="outlined" color="primary" startIcon={<ArrowIconSE />} fullWidth>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    color="primary"
+                    sx={{ height: '48px', padding: '12px 16px' }}
+                    startIcon={<ArrowIconSE />}
+                    fullWidth
+                  >
                     Receive
                   </Button>
                 </QrCodeButton>

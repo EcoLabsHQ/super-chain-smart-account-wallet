@@ -1,11 +1,14 @@
 .safeAppContainer {
   transition: background-color 0.3s ease-in-out, border 0.3s ease-in-out;
   border: 1px solid transparent;
+  padding: 24px;
+  background-color: #fcfcfd;
 }
 
 .safeAppCardCointainer {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   height: 100%;
   border: 1px solid var(--color-border-light);
   border-radius: 12px;
@@ -17,19 +20,18 @@
 }
 
 .safeAppHeader {
-  padding: var(--space-3) var(--space-2) 0 var(--space-2);
+  /* padding: var(--space-3) var(--space-2) 0 var(--space-2); */
+  padding: 0;
 }
 
 .safeAppContent {
   height: 100%;
-  padding: var(--space-2);
+  /* padding: var(--space-2); */
+  padding: 0 !important;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-}
-
-.safeAppIconContainer {
-  position: relative;
+  justify-content: flex-start;
+  gap: 12px;
 }
 
 .safeAppIconContainer iframe {
@@ -62,7 +64,7 @@
 }
 
 .safeAppTagContainer {
-  padding-top: var(--space-2);
+  /* padding-top: var(--space-2); */
 }
 
 .safeAppTagLabel {
@@ -71,5 +73,5 @@
 }
 
 .safeAppTagLabel > * {
-  padding: var(--space-1);
+  /* padding: var(--space-1); */
 }

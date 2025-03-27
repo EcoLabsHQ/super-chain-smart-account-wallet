@@ -10,9 +10,7 @@ const Home: NextPage = () => {
         <title>Super Account – Account</title>
       </Head>
 
-      <main>
-        <Dashboard />
-      </main>
+      <Dashboard />
     </>
   )
 }

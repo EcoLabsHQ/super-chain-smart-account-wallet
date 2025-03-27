@@ -8,7 +8,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 export const WidgetContainer = styled.section`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: fit-content;
 `
 
 export const WidgetTitle = styled.h2`
@@ -19,17 +19,14 @@ export const WidgetBody = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
-  height: 100%;
 `
 
 export const Card = styled.div`
   background: var(--color-background-paper);
   padding: var(--space-3);
   border-radius: 6px;
-  flex-grow: 1;
   position: relative;
   box-sizing: border-box;
-  height: 100%;
   overflow: hidden;
 
   & h2 {

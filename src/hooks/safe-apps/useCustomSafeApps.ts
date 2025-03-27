@@ -96,7 +96,7 @@ const fakeSafeApps: SafeAppData[] = [
       type: 'NO_RESTRICTIONS' as SafeAppAccessPolicyTypes,
       value: [],
     },
-    tags: ['Accounting', 'DAO Tooling', 'Payments'],
+    tags: ['Accounting', 'Payments'],
     features: [],
     developerWebsite: 'https://superfluid.finance',
     socialProfiles: [
