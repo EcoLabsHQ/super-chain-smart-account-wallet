@@ -49,20 +49,20 @@ export const navItems: NavItem[] = [
     icon: <SvgIcon component={TransactionIcon} inheritViewBox />,
     href: AppRoutes.transactions.history,
   },
-  {
-    label: '$SUNNY Claim',
-    icon: <SvgIcon component={SunnyIcon} inheritViewBox />,
-    href: AppRoutes.sunnyClaim,
-    customComponent: (
-      <SidebarAirdropComponent
-        item={{
-          label: '$SUNNY Claim',
-          icon: <SvgIcon component={SunnyIcon} inheritViewBox />,
-          href: AppRoutes.sunnyClaim,
-        }}
-      />
-    ),
-  },
+  // {
+  //   label: '$SUNNY Claim',
+  //   icon: <SvgIcon component={SunnyIcon} inheritViewBox />,
+  //   href: AppRoutes.sunnyClaim,
+  //   customComponent: (
+  //     <SidebarAirdropComponent
+  //       item={{
+  //         label: '$SUNNY Claim',
+  //         icon: <SvgIcon component={SunnyIcon} inheritViewBox />,
+  //         href: AppRoutes.sunnyClaim,
+  //       }}
+  //     />
+  //   ),
+  // },
 
   // {
   //   label: 'Apps',
