@@ -15,7 +15,14 @@
 @font-face {
   font-family: 'DM Sans';
   font-display: swap;
-  font-weight: bold;
+  font-weight: 600;
+  src: url('/fonts/DMSans-SemiBold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'DM Sans';
+  font-display: swap;
+  font-weight: 700;
   src: url('/fonts/DMSans700.woff2') format('woff2');
 }
 
