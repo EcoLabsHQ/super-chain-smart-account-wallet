@@ -20,6 +20,21 @@ export const networks = [
   { label: 'Mode', value: 'mode', icon: '/chains/34443/chain_logo.svg' },
   { label: 'Ethereum', value: 'ethereum', icon: 'https://safe-transaction-assets.safe.global/chains/1/chain_logo.png' },
   { label: 'Lisk', value: 'lisk', icon: '/chains/1135/chain_logo.svg' },
+  {
+    label: 'Unichain',
+    value: 'unichain',
+    icon: 'https://safe-transaction-assets.safe.global/chains/130/chain_logo.png',
+  },
+  {
+    label: 'Ink',
+    value: 'ink',
+    icon: '/chains/57073/chain_logo.svg',
+  },
+  {
+    label: 'Soneium',
+    value: 'soneium',
+    icon: '/chains/1868/chain_logo.svg',
+  },
 ]
 
 export const GradientProgress = styled(LinearProgress)(({ theme }) => ({
@@ -33,7 +48,7 @@ export const GradientProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }))
 
-function Badges({ season }: { season?: { code: string; name: string } }) {
+function Badges({ season }: { season?: { code: number; name: string } }) {
   const { data: superChainAccount, loading: isSuperChainLoading } = useAppSelector(selectSuperChainAccount)
   const { safeAddress, safeLoaded } = useSafeInfo()
   const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)

@@ -88,6 +88,13 @@ const createSafeTheme = (mode: PaletteMode): Theme => {
           }),
         },
       },
+      MuiListItem: {
+        styleOverrides: {
+          selected: ({ theme }) => ({
+            borderRadius: '100px',
+          }),
+        },
+      },
       MuiButton: {
         variants: [
           {
@@ -118,7 +125,7 @@ const createSafeTheme = (mode: PaletteMode): Theme => {
             padding: '12px 24px',
           },
           root: ({ theme }) => ({
-            borderRadius: theme.shape.borderRadius,
+            borderRadius: '100px',
             fontWeight: 'bold',
             lineHeight: 1.25,
             borderColor: theme.palette.primary.main,
@@ -205,6 +212,14 @@ const createSafeTheme = (mode: PaletteMode): Theme => {
         },
       },
       MuiCard: {
+        variants: [
+          {
+            props: { variant: 'outlined' },
+            style: ({ theme }) => ({
+              border: `1px solid ${theme.palette.border.light} !important`,
+            }),
+          },
+        ],
         styleOverrides: {
           root: ({ theme }) => ({
             borderRadius: theme.shape.borderRadius,
@@ -214,9 +229,30 @@ const createSafeTheme = (mode: PaletteMode): Theme => {
           }),
         },
       },
+
       MuiDialog: {
         defaultProps: {
           fullWidth: true,
+        },
+        styleOverrides: {
+          paper: ({ theme }) => ({
+            borderRadius: '12px',
+          }),
+          root: ({ theme }) => ({}),
+        },
+      },
+      MuiDialogTitle: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            borderBottom: `1px solid ${theme.palette.border.light} !important`,
+          }),
+        },
+      },
+      MuiDialogActions: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            borderTop: 'none !important',
+          }),
         },
       },
       MuiDialogContent: {
@@ -239,7 +275,7 @@ const createSafeTheme = (mode: PaletteMode): Theme => {
         },
         styleOverrides: {
           outlined: ({ theme }) => ({
-            borderWidth: 2,
+            borderWidth: 1,
             borderColor: theme.palette.border.light,
           }),
           root: ({ theme }) => ({
@@ -260,6 +296,9 @@ const createSafeTheme = (mode: PaletteMode): Theme => {
       },
       MuiIconButton: {
         styleOverrides: {
+          root: ({ theme }) => ({
+            borderRadius: '100px',
+          }),
           sizeSmall: {
             padding: '4px',
           },

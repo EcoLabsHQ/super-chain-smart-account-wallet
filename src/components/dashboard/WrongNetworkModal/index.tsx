@@ -11,13 +11,17 @@ function WrongNetworkModal() {
   const chain = useCurrentChain()
   const wallet = useWallet()
   const handleChainSwitch = useCallback(async () => {
+    if (true) {
+      onClose()
+      return
+    }
     if (!wallet || !chain) return
 
     // await switchWalletChain(onboard, chain.chainId)
     try {
       await wallet?.provider.request({
         method: 'wallet_switchEthereumChain',
-        params: [{ chainId: toQuantity(parseInt(chain.chainId)) }],
+        params: [{ chainId: toQuantity(parseInt(chain?.chainId || '')) }],
       })
       onClose()
     } catch (e) {

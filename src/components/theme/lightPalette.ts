@@ -13,11 +13,11 @@ const lightPalette = {
     dark: '#FF0420',
     main: '#FF0420',
     light: '#FF0420',
-    background: '#ECF0F7',
+    background: '#F1F2F5',
   },
   border: {
     main: '#A1A3A7',
-    light: '#A0A5AD',
+    light: '#E1E2EA',
     background: '#F4F4F4',
   },
   error: {

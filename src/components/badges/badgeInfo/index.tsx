@@ -58,7 +58,7 @@ function BadgeInfo({
         alignItems="center"
       >
         <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" p="10px 30px">
-          <SeasonChip season="S7" style="info" />
+          <SeasonChip season={7} style="info" />
 
           {/* Íconos alineados a la derecha */}
           <Box display="flex" alignItems="center" gap={1}>
@@ -93,16 +93,17 @@ function BadgeInfo({
           <Box
             sx={{
               position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: '100%',
+              top: -20,
+              left: -20,
+              right: -20,
+              bottom: -20,
               backgroundImage: `url(${currentBadge.metadata.image})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               filter: 'blur(68px)',
-              opacity: 1,
               zIndex: 0,
+              mixBlendMode: 'multiply',
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
             }}
           />
           <Box
