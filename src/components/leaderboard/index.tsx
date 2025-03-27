@@ -64,7 +64,7 @@ function Leaderboard({ handleUserSelect }: { handleUserSelect: (_: string) => vo
                 position={rank!}
                 points={user!.total_points}
                 name={user!.superChainId}
-                level={user!.level.toString()}
+                level={user!.level?.toString() || '0'}
                 badges={user!.total_badges}
                 noun={{
                   accessory: user!.noun.accessory,
