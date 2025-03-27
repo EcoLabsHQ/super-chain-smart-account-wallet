@@ -22,7 +22,10 @@ function ClaimModal({
 }) {
   const { data: superChainAccount } = useAppSelector(selectSuperChainAccount)
   const progress =
-    ((Number(superChainAccount.points) + (data?.totalPoints ?? 0)) / Number(superChainAccount.pointsToNextLevel)) * 100
+    Number(superChainAccount.points) + (data?.totalPoints ?? 0) > Number(superChainAccount.pointsToNextLevel)
+      ? 100
+      : ((Number(superChainAccount.points) + (data?.totalPoints ?? 0)) / Number(superChainAccount.pointsToNextLevel)) *
+        100
 
   const claimData = {
     claimedBadges: data?.badgeUpdates.flatMap((badge: any) => {
