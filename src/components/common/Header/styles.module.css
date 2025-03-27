@@ -7,12 +7,12 @@
   position: relative;
   border-radius: 0 !important;
   background-color: var(--color-background-paper);
-  border-bottom: 1px solid var(--color-border-light);
+  border-bottom: 1px solid #a0a5ad;
 }
 
 .element {
   height: 100%;
-  border-right: 1px solid var(--color-border-light);
+  border-right: 1px solid #a0a5ad;
   display: flex;
   flex-direction: column;
   justify-content: center;

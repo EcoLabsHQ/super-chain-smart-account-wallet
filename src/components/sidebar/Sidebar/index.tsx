@@ -33,7 +33,7 @@ const Sidebar = (): ReactElement => {
 
         <SidebarHeader />
 
-        <Divider />
+        <Divider sx={{ borderColor: '#a0a5ad' }} />
 
         {/* Nav menu */}
         <SidebarNavigation />

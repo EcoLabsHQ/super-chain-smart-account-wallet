@@ -46,6 +46,11 @@ const SideDrawer = ({ isOpen, onToggle }: SideDrawerProps): ReactElement => {
         open={isOpen}
         onClose={() => onToggle(false)}
         className={smDrawerHidden ? css.smDrawerHidden : undefined}
+        PaperProps={{
+          style: {
+            backgroundColor: '#A0A5AD',
+          },
+        }}
       >
         <aside>
           <Sidebar />
