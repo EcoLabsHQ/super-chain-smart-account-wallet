@@ -7,8 +7,6 @@ import LeaderboardIcon from '@/public/images/sidebar/leaderboard.svg'
 import ContactsIcon from '@/public/images/sidebar/contacts.svg'
 import TransactionIcon from '@/public/images/sidebar/transactions.svg'
 import { SvgIcon } from '@mui/material'
-import SunnyIcon from '@/public/images/sidebar/sunny.svg'
-import { SidebarAirdropComponent } from '../SidebarList/Airdrop'
 
 export type NavItem = {
   label: string
