@@ -198,6 +198,19 @@ function Badge({
           >
             {data.metadata.name}
           </Typography>
+          <Box display="flex" justifyContent="center" alignItems="center" gap="6px">
+            {data.badgeTiers.map((_, index) => (
+              <Box
+                key={index}
+                sx={{
+                  flex: 1,
+                  height: '6px',
+                  backgroundColor: index < Number(data.tier) ? '#39D551' : '#EBECF1',
+                  borderRadius: '100px',
+                }}
+              />
+            ))}
+          </Box>
           <Typography color="text.secondary" sx={{ wordBreak: 'break-word' }}>
             {data.metadata.description}
           </Typography>
