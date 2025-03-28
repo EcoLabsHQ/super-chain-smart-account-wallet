@@ -349,7 +349,7 @@ function Badge({
                       fontSize: '16px',
                       width: '16px',
                       height: '16px',
-                      border: index + 1 <= Number(data.tier) ? 'none' : '1px dashed #E1E2EA',
+                      border: index + 1 <= Number(data.tier) ? 'none' : '1px dashed #A0A0A6',
                       borderRadius: '50%',
                     }}
                   />
