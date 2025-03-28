@@ -8,21 +8,15 @@ interface NetworkChipProps {
   network: string
   style: 'badge' | 'info'
   isFavorite: boolean
+  className?: string
 }
-const NetworkChip: React.FC<NetworkChipProps> = ({ network, style, isFavorite }) => {
+const NetworkChip: React.FC<NetworkChipProps> = ({ network, style, isFavorite, className }) => {
   const networkLogo = networks.find((x) => x.value === network.toLocaleLowerCase())?.icon ?? ''
   const isBadge = style === 'badge'
   console.log(network)
 
   return isBadge ? (
-    <Image
-      src={networkLogo}
-      alt={`${network} Logo`}
-      width={24}
-      height={24}
-      loading="lazy"
-      style={{ position: 'absolute', right: isFavorite ? '40px' : '10px', top: '10px' }}
-    />
+    <Image src={networkLogo} alt={`${network} Logo`} width={24} height={24} loading="lazy" className={className} />
   ) : (
     <Chip
       label={
