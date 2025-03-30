@@ -16,7 +16,7 @@ export const AppRoutes = {
   addOwner: '/addOwner',
   _offline: '/_offline',
   sunnyClaim: '/airdrop',
-  leaderboard: { index: '/leaderboard', monthly: '/leaderboard/monthly', weekly: '/leaderboard/weekly' },
+  leaderboard: { index: '/leaderboard', season7: '/leaderboard/season-7' },
   apps: {
     open: '/apps/open',
     index: '/apps',
