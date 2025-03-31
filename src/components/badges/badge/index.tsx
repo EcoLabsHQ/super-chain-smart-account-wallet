@@ -304,11 +304,9 @@ function Badge({
           <Box
             className={css.rewardsContainer}
             width="100%"
-            border={1}
             borderRadius="100px"
-            borderColor="#E1E2EA"
             sx={{
-              borderStyle: 'dashed',
+              border: '1px dashed #CDCED5',
               marginTop: 'auto',
               marginBottom: '24px',
               marginX: '24px',
@@ -351,7 +349,7 @@ function Badge({
                         fontSize: '16px',
                         width: '16px',
                         height: '16px',
-                        border: index + 1 <= Number(data.tier) ? 'none' : '1px dashed #A0A0A6',
+                        border: index + 1 <= Number(data.tier) ? 'none' : '1px dashed #CDCED5',
                         borderRadius: '50%',
                       }}
                     />
