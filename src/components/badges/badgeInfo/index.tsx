@@ -274,6 +274,7 @@ function BadgeInfo({
                     <Typography color="#4B4B4E" fontSize="12px">
                       {currentBadge.metadata.condition.replace('{{variable}}', tier.metadata.minValue.toString())}
                     </Typography>
+
                     <SvgIcon
                       inheritViewBox
                       component={tier.tier <= currentBadge.tier ? CheckCircleIcon : null}

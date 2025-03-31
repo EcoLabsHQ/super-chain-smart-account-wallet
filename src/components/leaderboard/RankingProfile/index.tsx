@@ -40,7 +40,8 @@ function RankingProfile({ isMainProfile, position, points, name, level, badges, 
       <Stack direction="row" alignItems="center" justifyContent="flex-start">
         <Box
           height={28}
-          width={28}
+          minWidth={28}
+          paddingX={1}
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -57,6 +58,7 @@ function RankingProfile({ isMainProfile, position, points, name, level, badges, 
             {position}
           </Typography>
         </Box>
+
         <Stack paddingLeft={{ xs: 0, sm: 6 }} direction="row" alignItems="center" gap={{ xs: '6px', sm: '12px' }}>
           <Box width={32} height={32} borderRadius="6px">
             <NounsAvatar seed={noun} />

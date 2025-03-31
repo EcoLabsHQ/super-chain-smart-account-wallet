@@ -83,7 +83,7 @@ function Badge({
           </Box>
           <Box className={css.topBarRight}>
             <NetworkChip
-              network={data.metadata.chains[0].toLowerCase()}
+              network={data.metadata.chains?.[0]?.toLowerCase() ?? data.metadata.chain.toLowerCase()}
               style="badge"
               isFavorite={isFavorite}
               className={css.chainIcon}
@@ -336,25 +336,28 @@ function Badge({
               <SvgIcon component={SuperChainPoints} inheritViewBox fontSize="inherit" />
             </Box>
             <Box className={css.tiersTooltip}>
-              {data.badgeTiers.map((tier, index) => (
-                <Box key={index} className={css.tierRow}>
-                  <Typography fontSize="12px" fontWeight={500} fontFamily="Sora">
-                    {data.metadata.condition.replace('{{variable}}', tier.metadata.minValue.toString())}
-                  </Typography>
-                  <SvgIcon
-                    inheritViewBox
-                    component={index + 1 <= Number(data.tier) ? CheckCircleIcon : null}
-                    sx={{
-                      color: index + 1 <= Number(data.tier) ? '#A3E635' : '#E1E2EA',
-                      fontSize: '16px',
-                      width: '16px',
-                      height: '16px',
-                      border: index + 1 <= Number(data.tier) ? 'none' : '1px dashed #A0A0A6',
-                      borderRadius: '50%',
-                    }}
-                  />
-                </Box>
-              ))}
+              {data.badgeTiers.map((tier, index) => {
+                console.log(tier, ' todos son ', data.badgeTiers)
+                return (
+                  <Box key={index} className={css.tierRow}>
+                    <Typography fontSize="12px" fontWeight={500} fontFamily="Sora">
+                      {data.metadata.condition.replace('{{variable}}', tier.metadata.minValue.toString())}
+                    </Typography>
+                    <SvgIcon
+                      inheritViewBox
+                      component={index + 1 <= Number(data.tier) ? CheckCircleIcon : null}
+                      sx={{
+                        color: index + 1 <= Number(data.tier) ? '#A3E635' : '#E1E2EA',
+                        fontSize: '16px',
+                        width: '16px',
+                        height: '16px',
+                        border: index + 1 <= Number(data.tier) ? 'none' : '1px dashed #A0A0A6',
+                        borderRadius: '50%',
+                      }}
+                    />
+                  </Box>
+                )
+              })}
             </Box>
           </Box>
         )}
