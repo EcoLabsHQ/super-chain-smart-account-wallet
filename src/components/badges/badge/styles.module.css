@@ -90,6 +90,7 @@
   display: flex;
   align-items: center;
   gap: 1;
+  margin-top: 5px;
 }
 
 .topBarRight {
