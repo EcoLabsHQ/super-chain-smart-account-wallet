@@ -14,9 +14,11 @@ import SafeAppPreviewDrawer from '@/components/safe-apps/SafeAppPreviewDrawer'
 import { useCustomSafeApps } from '@/hooks/safe-apps/useCustomSafeApps'
 import { useAppSelector } from '@/store'
 import { selectSuperChainAccount } from '@/store/superChainAccountSlice'
+import useCurrentPerks from '@/hooks/super-chain/useCurrentPerks'
 
 const SafeAppsDashboardSection = () => {
   const { customSafeApps } = useCustomSafeApps()
+  const { data: currentPerks } = useCurrentPerks()
   const { isPreviewDrawerOpen, previewDrawerApp, openPreviewDrawer, closePreviewDrawer } = useSafeAppPreviewDrawer()
 
   const superChainSmartAccount = useAppSelector(selectSuperChainAccount)
@@ -36,11 +38,13 @@ const SafeAppsDashboardSection = () => {
             onClickSafeApp={() => openPreviewDrawer(customSafeApps[0])}
             openPreviewDrawer={openPreviewDrawer}
             perks={
-              superChainSmartAccount.data.level ? (
+              currentPerks ? (
                 <Typography>
                   Claim{' '}
-                  {`${Number(superChainSmartAccount.data.level)} ${
-                    Number(superChainSmartAccount.data.level) > 1 ? 'tickets' : 'ticket'
+                  {`${Number(currentPerks?.find((perk) => perk.name === 'SuperChainRaffle')?.value)} ${
+                    Number(currentPerks?.find((perk) => perk.name === 'SuperChainRaffle')?.value) > 1
+                      ? 'tickets'
+                      : 'ticket'
                   }`}{' '}
                   per week
                 </Typography>
