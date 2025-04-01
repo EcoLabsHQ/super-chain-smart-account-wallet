@@ -248,10 +248,10 @@ function BadgeInfo({
                 paddingX="8px"
               >
                 <Typography fontSize="12px" fontWeight={500}>
-                  {
-                    currentBadge.badgeTiers[currentBadge.claimableTier ? currentBadge.claimableTier - 1 : 0].metadata
-                      .points
-                  }
+                  {isCompleted
+                    ? currentBadge.badgeTiers.reduce((sum, tier) => sum + Number(tier.metadata.points), 0)
+                    : currentBadge.badgeTiers[currentBadge.claimableTier ? currentBadge.claimableTier - 1 : 0].metadata
+                        .points}
                 </Typography>
                 <SvgIcon component={SuperChainPoints} inheritViewBox fontSize="inherit" />
               </Box>

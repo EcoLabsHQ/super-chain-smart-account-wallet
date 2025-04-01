@@ -295,7 +295,7 @@ function Badge({
               paddingX="8px"
             >
               <Typography fontSize="12px" fontWeight={500}>
-                {data.badgeTiers[data.claimableTier ? data.claimableTier - 1 : 0].metadata.points}
+                {data.badgeTiers.reduce((sum, tier) => sum + Number(tier.metadata.points), 0)}
               </Typography>
               <SvgIcon component={SuperChainPoints} inheritViewBox fontSize="inherit" />
             </Box>
