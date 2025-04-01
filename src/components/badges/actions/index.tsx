@@ -28,7 +28,7 @@ import Image from 'next/image'
 import FailedTxnModal from '@/components/common/ErrorModal'
 import { useAppSelector } from '@/store'
 import { selectSuperChainAccount } from '@/store/superChainAccountSlice'
-import { ResponseBadge } from '@/types/super-chain'
+import { ResponseBadge, SuperChainAccount } from '@/types/super-chain'
 import AutorenewIcon from '@mui/icons-material/Autorenew'
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
@@ -82,8 +82,14 @@ function BadgesActions({
       console.error(error)
     },
     onSuccess: (data) => {
-      queryClient.refetchQueries({ queryKey: ['superChainAccount', safeAddress] })
+      queryClient.cancelQueries({ queryKey: ['superChainAccount', safeAddress] })
       queryClient.cancelQueries({ queryKey: ['badges', safeAddress, safeLoaded] })
+      queryClient.setQueryData(['superChainAccount', safeAddress], (old: SuperChainAccount) => {
+        return {
+          ...old,
+          points: data.points,
+        }
+      })
       queryClient.setQueryData(['badges', safeAddress, safeLoaded], (old: { currentBadges: ResponseBadge[] }) => {
         const badgeUpdates = old.currentBadges.map((badge) => {
           const update = data.badgeUpdates.find((update: ResponseBadge) => update.badgeId === badge.badgeId)
@@ -101,6 +107,7 @@ function BadgesActions({
           currentBadges: [...old.currentBadges, ...badgeUpdates],
         }
       })
+      queryClient.refetchQueries({ queryKey: ['superChainAccount', safeAddress] })
       setClaimData(data)
       setIsClaimModalOpen(true)
     },
