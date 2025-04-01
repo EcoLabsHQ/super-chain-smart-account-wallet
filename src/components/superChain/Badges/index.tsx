@@ -43,7 +43,12 @@ function Badges({ badges, isLoading }: { badges?: BadgeResponse[]; isLoading?: b
               }
             >
               <Box display="flex" flexDirection="column" alignItems="center">
-                <Image height={60} width={60} alt={badge.badge.metadata.name} src={badge.badge.metadata.image} />
+                <Image
+                  height={60}
+                  width={60}
+                  alt={badge.badge.metadata.name}
+                  src={badge.badge.metadata.image ?? (badge.badge.badgeTiers.at(-1)?.metadata as any)['2DImage']}
+                />
                 <Box display="flex" gap="4px" mt={1}>
                   {[...Array(parseInt(badge.tier))].map((_, i) => (
                     <Box key={i} width={6} height={6} borderRadius="100px" bgcolor="#39D551" />

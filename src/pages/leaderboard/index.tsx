@@ -1,7 +1,6 @@
 import Leaderboard from '@/components/leaderboard'
 import LeaderboardHeader from '@/components/leaderboard/LeaderboardHeader'
 import UserInfo from '@/components/leaderboard/UserInfo'
-import { BACKEND_BASE_URI } from '@/config/constants'
 import { UserResponse } from '@/types/super-chain'
 
 import { Box, Drawer } from '@mui/material'
@@ -22,7 +21,8 @@ function LeaderboardLayout() {
       if (selectedUser === zeroAddress) {
         return null
       }
-      const response = await axios.get(`${BACKEND_BASE_URI}/user/${selectedUser}`)
+      //This is always got from prodc to avoid extra DUNE cost
+      const response = await axios.get(`https://scsa-backend-production.up.railway.app/api/user/${selectedUser}`)
       return response.data
     },
     enabled: selectedUser !== zeroAddress,
