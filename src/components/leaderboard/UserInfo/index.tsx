@@ -21,7 +21,6 @@ import useAddressBook from '@/hooks/useAddressBook'
 import useContacts from '@/hooks/useContacts'
 import { getNounData } from '@nouns/assets'
 import { Chip } from '@/components/common/Chip'
-import SeasonChip from '@/components/badges/seasonChip'
 
 function UserInfo({
   context,
@@ -157,7 +156,7 @@ function UserInfo({
                 }}
                 label={<Typography>Rank: {rank}</Typography>}
               />
-              <SeasonChip season={parseInt(context?.superchainsmartaccount[3])} style="info" />
+              {/* <SeasonChip season={parseInt(context?.superchainsmartaccount[3])} style="info" />*/}
             </Stack>
 
             <IconButton onClick={handleClose}>

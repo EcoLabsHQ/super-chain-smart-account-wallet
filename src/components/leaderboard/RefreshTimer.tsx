@@ -5,14 +5,13 @@ import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined'
 import { useEffect, useState } from 'react'
 
 function getNextDeadlineUTC(): Date {
-  const now = new Date()
+  const now: Date = new Date()
+  const result: Date = new Date(now)
 
-  const result = new Date(now)
-  const currentUTCDay = now.getUTCDay()
-  const daysUntilSunday = currentUTCDay === 0 ? 7 : 7 - currentUTCDay
-
-  result.setUTCDate(now.getUTCDate() + daysUntilSunday)
-  result.setUTCHours(23, 59, 59, 999)
+  const currentUTCDay: number = now.getUTCDay()
+  const daysUntilNextSunday: number = currentUTCDay === 0 ? 7 : 7 - currentUTCDay
+  result.setUTCDate(now.getUTCDate() + daysUntilNextSunday)
+  result.setUTCHours(13, 40, 0, 0)
 
   return result
 }
