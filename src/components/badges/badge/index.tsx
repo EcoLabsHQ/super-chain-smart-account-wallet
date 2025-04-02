@@ -82,12 +82,18 @@ function Badge({
             <SeasonChip season={data.metadata.season} style="badge" />
           </Box>
           <Box className={css.topBarRight}>
-            <NetworkChip
-              network={data.metadata.chains?.[0]?.toLowerCase() ?? data.metadata.chain.toLowerCase()}
-              style="badge"
-              isFavorite={isFavorite}
-              className={css.chainIcon}
-            />
+            <Box display="flex" flexWrap="wrap" gap={1} alignItems="center">
+              {data.metadata.chains.map((chain, index) => (
+                <NetworkChip
+                  key={`${data.badgeId}-${chain}-${index}`}
+                  network={chain}
+                  style="badge"
+                  isFavorite={isFavorite}
+                  offSet={data.metadata.chains.length > 1 ? index + 1 : undefined}
+                />
+              ))}
+            </Box>
+
             <IconButton
               onClick={handleSwitchFavorite}
               className={css.heartIcon}
