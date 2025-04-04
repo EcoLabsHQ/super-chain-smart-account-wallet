@@ -14,6 +14,7 @@ export default class WebCoreDocument extends Document {
         <Head>
           <meta name="emotion-insertion-point" content="" />
           {(this.props as any).emotionStyleTags}
+          <GTMScript />
         </Head>
         <body>
           <Main />
@@ -58,5 +59,24 @@ const getInitialProps = async (ctx: DocumentContext) => {
     emotionStyleTags,
   }
 }
+
+const GTMScript = () => (
+  <>
+    <script
+      async
+      src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID}`}
+    />
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', '${process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID}');
+        `,
+      }}
+    />
+  </>
+)
 
 WebCoreDocument.getInitialProps = getInitialProps
