@@ -101,21 +101,29 @@ function Vaults() {
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <Card variant="outlined">
-            <CardHeader title="Total Vault Deposits" />
             <CardContent>
-              <Typography variant="h3" fontWeight={700}>
-                ${totalDeposits.toFixed(2)}
-              </Typography>
+              <Stack gap={1}>
+                <Typography fontSize="16px" color="GrayText">
+                  Total Vault Deposits
+                </Typography>
+                <Typography fontSize="24px" fontWeight={700}>
+                  ${totalDeposits.toFixed(2)}
+                </Typography>
+              </Stack>
             </CardContent>
           </Card>
         </Grid>
         <Grid item xs={6}>
           <Card variant="outlined">
-            <CardHeader title="Average APY" />
             <CardContent>
-              <Typography variant="h3" fontWeight={700}>
-                {averageApy.toFixed(2)}%
-              </Typography>
+              <Stack gap={1}>
+                <Typography fontSize="16px" color="GrayText">
+                  Average APY
+                </Typography>
+                <Typography fontSize="24px" fontWeight={700}>
+                  {averageApy.toFixed(2)}%
+                </Typography>
+              </Stack>
             </CardContent>
           </Card>
         </Grid>
