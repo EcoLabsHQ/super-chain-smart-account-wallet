@@ -32,6 +32,11 @@ export const navItems: NavItem[] = [
     icon: <SvgIcon component={LeaderboardIcon} inheritViewBox />,
     href: AppRoutes.leaderboard.index,
   },
+  {
+    label: 'Vaults',
+    icon: <SvgIcon component={LeaderboardIcon} inheritViewBox />,
+    href: AppRoutes.vaults.index,
+  },
   // {
   //   label: 'Assets',
   //   icon: <SvgIcon component={AssetsIcon} inheritViewBox />,
