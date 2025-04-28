@@ -1,9 +1,35 @@
-import { Box, Button, Card, CardContent, CardHeader, Divider, Grid, Stack, SvgIcon, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardHeader,
+  Divider,
+  Grid,
+  Skeleton,
+  Stack,
+  SvgIcon,
+  Typography,
+} from '@mui/material'
 import React from 'react'
 import USDC_OP from '@/public/images/vaults/icons/USDC-OP.svg'
 import USDT_OP from '@/public/images/vaults/icons/USDT-OP.svg'
 import ETH_OP from '@/public/images/vaults/icons/ETH-OP.svg'
 import Compound from '@/public/images/vaults/protocols/Compound.svg'
+import { useQuery } from '@tanstack/react-query'
+import { BACKEND_BASE_URI } from '@/config/constants'
+import axios from 'axios'
+
+interface Vault {
+  comet: string
+  rewards_apr: string
+  asset: string
+  symbol: string
+  decimals: number
+  image: string | null
+  interest_apr: string
+  value?: number
+}
 
 function VaultCard({ title, value, apy, icon }: { title: string; value: number; apy: number; icon: any }) {
   return (
@@ -80,18 +106,40 @@ function VaultCard({ title, value, apy, icon }: { title: string; value: number; 
 }
 
 function Vaults() {
-  const vaults = [
-    { title: 'USDC', value: 110.0, apy: 4.9, icon: USDC_OP },
-    { title: 'ETH', value: 25.48, apy: 5.2, icon: ETH_OP },
-    { title: 'USDT', value: 0.0, apy: 3.8, icon: USDT_OP },
-  ]
+  const { data: vaults, isLoading: isLoadingVaults } = useQuery<Vault[]>({
+    queryKey: ['vaults'],
+    queryFn: async () => {
+      const response = await axios.get(`${BACKEND_BASE_URI}/vaults`)
+      return response.data
+    },
+  })
+
+  if (isLoadingVaults || !vaults) {
+    return <Skeleton variant="rectangular" height={100} />
+  }
 
   // Calcular el total de depósitos
-  const totalDeposits = vaults.reduce((sum, vault) => sum + vault.value, 0)
+  const totalDeposits = vaults.reduce((sum: number, vault: Vault) => sum + (vault.value || 0), 0)
 
   // Calcular el APY promedio (ponderado por el valor de los depósitos)
-  const totalWeightedApy = vaults.reduce((sum, vault) => sum + vault.value * vault.apy, 0)
+  const totalWeightedApy = vaults.reduce((sum: number, vault: Vault) => {
+    const totalApr = Number(vault.rewards_apr) + Number(vault.interest_apr)
+    return sum + (vault.value || 0) * totalApr
+  }, 0)
   const averageApy = totalDeposits > 0 ? totalWeightedApy / totalDeposits : 0
+
+  const getVaultIcon = (symbol: string) => {
+    switch (symbol) {
+      case 'USDC':
+        return USDC_OP
+      case 'USDT':
+        return USDT_OP
+      case 'WETH':
+        return ETH_OP
+      default:
+        return null
+    }
+  }
 
   return (
     <Stack gap={2} p={1} sx={{ width: '100%' }}>
@@ -129,9 +177,20 @@ function Vaults() {
         </Grid>
       </Grid>
       <Grid container spacing={2}>
-        {vaults.map((vault) => (
-          <VaultCard key={vault.title} title={vault.title} value={vault.value} apy={vault.apy} icon={vault.icon} />
-        ))}
+        {vaults.map((vault) => {
+          const icon = getVaultIcon(vault.symbol)
+          if (!icon) return null
+
+          return (
+            <VaultCard
+              key={vault.comet}
+              title={vault.symbol}
+              value={vault.value || 0}
+              apy={(Number(vault.rewards_apr) + Number(vault.interest_apr)) * 100}
+              icon={icon}
+            />
+          )
+        })}
       </Grid>
     </Stack>
   )
