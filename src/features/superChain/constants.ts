@@ -1,6 +1,10 @@
 import SuperChainSetupABI from './abi/SuperChainSetup.json'
 import SuperChainModuleABI from './abi/SuperChainModule.json'
 import SunnyAirdropABI from './abi/SunnyAirdrop.json'
+import CompoundUSDCABI from '../compound/abi/USDC.json'
+import CompoundUSDTABI from '../compound/abi/USDT.json'
+import CompoundWETHABI from '../compound/abi/WETH.json'
+
 import type { Address } from 'viem'
 
 enum ENVIRONMENTS {
@@ -20,6 +24,13 @@ const environmentConfig = {
     JSON_RPC_PROVIDER: process.env.NEXT_PUBLIC_JSON_RPC_PROVIDER,
     SUBGRAPH_URL: 'https://api.studio.thegraph.com/query/72352/super-accounts-staging/version/latest',
     CHAIN_ID: '10',
+    COMPOUND_USDC_ADDRESS: '0x2e44e174f7D53F0212823acC11C01A11d58c5bCB',
+    COMPOUND_USDT_ADDRESS: '0x995E394b8B2437aC8Ce61Ee0bC610D617962B214',
+    COMPOUND_WETH_ADDRESS: '0xE36A30D249f7761327fd973001A32010b521b6Fd',
+
+    COMPOUND_USDC_SUPPLY_TOKEN: 'b2c639c533813f4aa9d7837caf62653d097ff85',
+    COMPOUND_USDT_SUPPLY_TOKEN: '94b008aa00579c1307b0ef2c499ad98a8ce58e58',
+    COMPOUND_WETH_SUPPLY_TOKEN: '1f32b1c2345538c0c6f582fcb022739c4a194ebb',
   },
   production: {
     SUPER_CHAIN_SETUP_ADDRESS: '0xd2B51c08de198651653523ED14A137Df3aE86Ee0',
@@ -32,18 +43,38 @@ const environmentConfig = {
     SUBGRAPH_URL:
       'https://gateway.thegraph.com/api/00ebf42f37ee2faa3f02f5ca587b1717/subgraphs/id/A8Hs1ciwnqsdR8owyFZ77GM5PEXpQBqUTEUpNcnUS6xt',
     CHAIN_ID: '10',
+    COMPOUND_USDC_ADDRESS: '0x2e44e174f7D53F0212823acC11C01A11d58c5bCB',
+    COMPOUND_USDT_ADDRESS: '0x995E394b8B2437aC8Ce61Ee0bC610D617962B214',
+    COMPOUND_WETH_ADDRESS: '0xE36A30D249f7761327fd973001A32010b521b6Fd',
+    COMPOUND_USDC_SUPPLY_TOKEN: 'b2c639c533813f4aa9d7837caf62653d097ff85',
+    COMPOUND_USDT_SUPPLY_TOKEN: '94b008aa00579c1307b0ef2c499ad98a8ce58e58',
+    COMPOUND_WETH_SUPPLY_TOKEN: '1f32b1c2345538c0c6f582fcb022739c4a194ebb',
   },
 }[ENV]
 
 export const SUPER_CHAIN_SETUP_ABI = SuperChainSetupABI
 export const SUPER_CHAIN_MODULE_ABI = SuperChainModuleABI
 export const SUNNY_AIRDROP_ABI = SunnyAirdropABI
+
+export const COMPOUND_USDC_ABI = CompoundUSDCABI
+export const COMPOUND_USDT_ABI = CompoundUSDTABI
+export const COMPOUND_WETH_ABI = CompoundWETHABI
+
 export const SUPER_CHAIN_SETUP_ADDRESS = environmentConfig.SUPER_CHAIN_SETUP_ADDRESS as Address
 export const SUPER_CHAIN_ACCOUNT_MODULE_ADDRESS = environmentConfig.SUPER_CHAIN_ACCOUNT_MODULE_ADDRESS as Address
 export const SUPER_CHAIN_ACCOUNT_GUARD_ADDRESS = environmentConfig.SUPER_CHAIN_ACCOUNT_GUARD_ADDRESS as Address
 export const ERC4337_MODULE_ADDRESS = environmentConfig.ERC4337_MODULE_ADDRESS as Address
+export const COMPOUND_USDC_ADDRESS = environmentConfig.COMPOUND_USDC_ADDRESS as Address
+export const COMPOUND_USDT_ADDRESS = environmentConfig.COMPOUND_USDT_ADDRESS as Address
+export const COMPOUND_WETH_ADDRESS = environmentConfig.COMPOUND_WETH_ADDRESS as Address
+
+export const COMPOUND_USDC_SUPPLY_TOKEN = environmentConfig.COMPOUND_USDC_SUPPLY_TOKEN as Address
+export const COMPOUND_USDT_SUPPLY_TOKEN = environmentConfig.COMPOUND_USDT_SUPPLY_TOKEN as Address
+export const COMPOUND_WETH_SUPPLY_TOKEN = environmentConfig.COMPOUND_WETH_SUPPLY_TOKEN as Address
+
+export const SUNNY_TOKEN_ADDRESS = environmentConfig.SUNNY_TOKEN_ADDRESS as Address
+export const SUNNY_AIRDROP_ADDRESS = environmentConfig.SUNNY_AIRDROP_ADDRESS as Address
+
 export const JSON_RPC_PROVIDER = environmentConfig.JSON_RPC_PROVIDER
 export const CHAIN_ID = environmentConfig.CHAIN_ID
 export const SUBGRAPH_URL = environmentConfig.SUBGRAPH_URL
-export const SUNNY_TOKEN_ADDRESS = environmentConfig.SUNNY_TOKEN_ADDRESS as Address
-export const SUNNY_AIRDROP_ADDRESS = environmentConfig.SUNNY_AIRDROP_ADDRESS as Address
