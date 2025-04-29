@@ -1,14 +1,3 @@
-import {
-  COMPOUND_WETH_ADDRESS,
-  COMPOUND_USDT_ADDRESS,
-  COMPOUND_WETH_ABI,
-  COMPOUND_USDC_ADDRESS,
-  COMPOUND_USDC_ABI,
-  COMPOUND_USDT_ABI,
-  COMPOUND_USDT_SUPPLY_TOKEN,
-  COMPOUND_USDC_SUPPLY_TOKEN,
-  COMPOUND_WETH_SUPPLY_TOKEN,
-} from '@/features/superChain/constants'
 import { Eip1193Provider } from 'ethers'
 import { type Address, encodeFunctionData } from 'viem'
 
@@ -16,25 +5,25 @@ import { Safe4337Pack } from '@safe-global/relay-kit'
 import { BACKEND_BASE_URI } from '@/config/constants'
 import { ConnectedWallet } from '../wallets/useOnboard'
 import { MetaTransactionData } from '@safe-global/safe-core-sdk-types'
-
+import useWallet from '../wallets/useWallet'
+import useSafeAddress from '../useSafeAddress'
 let fetchPatched = false
 
 function useCompound() {
-  const getCompoundWETHDepositCallable = () => {
-    return getDepositOnCompoundCallable(COMPOUND_WETH_ADDRESS, COMPOUND_WETH_ABI, COMPOUND_WETH_SUPPLY_TOKEN)
+  const wallet = useWallet()
+  const safeAddress = useSafeAddress()
+
+  const getCompoundDepositCallable = (contract: Address, abi: any, supplyToken: Address) => {
+    return getDepositOnCompoundCallable(contract, abi, supplyToken)
   }
 
-  const getCompoundUSDCDepositCallable = () => {
-    return getDepositOnCompoundCallable(COMPOUND_USDC_ADDRESS, COMPOUND_USDC_ABI, COMPOUND_USDC_SUPPLY_TOKEN)
-  }
-
-  const getCompoundUSDTDepositCallable = () => {
-    return getDepositOnCompoundCallable(COMPOUND_USDT_ADDRESS, COMPOUND_USDT_ABI, COMPOUND_USDT_SUPPLY_TOKEN)
+  const getCompoundWithdrawCallable = (contract: Address, abi: any, supplyToken: Address) => {
+    return getWithdrawOnCompoundCallable(contract, abi, supplyToken)
   }
 
   const getDepositOnCompoundCallable = (contract: Address, abi: any, supplyToken: Address) => {
     return {
-      callContract: async (wallet: ConnectedWallet, safeAddres: string, amount: string) => {
+      callContract: async (amount: string) => {
         //TODO Check fetchpactching
         if (!fetchPatched) {
           const originalFetch = window.fetch
@@ -50,15 +39,15 @@ function useCompound() {
         }
 
         const safe4337Pack = await Safe4337Pack.init({
-          provider: wallet.provider as Eip1193Provider,
-          signer: wallet.address,
+          provider: wallet?.provider as Eip1193Provider,
+          signer: wallet?.address,
           bundlerUrl: `${BACKEND_BASE_URI}/user-op-reverse-proxy`,
           paymasterOptions: {
             isSponsored: true,
             paymasterUrl: `${BACKEND_BASE_URI}/user-op-reverse-proxy`,
           },
           options: {
-            safeAddress: safeAddres,
+            safeAddress: safeAddress,
           },
           onchainAnalytics: {
             platform: 'Web',
@@ -70,7 +59,7 @@ function useCompound() {
         const txApproveBaseData = encodeFunctionData({
           abi: abi,
           functionName: 'approve',
-          args: [safeAddres as Address, amount],
+          args: [safeAddress as Address, amount],
         })
         const txApproveData = `0x${txApproveBaseData}`
 
@@ -105,18 +94,6 @@ function useCompound() {
         return userOperationHash
       },
     }
-  }
-
-  const getCompoundWETHWithdrawCallable = () => {
-    return getWithdrawOnCompoundCallable(COMPOUND_WETH_ADDRESS, COMPOUND_WETH_ABI, COMPOUND_WETH_SUPPLY_TOKEN)
-  }
-
-  const getCompoundUSDCWithdrawCallable = () => {
-    return getWithdrawOnCompoundCallable(COMPOUND_USDC_ADDRESS, COMPOUND_USDC_ABI, COMPOUND_USDC_SUPPLY_TOKEN)
-  }
-
-  const getCompoundUSDTWithdrawCallable = () => {
-    return getWithdrawOnCompoundCallable(COMPOUND_USDT_ADDRESS, COMPOUND_USDT_ABI, COMPOUND_USDT_SUPPLY_TOKEN)
   }
 
   const getWithdrawOnCompoundCallable = (contract: Address, abi: any, supplyToken: Address) => {
@@ -179,6 +156,11 @@ function useCompound() {
         return userOperationHash
       },
     }
+  }
+
+  return {
+    getCompoundDepositCallable,
+    getCompoundWithdrawCallable,
   }
 }
 

@@ -9,6 +9,8 @@ import ExplorerButton from '@/components/common/ExplorerButton'
 import Image from 'next/image'
 import OETH from '@/public/images/currencies/ethereum.svg'
 import OP from '@/public/images/currencies/optimism.svg'
+import USDC from '@/public/images/currencies/usdc.svg'
+import USDT from '@/public/images/currencies/usdt.svg'
 import lightPalette from '@/components/theme/lightPalette'
 import { useAppSelector } from '@/store'
 import { selectSuperChainAccount } from '@/store/superChainAccountSlice'
@@ -54,6 +56,8 @@ export type Token = {
 const tokens: Record<string, Token> = {
   ETH: { values: [0.02, 0.05, 0.1], decimals: 18, address: '0x0000000000000000000000000000000000000000', icon: OETH },
   OP: { values: [10, 20, 50], decimals: 18, address: '0x4200000000000000000000000000000000000042', icon: OP },
+  USDC: { values: [25, 50, 100], decimals: 6, address: '0x0b2c639c533813f4aa9d7837caf62653d097ff85', icon: USDC },
+  USDT: { values: [25, 50, 100], decimals: 6, address: '0xdAC17F958D2ee523a2206206994597C13D831ec7', icon: USDT },
 }
 
 function TopUp({
@@ -167,18 +171,14 @@ function TopUp({
               }}
               value={selectedToken}
             >
-              <MenuItem value="ETH">
-                <Box pr={1} display="flex" gap={1}>
-                  <SvgIcon component={OETH} />
-                  ETH
-                </Box>
-              </MenuItem>
-              <MenuItem value="OP">
-                <Box pr={1} display="flex" gap={1}>
-                  <SvgIcon component={OP} />
-                  OP
-                </Box>
-              </MenuItem>
+              {Object.keys(tokens).map((token) => (
+                <MenuItem value={token}>
+                  <Box pr={1} display="flex" gap={1}>
+                    <SvgIcon component={tokens[token].icon} />
+                    {token}
+                  </Box>
+                </MenuItem>
+              ))}
             </Select>
             {tokens[selectedToken].values.map((value, index) => (
               <Button

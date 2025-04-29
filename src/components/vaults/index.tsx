@@ -11,7 +11,7 @@ import {
   SvgIcon,
   Typography,
 } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import USDC_OP from '@/public/images/vaults/icons/USDC-OP.svg'
 import USDT_OP from '@/public/images/vaults/icons/USDT-OP.svg'
 import ETH_OP from '@/public/images/vaults/icons/ETH-OP.svg'
@@ -20,7 +20,7 @@ import { useQuery } from '@tanstack/react-query'
 import { BACKEND_BASE_URI } from '@/config/constants'
 import axios from 'axios'
 import useSafeAddress from '@/hooks/useSafeAddress'
-
+import DepositModal from './DepositModal'
 interface Vault {
   comet: string
   rewards_apr: string
@@ -33,6 +33,16 @@ interface Vault {
 }
 
 function VaultCard({ title, value, apy, icon }: { title: string; value: number; apy: number; icon: any }) {
+  const [isDepositModalOpen, setIsDepositModalOpen] = useState(false)
+
+  const handleOpenDepositModal = () => {
+    setIsDepositModalOpen(true)
+  }
+
+  const handleCloseDepositModal = () => {
+    setIsDepositModalOpen(false)
+  }
+
   return (
     <Grid item xs={4}>
       <Card variant="outlined" sx={{ p: 0 }}>
@@ -91,17 +101,31 @@ function VaultCard({ title, value, apy, icon }: { title: string; value: number; 
               <Button fullWidth sx={{ borderRadius: 10, backgroundColor: '#F1F2F5' }}>
                 Withdraw
               </Button>
-              <Button variant="contained" fullWidth sx={{ borderRadius: 10 }}>
+              <Button variant="contained" fullWidth sx={{ borderRadius: 10 }} onClick={handleOpenDepositModal}>
                 Deposit
               </Button>
             </>
           ) : (
-            <Button variant="contained" color="secondary" fullWidth sx={{ borderRadius: 10 }}>
+            <Button
+              variant="contained"
+              color="secondary"
+              fullWidth
+              sx={{ borderRadius: 10 }}
+              onClick={handleOpenDepositModal}
+            >
               Activate
             </Button>
           )}
         </Box>
       </Card>
+
+      <DepositModal
+        open={isDepositModalOpen}
+        onClose={handleCloseDepositModal}
+        symbol={title}
+        icon={icon}
+        maxAmount={110}
+      />
     </Grid>
   )
 }
