@@ -19,6 +19,7 @@ import Compound from '@/public/images/vaults/protocols/Compound.svg'
 import { useQuery } from '@tanstack/react-query'
 import { BACKEND_BASE_URI } from '@/config/constants'
 import axios from 'axios'
+import useSafeAddress from '@/hooks/useSafeAddress'
 
 interface Vault {
   comet: string
@@ -28,7 +29,7 @@ interface Vault {
   decimals: number
   image: string | null
   interest_apr: string
-  value?: number
+  balance?: number
 }
 
 function VaultCard({ title, value, apy, icon }: { title: string; value: number; apy: number; icon: any }) {
@@ -106,12 +107,14 @@ function VaultCard({ title, value, apy, icon }: { title: string; value: number; 
 }
 
 function Vaults() {
+  const address = useSafeAddress()
   const { data: vaults, isLoading: isLoadingVaults } = useQuery<Vault[]>({
-    queryKey: ['vaults'],
+    queryKey: ['vaults', address],
     queryFn: async () => {
-      const response = await axios.get(`${BACKEND_BASE_URI}/vaults`)
+      const response = await axios.get(`${BACKEND_BASE_URI}/vaults/${address}`)
       return response.data
     },
+    enabled: !!address,
   })
 
   if (isLoadingVaults || !vaults) {
@@ -119,12 +122,12 @@ function Vaults() {
   }
 
   // Calcular el total de depósitos
-  const totalDeposits = vaults.reduce((sum: number, vault: Vault) => sum + (vault.value || 0), 0)
+  const totalDeposits = vaults.reduce((sum: number, vault: Vault) => sum + (Number(vault.balance) || 0), 0)
 
   // Calcular el APY promedio (ponderado por el valor de los depósitos)
   const totalWeightedApy = vaults.reduce((sum: number, vault: Vault) => {
     const totalApr = Number(vault.rewards_apr) + Number(vault.interest_apr)
-    return sum + (vault.value || 0) * totalApr
+    return sum + (Number(vault.balance) || 0) * totalApr
   }, 0)
   const averageApy = totalDeposits > 0 ? totalWeightedApy / totalDeposits : 0
 
@@ -185,7 +188,7 @@ function Vaults() {
             <VaultCard
               key={vault.comet}
               title={vault.symbol}
-              value={vault.value || 0}
+              value={Number(vault.balance) || 0}
               apy={(Number(vault.rewards_apr) + Number(vault.interest_apr)) * 100}
               icon={icon}
             />
