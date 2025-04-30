@@ -1,13 +1,11 @@
 import { Eip1193Provider, MaxUint256, parseUnits } from 'ethers'
-import { type Address, encodeFunctionData, erc20Abi } from 'viem'
+import { type Address, encodeFunctionData } from 'viem'
 import { Safe4337Pack } from '@safe-global/relay-kit'
 import { BACKEND_BASE_URI } from '@/config/constants'
-import { ConnectedWallet } from '../wallets/useOnboard'
 import { MetaTransactionData } from '@safe-global/safe-core-sdk-types'
 import useWallet from '../wallets/useWallet'
 import useSafeAddress from '../useSafeAddress'
 import { COMPOUND_ABI } from '@/features/superChain/constants'
-import { fetchPatched } from '../super-chain/useSuperChainAccount'
 import { patchFetch } from '@/services/airdrop/fecthPatch'
 
 function useCompound() {
@@ -32,7 +30,7 @@ function useCompound() {
         paymasterUrl: `${BACKEND_BASE_URI}/user-op-reverse-proxy`,
       },
       options: {
-        safeAddress: safeAddress,
+        safeAddress,
       },
       onchainAnalytics: {
         platform: 'Web',

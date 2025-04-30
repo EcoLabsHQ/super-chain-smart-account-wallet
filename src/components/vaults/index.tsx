@@ -1,16 +1,4 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Divider,
-  Grid,
-  Skeleton,
-  Stack,
-  SvgIcon,
-  Typography,
-} from '@mui/material'
+import { Box, Button, Card, CardContent, Divider, Grid, Skeleton, Stack, SvgIcon, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import USDC_OP from '@/public/images/vaults/icons/USDC-OP.svg'
 import USDT_OP from '@/public/images/vaults/icons/USDT-OP.svg'

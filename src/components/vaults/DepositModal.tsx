@@ -8,7 +8,6 @@ import {
   TextField,
   Button,
   IconButton,
-  InputAdornment,
   Link,
   Stack,
   Divider,
@@ -17,7 +16,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { SvgIcon } from '@mui/material'
 import useCompound from '@/hooks/compound/useCompound'
 import { useMutation } from '@tanstack/react-query'
-import { Address, erc20Abi } from 'viem'
+import { Address } from 'viem'
 import axios from 'axios'
 import { BACKEND_BASE_URI } from '@/config/constants'
 import useSafeAddress from '@/hooks/useSafeAddress'

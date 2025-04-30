@@ -172,7 +172,7 @@ function TopUp({
               value={selectedToken}
             >
               {Object.keys(tokens).map((token) => (
-                <MenuItem value={token}>
+                <MenuItem value={token} key={token}>
                   <Box pr={1} display="flex" gap={1}>
                     <SvgIcon component={tokens[token].icon} />
                     {token}
