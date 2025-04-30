@@ -53,7 +53,7 @@ export type Token = {
   icon: SvgIconComponent
 }
 
-const tokens: Record<string, Token> = {
+export const tokens: Record<string, Token> = {
   ETH: { values: [0.02, 0.05, 0.1], decimals: 18, address: '0x0000000000000000000000000000000000000000', icon: OETH },
   OP: { values: [10, 20, 50], decimals: 18, address: '0x4200000000000000000000000000000000000042', icon: OP },
   USDC: { values: [25, 50, 100], decimals: 6, address: '0x0b2c639c533813f4aa9d7837caf62653d097ff85', icon: USDC },

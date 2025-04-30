@@ -46,7 +46,7 @@ function DepositModal({
   const [amount, setAmount] = useState<string>('')
   const { mutate: deposit, isPending: isDepositing } = useMutation({
     mutationFn: async () => {
-      const depositCallable = getCompoundDepositCallable(tokenAddress, erc20Abi, supplyTokenAddress)
+      const depositCallable = getCompoundDepositCallable(tokenAddress, supplyTokenAddress)
       console.debug('depositCallable', depositCallable)
       const tx = await depositCallable.callContract(amount)
       console.debug('tx', tx)
