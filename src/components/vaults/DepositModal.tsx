@@ -42,7 +42,7 @@ function DepositModal({
   supplyTokenAddress,
 }: DepositModalProps) {
   const address = useSafeAddress()
-  const { getCompoundDepositCallable } = useCompound()
+  const { getCompoundDepositCallable, getCompoundWithdrawCallable } = useCompound()
   const [amount, setAmount] = useState<string>('')
   const { mutate: deposit, isPending: isDepositing } = useMutation({
     mutationFn: async () => {
@@ -69,6 +69,17 @@ function DepositModal({
 
   const handleDeposit = () => {
     deposit()
+    onClose()
+  }
+
+  const handleWithdraw = async () => {
+    const withdrawCallable = getCompoundWithdrawCallable(tokenAddress, supplyTokenAddress)
+
+    const tx = await withdrawCallable.callContract(amount)
+    console.debug('tx', tx)
+    await axios.post(`${BACKEND_BASE_URI}/vaults${address}/refresh`)
+    console.debug('refreshed')
+    onClose()
   }
 
   const isValidAmount = Boolean(amount) && Number(amount) >= 1
@@ -173,6 +184,15 @@ function DepositModal({
             onClick={handleDeposit}
           >
             Deposit
+          </Button>
+          <Button
+            variant="contained"
+            fullWidth
+            disabled={!isValidAmount}
+            sx={{ p: '16px', borderRadius: '100px', color: 'white !important' }}
+            onClick={handleWithdraw}
+          >
+            Withdraw
           </Button>
 
           <Box display="flex" flexDirection="column" gap="4px">

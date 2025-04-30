@@ -113,7 +113,7 @@ function VaultCard({
         <Box sx={{ display: 'flex', gap: 2, p: 2 }}>
           {value > 0 ? (
             <>
-              <Button fullWidth sx={{ borderRadius: 10, backgroundColor: '#F1F2F5' }}>
+              <Button fullWidth sx={{ borderRadius: 10, backgroundColor: '#F1F2F5' }} onClick={handleOpenDepositModal}>
                 Withdraw
               </Button>
               <Button variant="contained" fullWidth sx={{ borderRadius: 10 }} onClick={handleOpenDepositModal}>
