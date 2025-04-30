@@ -21,6 +21,7 @@ import { BACKEND_BASE_URI } from '@/config/constants'
 import axios from 'axios'
 import useSafeAddress from '@/hooks/useSafeAddress'
 import DepositModal from './DepositModal'
+import { Address } from 'viem'
 interface Vault {
   comet: string
   rewards_apr: string
@@ -32,7 +33,21 @@ interface Vault {
   balance?: number
 }
 
-function VaultCard({ title, value, apy, icon }: { title: string; value: number; apy: number; icon: any }) {
+function VaultCard({
+  title,
+  value,
+  apy,
+  icon,
+  comet,
+  tokenAddress,
+}: {
+  title: string
+  value: number
+  apy: number
+  icon: any
+  comet: string
+  tokenAddress: string
+}) {
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false)
 
   const handleOpenDepositModal = () => {
@@ -125,6 +140,8 @@ function VaultCard({ title, value, apy, icon }: { title: string; value: number; 
         symbol={title}
         icon={icon}
         maxAmount={110}
+        tokenAddress={tokenAddress as Address}
+        supplyTokenAddress={comet as Address}
       />
     </Grid>
   )
@@ -215,6 +232,8 @@ function Vaults() {
               value={Number(vault.balance) || 0}
               apy={(Number(vault.rewards_apr) + Number(vault.interest_apr)) * 100}
               icon={icon}
+              comet={vault.comet}
+              tokenAddress={vault.asset}
             />
           )
         })}
