@@ -6,7 +6,7 @@ import BadgesIcon from '@/public/images/sidebar/badges.svg'
 import LeaderboardIcon from '@/public/images/sidebar/leaderboard.svg'
 import ContactsIcon from '@/public/images/sidebar/contacts.svg'
 import TransactionIcon from '@/public/images/sidebar/transactions.svg'
-import Encrypted from '@/public/images/Vaults/encrypted.svg'
+import Encrypted from '@/public/images/vaults/encrypted.svg'
 
 import { SvgIcon } from '@mui/material'
 
