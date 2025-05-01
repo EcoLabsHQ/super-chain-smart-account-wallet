@@ -24,6 +24,7 @@ import useSafeAddress from '@/hooks/useSafeAddress'
 import useBalances from '@/hooks/useBalances'
 import SuccessModal from './SuccessModal'
 import useSuperChainAccount from '@/hooks/super-chain/useSuperChainAccount'
+import QrCodeButton from '../sidebar/QrCodeButton'
 
 interface DepositModalProps {
   open: boolean
@@ -70,13 +71,18 @@ function DepositModal({
       const depositCallable = getCompoundDepositCallable(tokenAddress, supplyTokenAddress)
       const tx = await depositCallable.callContract(amount)
       const hash = tx.toString()
-      await publicClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
+      try {
+        await publicClient.waitForTransactionReceipt({ hash: hash as `0x${string}`, timeout: 5000 })
+      } catch (error) {
+        console.log(error)
+      }
+
       const calculatedNewBalance = (Number(vaultBalance) + Number(amount)).toString()
       await axios.post(`${BACKEND_BASE_URI}/vaults/${address}/refresh`)
       setTxHash(hash)
       setNewBalance(calculatedNewBalance)
       onSuccess(amount, hash, calculatedNewBalance)
-      setShowSuccess(true)
+      // setShowSuccess(true)
     },
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: ['vaults', address] })
@@ -235,12 +241,16 @@ function DepositModal({
                 </Typography>
               )}
 
-              <Typography fontSize="14px" textAlign="center" color="text.secondary">
-                Low on {symbol}?{' '}
-                <Link href="#" underline="always" sx={{ cursor: 'pointer' }}>
-                  Top up balance
-                </Link>
-              </Typography>
+              <Box display="flex" justifyContent="center" alignItems="center" gap="4px">
+                <Typography fontSize="14px" color="text.secondary">
+                  Low on {symbol}?
+                </Typography>
+                <QrCodeButton>
+                  <Link href="#" underline="always" sx={{ cursor: 'pointer' }}>
+                    Top up balance
+                  </Link>
+                </QrCodeButton>
+              </Box>
             </Box>
           </Box>
         </DialogContent>

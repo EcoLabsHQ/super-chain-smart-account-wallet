@@ -58,13 +58,18 @@ function WithdrawModal({
       const withdrawCallable = getCompoundWithdrawCallable(tokenAddress, supplyTokenAddress)
       const tx = await withdrawCallable.callContract(amount)
       const hash = tx.toString()
-      await publicClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
+
+      try {
+        await publicClient.waitForTransactionReceipt({ hash: hash as `0x${string}`, timeout: 5000 })
+      } catch (error) {
+        console.log(error)
+      }
       const calculatedNewBalance = (Number(maxAmount) - Number(amount)).toString()
       await axios.post(`${BACKEND_BASE_URI}/vaults/${address}/refresh`)
       setTxHash(hash)
       setNewBalance(calculatedNewBalance)
       onSuccess(amount, hash, calculatedNewBalance)
-      setShowSuccess(true)
+      //setShowSuccess(true)
     },
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: ['vaults', address] })

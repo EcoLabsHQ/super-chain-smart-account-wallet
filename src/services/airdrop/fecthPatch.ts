@@ -6,7 +6,7 @@ export function patchFetch() {
     window.fetch = (url, options = {}) => {
       return originalFetch(url, {
         ...options,
-        credentials: 'include',
+        // credentials: 'include',
       })
     }
 
