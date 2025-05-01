@@ -21,6 +21,7 @@ import axios from 'axios'
 import { BACKEND_BASE_URI } from '@/config/constants'
 import useSafeAddress from '@/hooks/useSafeAddress'
 import SuccessModal from './SuccessModal'
+import useSuperChainAccount from '@/hooks/super-chain/useSuperChainAccount'
 
 interface WithdrawModalProps {
   open: boolean
@@ -45,6 +46,7 @@ function WithdrawModal({
 }: WithdrawModalProps) {
   const address = useSafeAddress()
   const queryClient = useQueryClient()
+  const { publicClient } = useSuperChainAccount()
   const { getCompoundWithdrawCallable } = useCompound()
   const [amount, setAmount] = useState<string>('')
   const [showSuccess, setShowSuccess] = useState(false)
@@ -56,12 +58,13 @@ function WithdrawModal({
       const withdrawCallable = getCompoundWithdrawCallable(tokenAddress, supplyTokenAddress)
       const tx = await withdrawCallable.callContract(amount)
       const hash = tx.toString()
+      await publicClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
       const calculatedNewBalance = (Number(maxAmount) - Number(amount)).toString()
-      await axios.post(`${BACKEND_BASE_URI}/vaults${address}/refresh`)
+      await axios.post(`${BACKEND_BASE_URI}/vaults/${address}/refresh`)
       setTxHash(hash)
       setNewBalance(calculatedNewBalance)
-      setShowSuccess(true)
       onSuccess(amount, hash, calculatedNewBalance)
+      setShowSuccess(true)
     },
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: ['vaults', address] })

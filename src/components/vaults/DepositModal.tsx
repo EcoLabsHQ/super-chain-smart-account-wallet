@@ -23,6 +23,7 @@ import { BACKEND_BASE_URI } from '@/config/constants'
 import useSafeAddress from '@/hooks/useSafeAddress'
 import useBalances from '@/hooks/useBalances'
 import SuccessModal from './SuccessModal'
+import useSuperChainAccount from '@/hooks/super-chain/useSuperChainAccount'
 
 interface DepositModalProps {
   open: boolean
@@ -46,6 +47,7 @@ function DepositModal({
   onSuccess,
 }: DepositModalProps) {
   const address = useSafeAddress()
+  const { publicClient } = useSuperChainAccount()
   const { getCompoundDepositCallable } = useCompound()
   const queryClient = useQueryClient()
   const { balances, loading } = useBalances()
@@ -68,12 +70,13 @@ function DepositModal({
       const depositCallable = getCompoundDepositCallable(tokenAddress, supplyTokenAddress)
       const tx = await depositCallable.callContract(amount)
       const hash = tx.toString()
+      await publicClient.waitForTransactionReceipt({ hash: hash as `0x${string}` })
       const calculatedNewBalance = (Number(vaultBalance) + Number(amount)).toString()
-      await axios.post(`${BACKEND_BASE_URI}/vaults${address}/refresh`)
+      await axios.post(`${BACKEND_BASE_URI}/vaults/${address}/refresh`)
       setTxHash(hash)
       setNewBalance(calculatedNewBalance)
-      setShowSuccess(true)
       onSuccess(amount, hash, calculatedNewBalance)
+      setShowSuccess(true)
     },
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: ['vaults', address] })
