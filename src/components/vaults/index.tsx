@@ -244,7 +244,7 @@ function Vaults() {
     const totalApr = Number(vault.rewards_apr) + Number(vault.interest_apr)
     return sum + (Number(vault.balance) || 0) * totalApr
   }, 0)
-  const averageApy = totalDeposits > 0 ? totalWeightedApy / totalDeposits : 0
+  const averageApy = totalDeposits > 0 ? (totalWeightedApy / totalDeposits) * 100 : 0
 
   const getVaultIcon = (symbol: string) => {
     switch (symbol) {
@@ -303,7 +303,7 @@ function Vaults() {
             <VaultCard
               key={vault.comet}
               title={vault.symbol}
-              value={10}
+              value={Number(vault.balance) || 0}
               apy={(Number(vault.rewards_apr) + Number(vault.interest_apr)) * 100}
               icon={icon}
               comet={vault.comet}

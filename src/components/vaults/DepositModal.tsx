@@ -69,15 +69,14 @@ function DepositModal({
       const tx = await depositCallable.callContract(amount)
       const hash = tx.toString()
       const calculatedNewBalance = (Number(vaultBalance) + Number(amount)).toString()
+      await axios.post(`${BACKEND_BASE_URI}/vaults${address}/refresh`)
       setTxHash(hash)
       setNewBalance(calculatedNewBalance)
-      onSuccess(amount, hash, calculatedNewBalance)
-      await axios.post(`${BACKEND_BASE_URI}/vaults${address}/refresh`)
       setShowSuccess(true)
-      return tx
+      onSuccess(amount, hash, calculatedNewBalance)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['vaults', address] })
+      queryClient.refetchQueries({ queryKey: ['vaults', address] })
     },
   })
 

@@ -8,7 +8,6 @@ import {
   TextField,
   Button,
   IconButton,
-  Link,
   Stack,
   Divider,
   CircularProgress,
@@ -16,7 +15,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close'
 import { SvgIcon } from '@mui/material'
 import useCompound from '@/hooks/compound/useCompound'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Address } from 'viem'
 import axios from 'axios'
 import { BACKEND_BASE_URI } from '@/config/constants'
@@ -45,6 +44,7 @@ function WithdrawModal({
   onSuccess,
 }: WithdrawModalProps) {
   const address = useSafeAddress()
+  const queryClient = useQueryClient()
   const { getCompoundWithdrawCallable } = useCompound()
   const [amount, setAmount] = useState<string>('')
   const [showSuccess, setShowSuccess] = useState(false)
@@ -57,12 +57,14 @@ function WithdrawModal({
       const tx = await withdrawCallable.callContract(amount)
       const hash = tx.toString()
       const calculatedNewBalance = (Number(maxAmount) - Number(amount)).toString()
+      await axios.post(`${BACKEND_BASE_URI}/vaults${address}/refresh`)
       setTxHash(hash)
       setNewBalance(calculatedNewBalance)
-      onSuccess(amount, hash, calculatedNewBalance)
-      await axios.post(`${BACKEND_BASE_URI}/vaults${address}/refresh`)
       setShowSuccess(true)
-      return tx
+      onSuccess(amount, hash, calculatedNewBalance)
+    },
+    onSuccess: () => {
+      queryClient.refetchQueries({ queryKey: ['vaults', address] })
     },
   })
 
