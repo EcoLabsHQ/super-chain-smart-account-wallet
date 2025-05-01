@@ -25,6 +25,7 @@ import useBalances from '@/hooks/useBalances'
 import SuccessModal from './SuccessModal'
 import useSuperChainAccount from '@/hooks/super-chain/useSuperChainAccount'
 import QrCodeButton from '../sidebar/QrCodeButton'
+import Image from 'next/image'
 
 interface DepositModalProps {
   open: boolean
@@ -36,6 +37,7 @@ interface DepositModalProps {
   vaultBalance: string
   onSuccess: (amount: string, hash: string, balance: string) => void
   minDepositAmount?: string
+  tokenIcon: string
 }
 
 function DepositModal({
@@ -48,6 +50,7 @@ function DepositModal({
   vaultBalance,
   onSuccess,
   minDepositAmount = '100',
+  tokenIcon,
 }: DepositModalProps) {
   const address = useSafeAddress()
   const { publicClient } = useSuperChainAccount()
@@ -182,7 +185,7 @@ function DepositModal({
                 />
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <Box width={24} height={24} fontSize="24px">
-                    <SvgIcon component={icon} inheritViewBox fontSize="inherit" width={24} height={24} />
+                    <Image src={tokenIcon} alt={symbol} width={24} height={24} />
                   </Box>
                   <Typography fontSize="16px" fontWeight="bold">
                     {symbol}

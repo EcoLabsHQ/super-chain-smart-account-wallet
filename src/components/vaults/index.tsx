@@ -23,7 +23,7 @@ interface Vault {
   image: string | null
   interest_apr: string
   balance?: number
-  deprecated?: boolean
+  depreciated?: boolean
   min_deposit?: string
 }
 
@@ -35,7 +35,7 @@ function VaultCard({
   comet,
   tokenAddress,
   tokenIcon,
-  deprecated = false,
+  depreciated = false,
   minDepositAmount = '100',
 }: {
   title: string
@@ -45,7 +45,7 @@ function VaultCard({
   comet: string
   tokenAddress: string
   tokenIcon: any
-  deprecated?: boolean
+  depreciated?: boolean
   minDepositAmount?: string
 }) {
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false)
@@ -113,7 +113,7 @@ function VaultCard({
           </Box>
           <Box
             sx={{
-              bgcolor: deprecated ? '#FFF4E5' : 'grey.100',
+              bgcolor: depreciated ? '#FFF4E5' : 'grey.100',
               px: 2,
               py: 0.5,
               borderRadius: '20px',
@@ -123,7 +123,7 @@ function VaultCard({
               fontSize: '16px',
             }}
           >
-            {deprecated ? (
+            {depreciated ? (
               <Typography fontSize={14} color="warning.main" fontWeight="medium">
                 Deprecated
               </Typography>
@@ -141,12 +141,12 @@ function VaultCard({
 
         <Box
           sx={{
-            border: value > 0 ? (deprecated ? '1px dashed #ED6C02' : '1px dashed #1FC1BF') : '1px dashed #e0e0e0',
+            border: value > 0 ? (depreciated ? '1px dashed #ED6C02' : '1px dashed #1FC1BF') : '1px dashed #e0e0e0',
             borderRadius: 2,
             p: 3,
             m: 3,
             textAlign: 'center',
-            bgcolor: value > 0 ? (deprecated ? '#FFF4E5' : '#E9F9F9') : 'transparent',
+            bgcolor: value > 0 ? (depreciated ? '#FFF4E5' : '#E9F9F9') : 'transparent',
           }}
         >
           <Typography variant="body2" color="text.secondary" gutterBottom>
@@ -173,7 +173,7 @@ function VaultCard({
 
         <Box sx={{ display: 'flex', gap: 2, p: 2 }}>
           {value > 0 ? (
-            deprecated ? (
+            depreciated ? (
               <Button fullWidth sx={{ borderRadius: 10, backgroundColor: '#F1F2F5' }} onClick={handleOpenWithdrawModal}>
                 Withdraw
               </Button>
@@ -192,7 +192,7 @@ function VaultCard({
               </>
             )
           ) : (
-            !deprecated && (
+            !depreciated && (
               <Button
                 variant="contained"
                 color="secondary"
@@ -207,19 +207,18 @@ function VaultCard({
         </Box>
       </Card>
 
-      {!deprecated && (
-        <DepositModal
-          open={isDepositModalOpen}
-          onClose={handleCloseDepositModal}
-          symbol={title}
-          icon={icon}
-          tokenAddress={tokenAddress as Address}
-          supplyTokenAddress={comet as Address}
-          vaultBalance={value.toString()}
-          onSuccess={handleDepositSuccess}
-          minDepositAmount={minDepositAmount}
-        />
-      )}
+      <DepositModal
+        open={isDepositModalOpen}
+        onClose={handleCloseDepositModal}
+        symbol={title}
+        icon={icon}
+        tokenAddress={tokenAddress as Address}
+        supplyTokenAddress={comet as Address}
+        vaultBalance={value.toString()}
+        tokenIcon={tokenIcon}
+        onSuccess={handleDepositSuccess}
+        minDepositAmount={minDepositAmount}
+      />
 
       <WithdrawModal
         open={isWithdrawModalOpen}
