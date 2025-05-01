@@ -45,9 +45,10 @@ export function InvitesCard({
     try {
       const hash = await superChainSmartAccountContract?.write.removePopulateRequest([safe, newOwner])
       await publicClient.waitForTransactionReceipt({ hash: hash! })
-      refetch()
     } catch (e) {
       console.error(e)
+    } finally {
+      refetch()
     }
   }
   {
