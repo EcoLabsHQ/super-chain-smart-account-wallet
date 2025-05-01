@@ -333,7 +333,7 @@ function Vaults() {
               tokenIcon={vault.image}
               comet={vault.comet}
               tokenAddress={vault.asset}
-              deprecated={vault.deprecated}
+              depreciated={vault.depreciated}
               minDepositAmount={vault.min_deposit}
             />
           )
