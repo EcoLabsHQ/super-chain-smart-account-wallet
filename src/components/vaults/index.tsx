@@ -12,6 +12,7 @@ import DepositModal from './DepositModal'
 import WithdrawModal from './WithdrawModal'
 import { Address } from 'viem'
 import SuccessModal from './SuccessModal'
+import Image from 'next/image'
 
 interface Vault {
   comet: string
@@ -23,6 +24,7 @@ interface Vault {
   interest_apr: string
   balance?: number
   deprecated?: boolean
+  min_deposit?: string
 }
 
 function VaultCard({
@@ -32,7 +34,9 @@ function VaultCard({
   icon,
   comet,
   tokenAddress,
+  tokenIcon,
   deprecated = false,
+  minDepositAmount = '100',
 }: {
   title: string
   value: number
@@ -40,7 +44,9 @@ function VaultCard({
   icon: any
   comet: string
   tokenAddress: string
+  tokenIcon: any
   deprecated?: boolean
+  minDepositAmount?: string
 }) {
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false)
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false)
@@ -49,6 +55,7 @@ function VaultCard({
   const [txHash, setTxHash] = useState('')
   const [newBalance, setNewBalance] = useState(value.toString())
   const [maxAmount, setMaxAmount] = useState(value)
+  const [lastOperationType, setLastOperationType] = useState<'deposit' | 'withdraw'>('deposit')
 
   const handleOpenDepositModal = () => {
     setIsDepositModalOpen(true)
@@ -77,6 +84,7 @@ function VaultCard({
     setTxHash(hash)
     setNewBalance(balance)
     setMaxAmount(Number(balance))
+    setLastOperationType('deposit')
     setShowSuccess(true)
     setIsDepositModalOpen(false)
   }
@@ -86,6 +94,7 @@ function VaultCard({
     setTxHash(hash)
     setNewBalance(balance)
     setMaxAmount(Number(balance))
+    setLastOperationType('withdraw')
     setShowSuccess(true)
     setIsWithdrawModalOpen(false)
   }
@@ -143,9 +152,22 @@ function VaultCard({
           <Typography variant="body2" color="text.secondary" gutterBottom>
             My Balance
           </Typography>
-          <Typography variant="h4" fontWeight="bold">
-            ${value.toFixed(2)}
-          </Typography>
+          <Box
+            sx={{
+              fontSize: '16px',
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 1,
+            }}
+          >
+            <Image src={tokenIcon} alt={title} width={16} height={16} />
+
+            <Typography fontSize="18px" variant="h4" fontWeight="bold">
+              {value.toFixed(2)}
+            </Typography>
+          </Box>
         </Box>
         <Divider />
 
@@ -195,6 +217,7 @@ function VaultCard({
           supplyTokenAddress={comet as Address}
           vaultBalance={value.toString()}
           onSuccess={handleDepositSuccess}
+          minDepositAmount={minDepositAmount}
         />
       )}
 
@@ -217,7 +240,7 @@ function VaultCard({
         txHash={txHash}
         vaultBalance={newBalance}
         icon={icon}
-        type={deprecated ? 'withdraw' : 'deposit'}
+        type={lastOperationType}
       />
     </Grid>
   )
@@ -299,6 +322,8 @@ function Vaults() {
           const icon = getVaultIcon(vault.symbol)
           if (!icon) return null
 
+          console.debug(vault.image)
+
           return (
             <VaultCard
               key={vault.comet}
@@ -306,9 +331,11 @@ function Vaults() {
               value={Number(vault.balance) || 0}
               apy={(Number(vault.rewards_apr) + Number(vault.interest_apr)) * 100}
               icon={icon}
+              tokenIcon={vault.image}
               comet={vault.comet}
               tokenAddress={vault.asset}
               deprecated={vault.deprecated}
+              minDepositAmount={vault.min_deposit}
             />
           )
         })}

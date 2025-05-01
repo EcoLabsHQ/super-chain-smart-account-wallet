@@ -35,6 +35,7 @@ interface DepositModalProps {
   supplyTokenAddress: Address
   vaultBalance: string
   onSuccess: (amount: string, hash: string, balance: string) => void
+  minDepositAmount?: string
 }
 
 function DepositModal({
@@ -46,6 +47,7 @@ function DepositModal({
   supplyTokenAddress,
   vaultBalance,
   onSuccess,
+  minDepositAmount = '100',
 }: DepositModalProps) {
   const address = useSafeAddress()
   const { publicClient } = useSuperChainAccount()
@@ -82,7 +84,6 @@ function DepositModal({
       setTxHash(hash)
       setNewBalance(calculatedNewBalance)
       onSuccess(amount, hash, calculatedNewBalance)
-      // setShowSuccess(true)
     },
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: ['vaults', address] })
@@ -118,7 +119,9 @@ function DepositModal({
     setNewBalance('')
   }
 
-  const isValidAmount = Boolean(amount) && Number(amount) >= 0 && (Number(vaultBalance) > 0 || Number(amount) >= 1)
+  const isValidAmount = Boolean(amount) && Number(amount) > 0
+  const meetsMinDeposit = Number(vaultBalance) > 0 || Number(amount) >= Number(minDepositAmount)
+  const canDeposit = isValidAmount && meetsMinDeposit
 
   return (
     <>
@@ -216,7 +219,7 @@ function DepositModal({
             <Button
               variant="contained"
               fullWidth
-              disabled={!isValidAmount}
+              disabled={!canDeposit}
               sx={{ p: '16px', borderRadius: '100px', color: 'white !important', display: 'flex', gap: 1 }}
               onClick={handleDeposit}
             >
@@ -233,11 +236,14 @@ function DepositModal({
             </Button>
 
             <Box display="flex" flexDirection="column" gap="4px">
-              {!isValidAmount && isTouched && (
+              {isTouched && !isValidAmount && meetsMinDeposit && (
                 <Typography color="error" fontSize="14px" textAlign="center">
-                  {Number(vaultBalance) === 0
-                    ? 'Min. deposit: $100 to activate this vault.'
-                    : 'Please enter a valid amount.'}
+                  Please enter a valid amount.
+                </Typography>
+              )}
+              {!meetsMinDeposit && (
+                <Typography color="error" fontSize="14px" textAlign="center">
+                  Min. deposit: {minDepositAmount} to activate this vault.
                 </Typography>
               )}
 
