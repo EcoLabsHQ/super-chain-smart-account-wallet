@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -16,68 +16,53 @@ import {
 import CloseIcon from '@mui/icons-material/Close'
 import { SvgIcon } from '@mui/material'
 import useCompound from '@/hooks/compound/useCompound'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation } from '@tanstack/react-query'
 import { Address } from 'viem'
 import axios from 'axios'
 import { BACKEND_BASE_URI } from '@/config/constants'
 import useSafeAddress from '@/hooks/useSafeAddress'
-import useBalances from '@/hooks/useBalances'
 import SuccessModal from './SuccessModal'
 
-interface DepositModalProps {
+interface WithdrawModalProps {
   open: boolean
   onClose: () => void
   symbol: string
   icon: any
+  maxAmount?: number
   tokenAddress: Address
   supplyTokenAddress: Address
-  vaultBalance: string
   onSuccess: (amount: string, hash: string, balance: string) => void
 }
 
-function DepositModal({
+function WithdrawModal({
   open,
   onClose,
   symbol,
   icon,
+  maxAmount = 0,
   tokenAddress,
   supplyTokenAddress,
-  vaultBalance,
   onSuccess,
-}: DepositModalProps) {
+}: WithdrawModalProps) {
   const address = useSafeAddress()
-  const { getCompoundDepositCallable } = useCompound()
-  const queryClient = useQueryClient()
-  const { balances, loading } = useBalances()
+  const { getCompoundWithdrawCallable } = useCompound()
   const [amount, setAmount] = useState<string>('')
   const [showSuccess, setShowSuccess] = useState(false)
   const [txHash, setTxHash] = useState<string>('')
   const [newBalance, setNewBalance] = useState<string>('')
-  const [isTouched, setIsTouched] = useState(false)
 
-  const maxAmount = useMemo(() => {
-    const token = balances.items.find((item) => item.tokenInfo.address === tokenAddress)
-    if (!token) return 0
-    const balance = token.balance
-    const decimals = token.tokenInfo.decimals
-    return balance ? Number(balance) / 10 ** decimals : 0
-  }, [balances, tokenAddress])
-
-  const { mutate: deposit, isPending: isDepositing } = useMutation({
+  const { mutate: withdraw, isPending: isWithdrawing } = useMutation({
     mutationFn: async () => {
-      const depositCallable = getCompoundDepositCallable(tokenAddress, supplyTokenAddress)
-      const tx = await depositCallable.callContract(amount)
+      const withdrawCallable = getCompoundWithdrawCallable(tokenAddress, supplyTokenAddress)
+      const tx = await withdrawCallable.callContract(amount)
       const hash = tx.toString()
-      const calculatedNewBalance = (Number(vaultBalance) + Number(amount)).toString()
+      const calculatedNewBalance = (Number(maxAmount) - Number(amount)).toString()
       setTxHash(hash)
       setNewBalance(calculatedNewBalance)
       onSuccess(amount, hash, calculatedNewBalance)
       await axios.post(`${BACKEND_BASE_URI}/vaults${address}/refresh`)
       setShowSuccess(true)
       return tx
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['vaults', address] })
     },
   })
 
@@ -89,18 +74,12 @@ function DepositModal({
     const value = event.target.value
     if (value === '' || !isNaN(Number(value))) {
       setAmount(value)
-      setIsTouched(true)
     }
   }
 
-  const handleDeposit = () => {
-    if (isDepositing) return
-    deposit()
-  }
-
-  const handleClose = () => {
-    setAmount('')
-    onClose()
+  const handleWithdraw = () => {
+    if (isWithdrawing) return
+    withdraw()
   }
 
   const handleCloseSuccess = () => {
@@ -110,11 +89,11 @@ function DepositModal({
     setNewBalance('')
   }
 
-  const isValidAmount = Boolean(amount) && Number(amount) >= 0 && (Number(vaultBalance) > 0 || Number(amount) >= 100)
+  const isValidAmount = Boolean(amount) && Number(amount) >= 0
 
   return (
     <>
-      <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
+      <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: '24px' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Box width={24} height={24} fontSize="24px">
@@ -124,7 +103,7 @@ function DepositModal({
               {symbol} Vault
             </Typography>
           </Box>
-          <IconButton onClick={handleClose} size="small">
+          <IconButton onClick={onClose} size="small">
             <CloseIcon />
           </IconButton>
         </DialogTitle>
@@ -132,7 +111,7 @@ function DepositModal({
         <DialogContent sx={{ p: 0 }}>
           <Box padding="24px" display="flex" flexDirection="column" gap="8px">
             <Typography variant="subtitle1" gutterBottom>
-              Deposit
+              Withdraw
             </Typography>
             <Box
               display="flex"
@@ -183,7 +162,7 @@ function DepositModal({
                   ${(Number(amount) || 0).toFixed(2)}
                 </Typography>
                 <Typography color="text.secondary" fontSize="14px">
-                  Available: {maxAmount}{' '}
+                  Available: {maxAmount.toFixed(2)}{' '}
                   <Button
                     onClick={handleSetMax}
                     size="small"
@@ -210,36 +189,19 @@ function DepositModal({
               fullWidth
               disabled={!isValidAmount}
               sx={{ p: '16px', borderRadius: '100px', color: 'white !important', display: 'flex', gap: 1 }}
-              onClick={handleDeposit}
+              onClick={handleWithdraw}
             >
-              {isDepositing ? (
+              {isWithdrawing ? (
                 <>
                   <CircularProgress color="inherit" size={24} />
                   <Typography fontSize="16px" fontWeight="bold">
-                    Depositing...
+                    Withdrawing...
                   </Typography>
                 </>
               ) : (
-                'Deposit'
+                'Withdraw'
               )}
             </Button>
-
-            <Box display="flex" flexDirection="column" gap="4px">
-              {!isValidAmount && isTouched && (
-                <Typography color="error" fontSize="14px" textAlign="center">
-                  {Number(vaultBalance) === 0
-                    ? 'Min. deposit: $100 to activate this vault.'
-                    : 'Please enter a valid amount.'}
-                </Typography>
-              )}
-
-              <Typography fontSize="14px" textAlign="center" color="text.secondary">
-                Low on {symbol}?{' '}
-                <Link href="#" underline="always" sx={{ cursor: 'pointer' }}>
-                  Top up balance
-                </Link>
-              </Typography>
-            </Box>
           </Box>
         </DialogContent>
       </Dialog>
@@ -252,10 +214,10 @@ function DepositModal({
         icon={icon}
         txHash={txHash}
         vaultBalance={newBalance}
-        type="deposit"
+        type="withdraw"
       />
     </>
   )
 }
 
-export default DepositModal
+export default WithdrawModal
