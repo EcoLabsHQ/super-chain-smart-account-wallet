@@ -118,7 +118,7 @@ function DepositModal({
     setNewBalance('')
   }
 
-  const isValidAmount = Boolean(amount) && Number(amount) >= 0 && (Number(vaultBalance) > 0 || Number(amount) >= 100)
+  const isValidAmount = Boolean(amount) && Number(amount) >= 0 && (Number(vaultBalance) > 0 || Number(amount) >= 1)
 
   return (
     <>
