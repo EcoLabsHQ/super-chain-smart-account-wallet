@@ -69,7 +69,6 @@ function WithdrawModal({
       setTxHash(hash)
       setNewBalance(calculatedNewBalance)
       onSuccess(amount, hash, calculatedNewBalance)
-      //setShowSuccess(true)
     },
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: ['vaults', address] })

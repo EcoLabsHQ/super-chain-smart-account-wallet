@@ -12,6 +12,7 @@ import DepositModal from './DepositModal'
 import WithdrawModal from './WithdrawModal'
 import { Address } from 'viem'
 import SuccessModal from './SuccessModal'
+import Image from 'next/image'
 
 interface Vault {
   comet: string
@@ -22,7 +23,8 @@ interface Vault {
   image: string | null
   interest_apr: string
   balance?: number
-  deprecated?: boolean
+  depreciated?: boolean
+  min_deposit?: string
 }
 
 function VaultCard({
@@ -32,7 +34,9 @@ function VaultCard({
   icon,
   comet,
   tokenAddress,
-  deprecated = false,
+  tokenIcon,
+  depreciated = false,
+  minDepositAmount = '100',
 }: {
   title: string
   value: number
@@ -40,7 +44,9 @@ function VaultCard({
   icon: any
   comet: string
   tokenAddress: string
-  deprecated?: boolean
+  tokenIcon: any
+  depreciated?: boolean
+  minDepositAmount?: string
 }) {
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false)
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false)
@@ -49,6 +55,7 @@ function VaultCard({
   const [txHash, setTxHash] = useState('')
   const [newBalance, setNewBalance] = useState(value.toString())
   const [maxAmount, setMaxAmount] = useState(value)
+  const [lastOperationType, setLastOperationType] = useState<'deposit' | 'withdraw'>('deposit')
 
   const handleOpenDepositModal = () => {
     setIsDepositModalOpen(true)
@@ -77,6 +84,7 @@ function VaultCard({
     setTxHash(hash)
     setNewBalance(balance)
     setMaxAmount(Number(balance))
+    setLastOperationType('deposit')
     setShowSuccess(true)
     setIsDepositModalOpen(false)
   }
@@ -86,6 +94,7 @@ function VaultCard({
     setTxHash(hash)
     setNewBalance(balance)
     setMaxAmount(Number(balance))
+    setLastOperationType('withdraw')
     setShowSuccess(true)
     setIsWithdrawModalOpen(false)
   }
@@ -104,7 +113,7 @@ function VaultCard({
           </Box>
           <Box
             sx={{
-              bgcolor: deprecated ? '#FFF4E5' : 'grey.100',
+              bgcolor: depreciated ? '#FFF4E5' : 'grey.100',
               px: 2,
               py: 0.5,
               borderRadius: '20px',
@@ -114,7 +123,7 @@ function VaultCard({
               fontSize: '16px',
             }}
           >
-            {deprecated ? (
+            {depreciated ? (
               <Typography fontSize={14} color="warning.main" fontWeight="medium">
                 Deprecated
               </Typography>
@@ -132,26 +141,39 @@ function VaultCard({
 
         <Box
           sx={{
-            border: value > 0 ? (deprecated ? '1px dashed #ED6C02' : '1px dashed #1FC1BF') : '1px dashed #e0e0e0',
+            border: value > 0 ? (depreciated ? '1px dashed #ED6C02' : '1px dashed #1FC1BF') : '1px dashed #e0e0e0',
             borderRadius: 2,
             p: 3,
             m: 3,
             textAlign: 'center',
-            bgcolor: value > 0 ? (deprecated ? '#FFF4E5' : '#E9F9F9') : 'transparent',
+            bgcolor: value > 0 ? (depreciated ? '#FFF4E5' : '#E9F9F9') : 'transparent',
           }}
         >
           <Typography variant="body2" color="text.secondary" gutterBottom>
             My Balance
           </Typography>
-          <Typography variant="h4" fontWeight="bold">
-            ${value.toFixed(2)}
-          </Typography>
+          <Box
+            sx={{
+              fontSize: '16px',
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: 1,
+            }}
+          >
+            <Image src={tokenIcon} alt={title} width={16} height={16} />
+
+            <Typography fontSize="18px" variant="h4" fontWeight="bold">
+              {value.toFixed(2)}
+            </Typography>
+          </Box>
         </Box>
         <Divider />
 
         <Box sx={{ display: 'flex', gap: 2, p: 2 }}>
           {value > 0 ? (
-            deprecated ? (
+            depreciated ? (
               <Button fullWidth sx={{ borderRadius: 10, backgroundColor: '#F1F2F5' }} onClick={handleOpenWithdrawModal}>
                 Withdraw
               </Button>
@@ -170,7 +192,7 @@ function VaultCard({
               </>
             )
           ) : (
-            !deprecated && (
+            !depreciated && (
               <Button
                 variant="contained"
                 color="secondary"
@@ -185,18 +207,18 @@ function VaultCard({
         </Box>
       </Card>
 
-      {!deprecated && (
-        <DepositModal
-          open={isDepositModalOpen}
-          onClose={handleCloseDepositModal}
-          symbol={title}
-          icon={icon}
-          tokenAddress={tokenAddress as Address}
-          supplyTokenAddress={comet as Address}
-          vaultBalance={value.toString()}
-          onSuccess={handleDepositSuccess}
-        />
-      )}
+      <DepositModal
+        open={isDepositModalOpen}
+        onClose={handleCloseDepositModal}
+        symbol={title}
+        icon={icon}
+        tokenAddress={tokenAddress as Address}
+        supplyTokenAddress={comet as Address}
+        vaultBalance={value.toString()}
+        tokenIcon={tokenIcon}
+        onSuccess={handleDepositSuccess}
+        minDepositAmount={minDepositAmount}
+      />
 
       <WithdrawModal
         open={isWithdrawModalOpen}
@@ -217,7 +239,7 @@ function VaultCard({
         txHash={txHash}
         vaultBalance={newBalance}
         icon={icon}
-        type={deprecated ? 'withdraw' : 'deposit'}
+        type={lastOperationType}
       />
     </Grid>
   )
@@ -299,6 +321,8 @@ function Vaults() {
           const icon = getVaultIcon(vault.symbol)
           if (!icon) return null
 
+          console.debug(vault.image)
+
           return (
             <VaultCard
               key={vault.comet}
@@ -306,9 +330,11 @@ function Vaults() {
               value={Number(vault.balance) || 0}
               apy={(Number(vault.rewards_apr) + Number(vault.interest_apr)) * 100}
               icon={icon}
+              tokenIcon={vault.image}
               comet={vault.comet}
               tokenAddress={vault.asset}
-              deprecated={vault.deprecated}
+              depreciated={vault.depreciated}
+              minDepositAmount={vault.min_deposit}
             />
           )
         })}

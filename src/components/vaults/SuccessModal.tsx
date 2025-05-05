@@ -57,7 +57,7 @@ function SuccessModal({ open, onClose, amount, symbol, txHash, vaultBalance, ico
             <Stack direction="row" justifyContent="center" fontSize="16px" gap="6px" alignItems="center">
               <SvgIcon component={icon} inheritViewBox fontSize="inherit" width={16} height={16} />
               <Typography variant="h4" textAlign="center" fontWeight="medium">
-                {vaultBalance}
+                {Number(vaultBalance).toFixed(2)}
               </Typography>
             </Stack>
           </Box>
