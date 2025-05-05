@@ -79,7 +79,7 @@ function Leaderboard({ handleUserSelect }: { handleUserSelect: (address: string,
                 points={user.total_points}
                 onClick={() => handleUserSelect(user.superaccount, index + 1 + pageIndex * 20)}
                 name={user.superChainId}
-                level={user.level.toString()}
+                level={user.level?.toString() || '0'}
                 isMainProfile={user.superaccount.toLowerCase() === address.toLowerCase()}
                 badges={user.total_badges}
                 noun={{
