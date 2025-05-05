@@ -257,7 +257,59 @@ function Vaults() {
   })
 
   if (isLoadingVaults || !vaults) {
-    return <Skeleton variant="rectangular" height={100} />
+    return (
+      <Stack gap={2} p={1} sx={{ width: '100%' }}>
+        <Typography variant="h4" fontWeight={700} gutterBottom>
+          Vaults
+        </Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <Card variant="outlined">
+              <CardContent>
+                <Stack gap={1}>
+                  <Skeleton variant="text" width="60%" />
+                  <Skeleton variant="text" width="40%" height={40} />
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={6}>
+            <Card variant="outlined">
+              <CardContent>
+                <Stack gap={1}>
+                  <Skeleton variant="text" width="60%" />
+                  <Skeleton variant="text" width="40%" height={40} />
+                </Stack>
+              </CardContent>
+            </Card>
+          </Grid>
+        </Grid>
+        <Grid container spacing={2}>
+          {[1, 2, 3].map((index) => (
+            <Grid item xs={4} key={index}>
+              <Card variant="outlined" sx={{ p: 0 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    <Skeleton variant="circular" width={36} height={36} />
+                    <Skeleton variant="text" width={100} />
+                  </Box>
+                  <Skeleton variant="text" width={80} />
+                </Box>
+                <Divider />
+                <Box sx={{ p: 3, m: 3, textAlign: 'center' }}>
+                  <Skeleton variant="text" width="40%" sx={{ mx: 'auto' }} />
+                  <Skeleton variant="text" width="60%" height={40} sx={{ mx: 'auto', mt: 1 }} />
+                </Box>
+                <Divider />
+                <Box sx={{ display: 'flex', gap: 2, p: 2 }}>
+                  <Skeleton variant="rectangular" width="100%" height={40} />
+                </Box>
+              </Card>
+            </Grid>
+          ))}
+        </Grid>
+      </Stack>
+    )
   }
 
   const totalDeposits = vaults.reduce((sum: number, vault: Vault) => sum + (Number(vault.balance) || 0), 0)
