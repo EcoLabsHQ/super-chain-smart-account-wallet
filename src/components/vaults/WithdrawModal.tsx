@@ -22,6 +22,7 @@ import { BACKEND_BASE_URI } from '@/config/constants'
 import useSafeAddress from '@/hooks/useSafeAddress'
 import SuccessModal from './SuccessModal'
 import useSuperChainAccount from '@/hooks/super-chain/useSuperChainAccount'
+import Image from 'next/image'
 
 interface WithdrawModalProps {
   open: boolean
@@ -106,7 +107,8 @@ function WithdrawModal({
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: '24px' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Box width={24} height={24} fontSize="24px">
-              <SvgIcon component={icon} inheritViewBox fontSize="inherit" width={24} height={24} />
+              <Image src={icon} alt={symbol} width={28} height={24} />
+              {/* <SvgIcon component={icon} inheritViewBox fontSize="inherit" width={24} height={24} /> */}
             </Box>
             <Typography fontSize="24px" fontWeight="bold">
               {symbol} Vault
@@ -159,7 +161,8 @@ function WithdrawModal({
                 />
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <Box width={24} height={24} fontSize="24px">
-                    <SvgIcon component={icon} inheritViewBox fontSize="inherit" width={24} height={24} />
+                    <Image src={icon} alt={symbol} width={28} height={24} />
+                    {/* <SvgIcon component={icon} inheritViewBox fontSize="inherit" width={24} height={24} /> */}
                   </Box>
                   <Typography fontSize="16px" fontWeight="bold">
                     {symbol}
