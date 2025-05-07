@@ -14,7 +14,6 @@ import {
   CircularProgress,
 } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
-import { SvgIcon } from '@mui/material'
 import useCompound from '@/hooks/compound/useCompound'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Address } from 'viem'

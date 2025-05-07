@@ -30,7 +30,7 @@ function Campaigns() {
 
       <Grid container spacing={2}>
         {campaigns.map((campaign) => {
-          return <CampaignCard campaign={campaign} />
+          return <CampaignCard campaign={campaign} key={campaign.name} />
         })}
       </Grid>
     </Stack>

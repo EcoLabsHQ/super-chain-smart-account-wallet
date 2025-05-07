@@ -3,7 +3,7 @@ import TopUpModal from '@/components/superChain/TopUpModal'
 
 //const TopUpModal = dynamic(() => import('@/components/superChain/TopUpModal'))
 
-const QrCodeButton = ({ children, defaultToken }: { children: ReactNode; defaultToken: string }): ReactElement => {
+const QrCodeButton = ({ children, defaultToken }: { children: ReactNode; defaultToken?: string }): ReactElement => {
   const [modalOpen, setModalOpen] = useState<boolean>(false)
 
   return (
