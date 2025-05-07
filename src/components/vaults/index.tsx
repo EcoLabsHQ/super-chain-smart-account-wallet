@@ -1,8 +1,8 @@
 import { Box, Button, Card, CardContent, Divider, Grid, Skeleton, Stack, SvgIcon, Typography } from '@mui/material'
 import React, { useState } from 'react'
-import USDC_OP from '@/public/images/vaults/icons/USDC-OP.svg'
-import USDT_OP from '@/public/images/vaults/icons/USDT-OP.svg'
-import ETH_OP from '@/public/images/vaults/icons/ETH-OP.svg'
+import USDC_OP from '@/public/images/vaults/icons/USDC-OP.png'
+import USDT_OP from '@/public/images/vaults/icons/USDT-OP.png'
+import WETH from '@/public/images/vaults/icons/ETH-OP.png'
 import Compound from '@/public/images/vaults/protocols/Compound.svg'
 import { useQuery } from '@tanstack/react-query'
 import { BACKEND_BASE_URI } from '@/config/constants'
@@ -105,7 +105,7 @@ function VaultCard({
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Box width={36} height={36} fontSize={36}>
-              <SvgIcon component={icon} inheritViewBox alt={title} fontSize="inherit" width={36} height={36} />
+              <Image src={icon} alt={title} width={36} height={30} />
             </Box>
             <Typography fontSize={18} fontWeight={600} fontFamily="Sora">
               {title}
@@ -150,7 +150,7 @@ function VaultCard({
           }}
         >
           <Typography variant="body2" color="text.secondary" gutterBottom>
-            My Balance
+            My Deposit
           </Typography>
           <Box
             sx={{
@@ -257,59 +257,7 @@ function Vaults() {
   })
 
   if (isLoadingVaults || !vaults) {
-    return (
-      <Stack gap={2} p={1} sx={{ width: '100%' }}>
-        <Typography variant="h4" fontWeight={700} gutterBottom>
-          Vaults
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <Card variant="outlined">
-              <CardContent>
-                <Stack gap={1}>
-                  <Skeleton variant="text" width="60%" />
-                  <Skeleton variant="text" width="40%" height={40} />
-                </Stack>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={6}>
-            <Card variant="outlined">
-              <CardContent>
-                <Stack gap={1}>
-                  <Skeleton variant="text" width="60%" />
-                  <Skeleton variant="text" width="40%" height={40} />
-                </Stack>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-        <Grid container spacing={2}>
-          {[1, 2, 3].map((index) => (
-            <Grid item xs={4} key={index}>
-              <Card variant="outlined" sx={{ p: 0 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Skeleton variant="circular" width={36} height={36} />
-                    <Skeleton variant="text" width={100} />
-                  </Box>
-                  <Skeleton variant="text" width={80} />
-                </Box>
-                <Divider />
-                <Box sx={{ p: 3, m: 3, textAlign: 'center' }}>
-                  <Skeleton variant="text" width="40%" sx={{ mx: 'auto' }} />
-                  <Skeleton variant="text" width="60%" height={40} sx={{ mx: 'auto', mt: 1 }} />
-                </Box>
-                <Divider />
-                <Box sx={{ display: 'flex', gap: 2, p: 2 }}>
-                  <Skeleton variant="rectangular" width="100%" height={40} />
-                </Box>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-      </Stack>
-    )
+    return <Skeleton variant="rectangular" height={100} />
   }
 
   const totalDeposits = vaults.reduce((sum: number, vault: Vault) => sum + (Number(vault.balance) || 0), 0)
@@ -327,7 +275,7 @@ function Vaults() {
       case 'USDT':
         return USDT_OP
       case 'WETH':
-        return ETH_OP
+        return WETH
       default:
         return null
     }

@@ -132,7 +132,8 @@ function DepositModal({
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: '24px' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Box width={24} height={24} fontSize="24px">
-              <SvgIcon component={icon} inheritViewBox fontSize="inherit" width={24} height={24} />
+              {/* <SvgIcon component={icon} inheritViewBox fontSize="inherit" width={24} height={24} /> */}
+              <Image src={icon} alt={symbol} width={28} height={24} />
             </Box>
             <Typography fontSize="24px" fontWeight="bold">
               {symbol} Vault
@@ -254,7 +255,7 @@ function DepositModal({
                 <Typography fontSize="14px" color="text.secondary">
                   Low on {symbol}?
                 </Typography>
-                <QrCodeButton>
+                <QrCodeButton defaultToken={symbol}>
                   <Link href="#" underline="always" sx={{ cursor: 'pointer' }}>
                     Top up balance
                   </Link>
