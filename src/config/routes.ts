@@ -11,6 +11,7 @@ export const AppRoutes = {
     allTime: '/badges',
     season7: '/badges/season-7',
   },
+  campaigns: '/campaigns',
   cookie: '/cookie',
   contacts: '/contacts',
   addOwner: '/addOwner',

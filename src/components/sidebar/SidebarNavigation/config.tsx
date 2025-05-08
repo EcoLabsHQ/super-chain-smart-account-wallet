@@ -23,6 +23,11 @@ export const navItems: NavItem[] = [
     icon: <SvgIcon component={AccountIcon} inheritViewBox />,
     href: AppRoutes.home,
   },
+  {
+    label: 'Campaigns',
+    icon: <SvgIcon component={AccountIcon} inheritViewBox />,
+    href: AppRoutes.campaigns,
+  },
 
   {
     label: 'Badges',
