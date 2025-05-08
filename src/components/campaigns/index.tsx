@@ -6,19 +6,134 @@ import React from 'react'
 import useSafeAddress from '@/hooks/useSafeAddress'
 
 interface Campaign {
+  id: string
   name: string
-  start_date: Date
-  end_date: Date
   description: string
-  tag: string
+  banner: string
   network: string
+  boosts: Array<{
+    type: string
+    level?: number
+    boostPercent: number
+    description: string
+    badgeLevel?: number
+    badgeName?: string
+    minLevel?: number
+    applies: boolean
+  }>
+  totalBoost: number
+  campaign_badges: Array<{
+    type: string
+    badgeName: string
+    description: string
+    badgeLevel: number
+  }>
+  start_date: string | Date
+  end_date: string | Date
 }
 
 function CampaignCard({ campaign }: { campaign: Campaign }) {
+  const now = new Date()
+  const start = new Date(campaign.start_date)
+  const end = new Date(campaign.end_date)
+  const isLive = now >= start && now <= end
+
+  const formatDate = (date: Date) =>
+    date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+
   return (
-    <Grid item xs={4}>
-      <Card variant="outlined" sx={{ p: 0 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}></Box>
+    <Grid item xs={12} sm={6} md={4}>
+      <Card variant="outlined" sx={{ p: 0, borderRadius: '12px', overflow: 'hidden', boxShadow: 2, minWidth: 340 }}>
+        <Box sx={{ position: 'relative', height: 180, background: '#eee' }}>
+          <img
+            src={campaign.banner}
+            alt={campaign.name}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+          />
+          {isLive && (
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 16,
+                right: 16,
+                display: 'flex',
+                alignItems: 'center',
+                background: '#EBFBEE',
+                border: '1px solid #39D551',
+                borderRadius: '100px',
+                padding: '0px 8px',
+                boxShadow: '0 1px 4px rgba(44, 204, 64, 0.08)',
+                zIndex: 2,
+                height: '28px',
+                gap: 1,
+              }}
+            >
+              <Box
+                sx={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: '50%',
+                  background: '#39D551',
+                }}
+              />
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: 500,
+                  fontSize: 16,
+                }}
+              >
+                Live
+              </Typography>
+            </Box>
+          )}
+        </Box>
+        <Box sx={{ p: 2 }}>
+          <Typography variant="subtitle1" fontWeight={600} fontSize={18} fontFamily="Sora" gutterBottom>
+            {campaign.name}
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+              <Box component="span" sx={{ color: 'text.secondary' }}>
+                <i className="fa fa-calendar" />
+              </Box>
+              <Typography variant="body2" color="text.secondary">
+                {formatDate(start)}
+              </Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mx: 0.5 }}>
+                →
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {formatDate(end)}
+              </Typography>
+            </Box>
+          </Box>
+          <Typography variant="body2" color="text.secondary" fontSize={14} fontWeight={400} sx={{ mb: 2 }}>
+            {campaign.description}
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box
+              sx={{
+                padding: '0px 8px',
+                borderRadius: '100px',
+                display: 'flex',
+                border: '1px solid #386AFF',
+                alignItems: 'center',
+                background: '#EBF0FF',
+                px: 1.5,
+                py: 0.5,
+              }}
+            >
+              <Typography variant="body2" color="primary" fontWeight={500} fontSize={16}>
+                {campaign.totalBoost}% Boost
+              </Typography>
+            </Box>
+            {/* Icono de red (ejemplo: Lisk) */}
+            <Box sx={{ ml: 'auto' }}>
+              <img src="https://lisk.com/favicon.ico" alt="Lisk" style={{ width: 24, height: 24 }} />
+            </Box>
+          </Box>
+        </Box>
       </Card>
     </Grid>
   )
