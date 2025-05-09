@@ -60,9 +60,7 @@ function BadgeInfo({
         <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" p="10px 30px">
           <SeasonChip season={currentBadge.metadata.season} style="info" />
 
-          {/* Íconos alineados a la derecha */}
           <Box display="flex" alignItems="center" gap={1}>
-            {/* Botón de Favorito */}
             <IconButton onClick={handleSwitchFavorite} className={css.actionBtn}>
               <SvgIcon
                 component={currentBadge?.isFavorite ? HeartFilled : Hearth}
@@ -71,7 +69,6 @@ function BadgeInfo({
               />
             </IconButton>
 
-            {/* Botón de Cerrar */}
             <IconButton onClick={() => setCurrentBadge(null)} className={css.actionBtn}>
               <SvgIcon component={Close} sx={{ color: 'inherit', fontSize: '20px' }} inheritViewBox />
             </IconButton>
