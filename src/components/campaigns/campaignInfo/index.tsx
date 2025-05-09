@@ -6,7 +6,6 @@ import React from 'react'
 import css from './styles.module.css'
 import { Campaign } from '..'
 import NetworkChip from '@/components/badges/networkChip'
-import { color } from 'framer-motion'
 
 function CampaignInfo({
   currentCampaign,
