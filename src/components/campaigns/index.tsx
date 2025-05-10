@@ -14,13 +14,17 @@ export interface Campaign {
   description: string
   banner: string
   network: string
+  participate_description: string
+  campaign_link: string
   boosts: Array<{
     type: string
     level?: number
     boostPercent: number
     description: string
-    badgeLevel?: number
-    badgeName?: string
+    currentLevel?: number
+    maxLevel?: number
+    name?: string
+    image?: string
     minLevel?: number
     applies: boolean
   }>
@@ -29,7 +33,8 @@ export interface Campaign {
     type: string
     badgeName: string
     description: string
-    badgeLevel: number
+    currentLevel: number
+    maxLevel: number
   }>
   start_date: string | Date
   end_date: string | Date

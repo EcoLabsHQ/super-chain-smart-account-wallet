@@ -1,4 +1,4 @@
-import { Box, Stack, Typography, IconButton, Button, Divider } from '@mui/material'
+import { Box, Stack, Typography, IconButton, Button, Divider, Tooltip } from '@mui/material'
 import OfflineBoltOutlinedIcon from '@mui/icons-material/OfflineBoltOutlined'
 import InsertInvitationTwoToneIcon from '@mui/icons-material/InsertInvitationTwoTone'
 import CloseIcon from '@mui/icons-material/Close'
@@ -6,6 +6,7 @@ import React from 'react'
 import css from './styles.module.css'
 import { Campaign } from '..'
 import NetworkChip from '@/components/badges/networkChip'
+import Image from 'next/image'
 
 function CampaignInfo({
   currentCampaign,
@@ -123,114 +124,219 @@ function CampaignInfo({
       <Box width="100%">
         <Divider />
       </Box>
-      <Box borderRadius={2} border="1px solid" borderColor="grey.500" bgcolor="grey.50" width={340}>
+      <Box borderRadius={2} border="1px solid" borderColor="#E1E2EA" bgcolor="grey.50" width={340}>
         <Box display="flex" justifyContent="space-between" alignItems="center" px={3} py={1.5}>
           <Typography fontWeight={600}>Increase Your Boost</Typography>
-          <Box
-            sx={{
-              px: 1.5,
-              py: 0.5,
-              borderRadius: '100px',
-              display: 'flex',
-              alignItems: 'center',
-              border: '1px solid #386AFF',
-              background: '#EBF0FF',
-              gap: 0.75,
+          <Tooltip
+            title="Your Super Account boosts the yield you earn from eligible Lisk Surge pools. The more traits you unlock, the higher the multiplier."
+            componentsProps={{
+              tooltip: {
+                sx: {
+                  bgcolor: 'rgba(56, 106, 255, 0.95)',
+                  color: 'white',
+                  fontSize: '14px',
+                  padding: '12px 16px',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                  '& .MuiTooltip-arrow': {
+                    color: 'rgba(56, 106, 255, 0.95)',
+                  },
+                },
+              },
             }}
           >
-            <OfflineBoltOutlinedIcon sx={{ color: '#386AFF', fontSize: 18 }} />
-            <Typography fontSize={14} fontWeight={500} color="primary">
-              {currentCampaign.totalBoost}% Boost
-            </Typography>
-          </Box>
+            <Box
+              sx={{
+                px: 1.5,
+                py: 0.5,
+                borderRadius: '100px',
+                display: 'flex',
+                alignItems: 'center',
+                border: '1px solid #386AFF',
+                background: '#EBF0FF',
+                gap: 0.75,
+                cursor: 'pointer',
+                userSelect: 'none',
+                transition: 'all 0.2s ease-in-out',
+                '&:hover': {
+                  background: '#D6E0FF',
+                  boxShadow: '0 2px 8px rgba(56, 106, 255, 0.15)',
+                },
+              }}
+            >
+              <OfflineBoltOutlinedIcon sx={{ color: '#386AFF', fontSize: 18 }} />
+              <Typography fontSize={14} fontWeight={500} color="primary">
+                {currentCampaign.totalBoost}% Boost
+              </Typography>
+            </Box>
+          </Tooltip>
         </Box>
         <Box width="100%">
-          <Divider sx={{ borderColor: 'grey.500' }} />
+          <Divider sx={{ borderColor: '#E1E2EA' }} />
         </Box>
         <Stack my={2} spacing={1.5} px={3}>
-          {currentCampaign.boosts.map((boost, index) => (
-            <Box key={boost.badgeName} display="flex" alignItems="center" gap={2}>
-              <Box
-                width={58}
-                height={58}
-                borderRadius="12px"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                border="2px solid  #39D551"
-                sx={{ backgroundColor: ' #EBFBEE' }}
-              >
-                <Typography fontWeight={700}>{boost.level}</Typography>
-              </Box>
-              <Box flex={1}>
-                <Box display="flex" alignItems="center" gap={1}>
-                  <Typography fontWeight={600}>{boost.badgeName}</Typography>
-                  <Box
-                    sx={{
-                      px: 1,
-                      py: 0.2,
-                      borderRadius: '100px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      border: '1px solid #386AFF',
-                      background: '#EBF0FF',
-                      gap: 0.75,
-                      fontSize: 13,
-                    }}
-                  >
-                    +{boost.boostPercent}%
-                  </Box>
+          {currentCampaign.boosts.map((boost: any, index: number) => {
+            const displayName = boost.badgeName || boost.name || ''
+            const currentLevel = typeof boost.currentLevel === 'number' ? boost.currentLevel : 0
+            const maxLevel = typeof boost.maxLevel === 'number' ? boost.maxLevel : 0
+            const isActive = boost.applies === true
+            return (
+              <Box key={displayName} display="flex" alignItems="center" gap={2}>
+                <Box
+                  width={58}
+                  height={58}
+                  padding="8px"
+                  borderRadius="12px"
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  justifyContent="center"
+                  gap="6px"
+                  border={isActive ? '1px solid #39D551' : '1px solid #E1E2EA'}
+                  sx={{
+                    backgroundColor: isActive ? '#EBFBEE' : '#FFF',
+                    transition: 'all 0.2s ease-in-out',
+                    animation: 'fadeIn 0.3s ease-out',
+                    '&:hover': {
+                      boxShadow: isActive ? '0 0 16px rgba(57, 213, 81, 0.35)' : '0 0 8px rgba(0, 0, 0, 0.05)',
+                    },
+                    '@keyframes fadeIn': {
+                      '0%': {
+                        opacity: 0.8,
+                        transform: 'scale(0.98)',
+                      },
+                      '100%': {
+                        opacity: 1,
+                        transform: 'scale(1)',
+                      },
+                    },
+                  }}
+                >
+                  {boost.image && <Image src={boost.image} alt={displayName} width={32} height={32} />}
+                  {boost.type === 'badge' && maxLevel > 0 && (
+                    <Box display="flex" gap="2px" justifyContent="center">
+                      {[...Array(currentLevel)].map((_, i) => (
+                        <Box key={i} width={4} height={4} borderRadius="100px" bgcolor="#39D551" />
+                      ))}
+                      {[...Array(maxLevel - currentLevel)].map((_, i) => (
+                        <Box key={i} width={4} height={4} borderRadius="100px" bgcolor="#EBECF1" />
+                      ))}
+                    </Box>
+                  )}
                 </Box>
-                <Typography fontSize={12} color="text.secondary">
-                  {boost.description}
-                </Typography>
+                <Box flex={1}>
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Typography fontWeight={600}>{displayName}</Typography>
+                    <Box
+                      sx={{
+                        px: 1,
+                        py: 0.2,
+                        borderRadius: '100px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        border: '1px solid #386AFF',
+                        background: '#EBF0FF',
+                        gap: 0.75,
+                        fontSize: 13,
+                      }}
+                    >
+                      +{boost.boostPercent}%
+                    </Box>
+                  </Box>
+                  <Typography fontSize={12} color="text.secondary">
+                    {boost.description}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
-          ))}
+            )
+          })}
         </Stack>
       </Box>
 
-      <Box borderRadius={2} border="1px solid" borderColor="grey.500" bgcolor="grey.50" width={340}>
+      <Box borderRadius={2} border="1px solid" borderColor="#E1E2EA" bgcolor="grey.50" width={340}>
         <Box display="flex" justifyContent="space-between" alignItems="center" px={3} py={2}>
           <Typography fontWeight={600}>Earn Campaign Badge</Typography>
         </Box>
         <Box width="100%">
-          <Divider sx={{ borderColor: 'grey.500' }} />
+          <Divider sx={{ borderColor: '#E1E2EA' }} />
         </Box>
         <Stack my={2} spacing={1.5} px={3}>
-          {currentCampaign.campaign_badges.map((badge, index) => (
-            <Box key={badge.badgeName} display="flex" alignItems="center" gap={2}>
-              <Box
-                width={58}
-                height={58}
-                borderRadius="12px"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                border="2px solid  #39D551"
-                sx={{ backgroundColor: ' #EBFBEE' }}
-              >
-                <Typography fontWeight={700}>ICON</Typography>
-              </Box>
-              <Box flex={1}>
-                <Box display="flex" alignItems="center" gap={1}>
-                  <Typography fontWeight={600}>{badge.badgeName}</Typography>
+          {currentCampaign.campaign_badges.map((badge: any, index: number) => {
+            const isActive = badge.applies === true
+            const currentLevel = typeof badge.currentLevel === 'number' ? badge.currentLevel : 0
+            const maxLevel = typeof badge.maxLevel === 'number' ? badge.maxLevel : 0
+            return (
+              <Box key={badge.badgeName} display="flex" alignItems="center" gap={2}>
+                <Box
+                  width={58}
+                  height={58}
+                  padding="8px"
+                  borderRadius="12px"
+                  display="flex"
+                  flexDirection="column"
+                  alignItems="center"
+                  justifyContent="center"
+                  gap="6px"
+                  border={isActive ? '1px solid #39D551' : '1px solid #E1E2EA'}
+                  sx={{
+                    backgroundColor: isActive ? '#EBFBEE' : '#FFF',
+                    transition: 'all 0.2s ease-in-out',
+                    animation: 'fadeIn 0.3s ease-out',
+                    '&:hover': {
+                      boxShadow: isActive ? '0 0 16px rgba(57, 213, 81, 0.35)' : '0 0 8px rgba(0, 0, 0, 0.05)',
+                    },
+                    '@keyframes fadeIn': {
+                      '0%': {
+                        opacity: 0.8,
+                        transform: 'scale(0.98)',
+                      },
+                      '100%': {
+                        opacity: 1,
+                        transform: 'scale(1)',
+                      },
+                    },
+                  }}
+                >
+                  {badge.image && <Image src={badge.image} alt={badge.badgeName} width={32} height={32} />}
+                  {maxLevel > 0 && (
+                    <Box display="flex" gap="2px" justifyContent="center">
+                      {[...Array(currentLevel)].map((_, i) => (
+                        <Box key={i} width={4} height={4} borderRadius="100px" bgcolor="#39D551" />
+                      ))}
+                      {[...Array(maxLevel - currentLevel)].map((_, i) => (
+                        <Box key={i} width={4} height={4} borderRadius="100px" bgcolor="#EBECF1" />
+                      ))}
+                    </Box>
+                  )}
                 </Box>
-                <Typography fontSize={12} color="text.secondary">
-                  {badge.description}
-                </Typography>
+                <Box flex={1}>
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Typography fontWeight={600}>{badge.badgeName}</Typography>
+                  </Box>
+                  <Typography fontSize={12} color="text.secondary">
+                    {badge.description}
+                  </Typography>
+                </Box>
               </Box>
-            </Box>
-          ))}
+            )
+          })}
         </Stack>
       </Box>
 
       <Box width="100%" px={3} pb={3}>
-        <Button variant="contained" fullWidth size="large" sx={{ borderRadius: 999, height: '48px' }}>
+        <Button
+          variant="contained"
+          fullWidth
+          size="large"
+          sx={{ borderRadius: 999, height: '48px' }}
+          href={currentCampaign.campaign_link}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           Participate
         </Button>
         <Typography textAlign="center" fontSize={12} mt={1} color=" #75757A">
-          Participating increases your Season 7 progress and may result in additional rewards at a later point.
+          {currentCampaign.participate_description}
         </Typography>
       </Box>
     </Stack>
