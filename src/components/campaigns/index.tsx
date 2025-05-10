@@ -60,136 +60,152 @@ function CampaignCard({
   }
 
   return (
-    <Grid item xs={12} sm={6} md={4}>
-      <Card
-        variant="outlined"
+    <Card
+      variant="outlined"
+      sx={{
+        p: 0,
+        borderRadius: '12px',
+        overflow: 'hidden',
+        boxShadow: 2,
+        backgroundColor: 'grey.50',
+        cursor: 'pointer',
+        width: '340px',
+        height: 'fit-content',
+      }}
+      onClick={handlePickCampaign}
+    >
+      <Box
         sx={{
-          p: 0,
-          borderRadius: '12px',
-          overflow: 'hidden',
-          boxShadow: 2,
-          maxWidth: 340,
-          backgroundColor: 'grey.50',
-          cursor: 'pointer',
+          position: 'relative',
+          background: '#eee',
+          aspectRatio: '16/9',
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
-        onClick={handlePickCampaign}
       >
-        <Box sx={{ position: 'relative', height: 192, background: '#eee' }}>
-          <img
-            src={campaign.banner}
-            alt={campaign.name}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          />
-          {isLive && (
+        <img
+          src={campaign.banner}
+          alt={campaign.name}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+          }}
+        />
+        {isLive && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 16,
+              right: 16,
+              display: 'flex',
+              alignItems: 'center',
+              background: '#EBFBEE',
+              border: '1px solid #39D551',
+              borderRadius: '100px',
+              padding: '0px 8px',
+              boxShadow: '0 1px 4px rgba(44, 204, 64, 0.08)',
+              zIndex: 2,
+              height: '28px',
+              gap: 1,
+            }}
+          >
             <Box
               sx={{
-                position: 'absolute',
-                top: 16,
-                right: 16,
-                display: 'flex',
-                alignItems: 'center',
-                background: '#EBFBEE',
-                border: '1px solid #39D551',
-                borderRadius: '100px',
-                padding: '0px 8px',
-                boxShadow: '0 1px 4px rgba(44, 204, 64, 0.08)',
-                zIndex: 2,
-                height: '28px',
-                gap: 1,
+                width: 10,
+                height: 10,
+                borderRadius: '50%',
+                background: '#39D551',
+              }}
+            />
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 500,
+                fontSize: 14,
               }}
             >
-              <Box
-                sx={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: '50%',
-                  background: '#39D551',
-                }}
-              />
-              <Typography
-                variant="h6"
-                sx={{
-                  fontWeight: 500,
-                  fontSize: 14,
-                }}
-              >
-                Live
-              </Typography>
-            </Box>
-          )}
-        </Box>
-        <Box sx={{ p: 2 }}>
-          <Typography variant="subtitle1" fontWeight={600} fontSize={18} fontFamily="Sora" gutterBottom>
-            {campaign.name}
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-              <Box
-                component="span"
-                sx={{
-                  color: 'text.secondary',
-                  backgroundColor: 'grey.300',
-                  borderRadius: 1,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  padding: '4px',
-                  width: 24,
-                  height: 24,
-                }}
-              >
-                <InsertInvitationTwoToneIcon fontSize="small" />
-              </Box>
-              <Typography variant="body2" color="grey.900">
-                {formatDate(start)}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" sx={{ mx: 0.5 }}>
-                →
-              </Typography>
-              <Typography variant="body2" color="grey.700">
-                {formatDate(end)}
-              </Typography>
-            </Box>
+              Live
+            </Typography>
           </Box>
-          <Typography variant="body2" color="grey.800" fontSize={14} fontWeight={400} sx={{ mb: 2 }}>
-            {campaign.description}
-          </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        )}
+      </Box>
+      <Box sx={{ p: 2 }}>
+        <Typography variant="subtitle1" fontWeight={600} fontSize={18} fontFamily="Sora" gutterBottom>
+          {campaign.name}
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
             <Box
+              component="span"
               sx={{
-                padding: '0px 8px',
-                borderRadius: '100px',
-                display: 'flex',
-                border: '1px solid #386AFF',
+                color: 'text.secondary',
+                backgroundColor: 'grey.300',
+                borderRadius: 1,
+                display: 'inline-flex',
                 alignItems: 'center',
-                background: '#EBF0FF',
-                px: 1.5,
-                py: 0.5,
+                justifyContent: 'center',
+                padding: '4px',
+                width: 24,
+                height: 24,
               }}
             >
-              <OfflineBoltOutlinedIcon sx={{ color: ' #386AFF', pr: '4px' }} />
-              <Typography variant="body2" color="primary" fontWeight={500} fontSize={14}>
-                {campaign.totalBoost}% Boost
-              </Typography>
+              <InsertInvitationTwoToneIcon fontSize="small" />
             </Box>
+            <Typography variant="body2" color="grey.900">
+              {formatDate(start)}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mx: 0.5 }}>
+              →
+            </Typography>
+            <Typography variant="body2" color="grey.700">
+              {formatDate(end)}
+            </Typography>
+          </Box>
+        </Box>
+        <Typography variant="body2" color="grey.800" fontSize={14} fontWeight={400} sx={{ mb: 2 }}>
+          {campaign.description}
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Box
+            sx={{
+              padding: '0px 8px',
+              borderRadius: '100px',
+              display: 'flex',
+              border: '1px solid #386AFF',
+              alignItems: 'center',
+              background: '#EBF0FF',
+              px: 1.5,
+              py: 0.5,
+            }}
+          >
+            <OfflineBoltOutlinedIcon sx={{ color: ' #386AFF', pr: '4px' }} />
+            <Typography variant="body2" color="primary" fontWeight={500} fontSize={14}>
+              {campaign.totalBoost}% Boost
+            </Typography>
+          </Box>
 
-            <Box
-              sx={{
-                ml: 'auto',
-                borderRadius: '100px',
-                border: '1px solid #E1E2EA',
-                width: '30px',
-                pl: '2px',
-                pt: '2px',
-                height: '30px',
-              }}
-            >
-              <NetworkChip key={`${campaign.id}`} network={campaign.network} style="badge" isFavorite={false} />
-            </Box>
+          <Box
+            sx={{
+              ml: 'auto',
+              borderRadius: '100px',
+              border: '1px solid #E1E2EA',
+              width: '30px',
+              pl: '2px',
+              pt: '2px',
+              height: '30px',
+            }}
+          >
+            <NetworkChip key={`${campaign.id}`} network={campaign.network} style="badge" isFavorite={false} />
           </Box>
         </Box>
-      </Card>
-    </Grid>
+      </Box>
+    </Card>
   )
 }
 
@@ -239,11 +255,31 @@ function Campaigns() {
         Campaigns
       </Typography>
       <Divider />
-      <Grid container spacing={2}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+          gap: '16px',
+          width: '100%',
+          '& > *': {
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'column',
+          },
+        }}
+      >
         {campaigns.map((campaign) => {
           return <CampaignCard campaign={campaign} key={campaign.name} setCurrentCampaign={setCurrentCampaign} />
         })}
-      </Grid>
+
+        {campaigns.map((campaign) => {
+          return <CampaignCard campaign={campaign} key={campaign.name} setCurrentCampaign={setCurrentCampaign} />
+        })}
+
+        {campaigns.map((campaign) => {
+          return <CampaignCard campaign={campaign} key={campaign.name} setCurrentCampaign={setCurrentCampaign} />
+        })}
+      </Box>
       <Drawer variant="temporary" anchor="right" onClose={() => setCurrentCampaign(null)} open={!!currentCampaign}>
         <CampaignInfo setCurrentCampaign={setCurrentCampaign} currentCampaign={currentCampaign} />
       </Drawer>

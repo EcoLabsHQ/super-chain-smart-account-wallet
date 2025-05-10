@@ -29,7 +29,30 @@ function CampaignInfo({
     })
 
   return (
-    <Stack justifyContent="flex-start" alignItems="center" spacing={2} className={css.drawer}>
+    <Stack
+      justifyContent="flex-start"
+      alignItems="center"
+      spacing={2}
+      className={css.drawer}
+      sx={{
+        height: '100%',
+        overflowY: 'auto',
+        '&::-webkit-scrollbar': {
+          width: '4px',
+        },
+        '&::-webkit-scrollbar-track': {
+          background: '#f1f1f1',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          background: '#888',
+          borderRadius: '4px',
+        },
+        '&::-webkit-scrollbar-thumb:hover': {
+          background: '#555',
+        },
+        pb: 3,
+      }}
+    >
       <Box display="flex" width="100%" paddingTop="24px" px={3} justifyContent="space-between" alignItems="center">
         <Box display="flex" alignItems="center" gap={1}>
           {isLive && (
