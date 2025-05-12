@@ -1,5 +1,5 @@
 import { BACKEND_BASE_URI } from '@/config/constants'
-import { Box, Card, Divider, Drawer, Grid, Skeleton, Stack, Typography } from '@mui/material'
+import { Box, Card, Divider, Drawer, Skeleton, Stack, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import React, { useState } from 'react'
