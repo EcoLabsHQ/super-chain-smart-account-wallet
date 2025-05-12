@@ -69,8 +69,7 @@ function CampaignCard({
         boxShadow: 2,
         backgroundColor: 'grey.50',
         cursor: 'pointer',
-        width: '340px',
-        height: 'fit-content',
+        height: '100%',
       }}
       onClick={handlePickCampaign}
     >
@@ -232,10 +231,12 @@ function Campaigns() {
             gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
             gap: '16px',
             width: '100%',
+            gridAutoRows: '1fr',
             '& > *': {
               width: '100%',
               display: 'flex',
               flexDirection: 'column',
+              height: '100%',
             },
           }}
         >
@@ -261,7 +262,7 @@ function Campaigns() {
 
   return (
     <Stack gap={2} p={1} sx={{ width: '100%' }}>
-      <Typography variant="h4" fontWeight={700} gutterBottom>
+      <Typography variant="h4" fontWeight={700} fontFamily="Sora" fontSize={24} gutterBottom>
         Campaigns
       </Typography>
       <Divider />
@@ -271,10 +272,12 @@ function Campaigns() {
           gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
           gap: '16px',
           width: '100%',
+          gridAutoRows: '1fr',
           '& > *': {
             width: '100%',
             display: 'flex',
             flexDirection: 'column',
+            height: '100%',
           },
         }}
       >
