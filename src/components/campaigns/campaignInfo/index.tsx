@@ -148,7 +148,7 @@ function CampaignInfo({
         <Divider />
       </Box>
       <Box borderRadius={2} border="1px solid" borderColor="#E1E2EA" bgcolor="grey.50" width={340}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" px={3} py={1.5}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" p="16px">
           <Typography fontWeight={600}>Increase Your Boost</Typography>
           <Tooltip
             title="Your Super Account boosts the yield you earn from eligible Lisk Surge pools. The more traits you unlock, the higher the multiplier."
@@ -197,20 +197,14 @@ function CampaignInfo({
         <Box width="100%">
           <Divider sx={{ borderColor: '#E1E2EA' }} />
         </Box>
-        <Stack my={2} px={1.5}>
+        <Stack p="16px" gap="16px" spacing="0">
           {currentCampaign.boosts.map((boost: any, index: number) => {
             const displayName = boost.badgeName || boost.name || ''
             const currentLevel = typeof boost.currentLevel === 'number' ? boost.currentLevel : 0
             const maxLevel = typeof boost.maxLevel === 'number' ? boost.maxLevel : 0
             const isActive = boost.applies === true
             return (
-              <Box
-                key={displayName}
-                display="flex"
-                alignItems="center"
-                gap={2}
-                marginBottom={boost.type === 'level' ? 2 : -0.6}
-              >
+              <Box key={displayName} display="flex" alignItems="center" gap={2}>
                 <Box
                   width={58}
                   height={58}
@@ -279,22 +273,27 @@ function CampaignInfo({
                     </Typography>
                     <Box
                       sx={{
-                        px: 1,
-                        py: 0.2,
                         borderRadius: '100px',
                         display: 'flex',
                         alignItems: 'center',
                         border: '1px solid #386AFF',
                         background: '#EBF0FF',
-                        gap: 0.75,
-                        fontSize: 13,
-                        fontWeight: 600,
+                        fontSize: 10,
+                        fontWeight: 500,
+                        height: '20px',
+                        padding: '0px 4px',
                       }}
                     >
                       +{boost.boostPercent}%
                     </Box>
                   </Box>
-                  <Typography fontSize={12} color="text.secondary">
+                  <Typography
+                    fontSize={10}
+                    fontWeight={400}
+                    lineHeight="14px"
+                    textOverflow="ellipsis"
+                    color="text.secondary"
+                  >
                     {boost.description}
                   </Typography>
                 </Box>
@@ -305,13 +304,13 @@ function CampaignInfo({
       </Box>
 
       <Box borderRadius={2} border="1px solid" borderColor="#E1E2EA" bgcolor="grey.50" width={340}>
-        <Box display="flex" justifyContent="space-between" alignItems="center" px={3} py={2}>
+        <Box display="flex" justifyContent="space-between" alignItems="center" p="16px">
           <Typography fontWeight={600}>Earn Campaign Badge</Typography>
         </Box>
         <Box width="100%">
           <Divider sx={{ borderColor: '#E1E2EA' }} />
         </Box>
-        <Stack my={2} spacing={1.5} px={3}>
+        <Stack p="16px" gap="16px" spacing="0">
           {currentCampaign.campaign_badges.map((badge: any, index: number) => {
             const isActive = badge.applies === true
             const currentLevel = typeof badge.currentLevel === 'number' ? badge.currentLevel : 0
