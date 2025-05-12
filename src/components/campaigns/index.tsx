@@ -226,25 +226,35 @@ function Campaigns() {
       <Stack gap={2} p={1} sx={{ width: '100%' }}>
         <Skeleton variant="text" width={200} height={40} />
         <Divider />
-        <Grid container spacing={2}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gap: '16px',
+            width: '100%',
+            '& > *': {
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+            },
+          }}
+        >
           {[1, 2, 3].map((index) => (
-            <Grid item xs={12} sm={6} md={4} key={index}>
-              <Card variant="outlined" sx={{ p: 0, borderRadius: '12px', overflow: 'hidden', maxWidth: 340 }}>
-                <Skeleton variant="rectangular" height={192} />
-                <Box sx={{ p: 2 }}>
-                  <Skeleton variant="text" width="80%" height={32} sx={{ mb: 1 }} />
-                  <Skeleton variant="text" width="60%" height={24} sx={{ mb: 1 }} />
-                  <Skeleton variant="text" width="90%" height={20} sx={{ mb: 1 }} />
-                  <Skeleton variant="text" width="70%" height={20} sx={{ mb: 2 }} />
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Skeleton variant="rounded" width={120} height={30} />
-                    <Skeleton variant="circular" width={30} height={30} sx={{ ml: 'auto' }} />
-                  </Box>
+            <Card key={index} variant="outlined" sx={{ p: 0, borderRadius: '12px', overflow: 'hidden', maxWidth: 340 }}>
+              <Skeleton variant="rectangular" height={192} />
+              <Box sx={{ p: 2 }}>
+                <Skeleton variant="text" width="80%" height={32} sx={{ mb: 1 }} />
+                <Skeleton variant="text" width="60%" height={24} sx={{ mb: 1 }} />
+                <Skeleton variant="text" width="90%" height={20} sx={{ mb: 1 }} />
+                <Skeleton variant="text" width="70%" height={20} sx={{ mb: 2 }} />
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Skeleton variant="rounded" width={120} height={30} />
+                  <Skeleton variant="circular" width={30} height={30} sx={{ ml: 'auto' }} />
                 </Box>
-              </Card>
-            </Grid>
+              </Box>
+            </Card>
           ))}
-        </Grid>
+        </Box>
       </Stack>
     )
   }
@@ -268,14 +278,6 @@ function Campaigns() {
           },
         }}
       >
-        {campaigns.map((campaign) => {
-          return <CampaignCard campaign={campaign} key={campaign.name} setCurrentCampaign={setCurrentCampaign} />
-        })}
-
-        {campaigns.map((campaign) => {
-          return <CampaignCard campaign={campaign} key={campaign.name} setCurrentCampaign={setCurrentCampaign} />
-        })}
-
         {campaigns.map((campaign) => {
           return <CampaignCard campaign={campaign} key={campaign.name} setCurrentCampaign={setCurrentCampaign} />
         })}

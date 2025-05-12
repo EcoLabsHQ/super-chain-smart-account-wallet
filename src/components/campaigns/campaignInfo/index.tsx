@@ -197,14 +197,20 @@ function CampaignInfo({
         <Box width="100%">
           <Divider sx={{ borderColor: '#E1E2EA' }} />
         </Box>
-        <Stack my={2} spacing={1.5} px={3}>
+        <Stack my={2} px={1.5}>
           {currentCampaign.boosts.map((boost: any, index: number) => {
             const displayName = boost.badgeName || boost.name || ''
             const currentLevel = typeof boost.currentLevel === 'number' ? boost.currentLevel : 0
             const maxLevel = typeof boost.maxLevel === 'number' ? boost.maxLevel : 0
             const isActive = boost.applies === true
             return (
-              <Box key={displayName} display="flex" alignItems="center" gap={2}>
+              <Box
+                key={displayName}
+                display="flex"
+                alignItems="center"
+                gap={2}
+                marginBottom={boost.type === 'level' ? 2 : -0.6}
+              >
                 <Box
                   width={58}
                   height={58}
@@ -246,10 +252,31 @@ function CampaignInfo({
                       ))}
                     </Box>
                   )}
+                  {boost.type === 'level' && (
+                    <Box display="flex" flexDirection="column" alignItems="center">
+                      <Image src="/images/badges/star.svg" alt="Badge" width={32} height={32} />
+
+                      <Typography
+                        variant="h5"
+                        fontWeight={700}
+                        color="white"
+                        sx={{
+                          position: 'absolute',
+                          transform: 'translateY(-63%)',
+                          backgroundColor: 'transparent',
+                          pt: '50px',
+                        }}
+                      >
+                        {currentLevel}
+                      </Typography>
+                    </Box>
+                  )}
                 </Box>
                 <Box flex={1}>
                   <Box display="flex" alignItems="center" gap={1}>
-                    <Typography fontWeight={600}>{displayName}</Typography>
+                    <Typography fontWeight={600}>
+                      {boost.type === 'level' ? 'Level ' + boost.level : displayName}
+                    </Typography>
                     <Box
                       sx={{
                         px: 1,
@@ -261,6 +288,7 @@ function CampaignInfo({
                         background: '#EBF0FF',
                         gap: 0.75,
                         fontSize: 13,
+                        fontWeight: 600,
                       }}
                     >
                       +{boost.boostPercent}%
