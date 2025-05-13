@@ -191,6 +191,7 @@ function CampaignCard({
           {campaign.network.map((network: string, index: number) => {
             return (
               <Box
+                key={`box${campaign.id + network}`}
                 sx={{
                   ml: 'auto',
                   mr: '-10px',

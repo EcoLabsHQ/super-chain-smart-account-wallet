@@ -85,6 +85,7 @@ function CampaignInfo({
           {currentCampaign.network.map((network: string, index: number) => {
             return (
               <Box
+                key={`box${currentCampaign.id + network}`}
                 sx={{
                   borderRadius: '100px',
                   border: '1px solid #E1E2EA',
