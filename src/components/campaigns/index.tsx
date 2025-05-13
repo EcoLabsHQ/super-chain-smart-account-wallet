@@ -13,7 +13,7 @@ export interface Campaign {
   name: string
   description: string
   banner: string
-  network: string
+  network: string[]
   participate_description: string
   campaign_link: string
   boosts: Array<{
@@ -188,20 +188,24 @@ function CampaignCard({
               {campaign.totalBoost}% Boost
             </Typography>
           </Box>
-
-          <Box
-            sx={{
-              ml: 'auto',
-              borderRadius: '100px',
-              border: '1px solid #E1E2EA',
-              width: '30px',
-              pl: '2px',
-              pt: '2px',
-              height: '30px',
-            }}
-          >
-            <NetworkChip key={`${campaign.id}`} network={campaign.network} style="badge" isFavorite={false} />
-          </Box>
+          {campaign.network.map((network: string, index: number) => {
+            return (
+              <Box
+                sx={{
+                  ml: 'auto',
+                  mr: '-10px',
+                  borderRadius: '100px',
+                  border: '1px solid #E1E2EA',
+                  width: '30px',
+                  pl: '2px',
+                  pt: '2px',
+                  height: '30px',
+                }}
+              >
+                <NetworkChip key={`${campaign.id + network}`} network={network} style="badge" isFavorite={false} />
+              </Box>
+            )
+          })}
         </Box>
       </Box>
     </Card>
