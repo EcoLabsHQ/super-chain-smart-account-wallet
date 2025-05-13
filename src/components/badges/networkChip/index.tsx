@@ -12,13 +12,13 @@ interface NetworkChipProps {
   offSet?: number
 }
 const NetworkChip: React.FC<NetworkChipProps> = ({ network, style, isFavorite, className, offSet }) => {
-  const networkLogo = networks.find((x) => x.value === network.toLocaleLowerCase())?.icon ?? ''
+  const networkData = networks.find((x) => x.value === network.toLocaleLowerCase())
   const isBadge = style === 'badge'
   console.log(network)
 
   return isBadge ? (
     <Image
-      src={networkLogo}
+      src={networkData?.icon ?? ''}
       alt={`${network} Logo`}
       width={24}
       height={24}
@@ -30,8 +30,8 @@ const NetworkChip: React.FC<NetworkChipProps> = ({ network, style, isFavorite, c
     <Chip
       label={
         <Box display="flex" gap={1} alignItems="center">
-          <Image src={networkLogo} alt={`${network} Logo`} width={24} height={24} loading="lazy" />
-          <strong>{network}</strong>
+          <Image src={networkData?.icon ?? ''} alt={`${network} Logo`} width={24} height={24} loading="lazy" />
+          <strong>{networkData?.label}</strong>
         </Box>
       }
       sx={{

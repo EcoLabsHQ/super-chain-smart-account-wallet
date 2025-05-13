@@ -13,6 +13,7 @@ import Image from 'next/image'
 import CheckCircleIcon from '@/public/images/common/check-circle.svg'
 import NetworkChip from '../networkChip'
 import SeasonChip from '../seasonChip'
+import { formatXP } from '../badge'
 
 function BadgeInfo({
   currentBadge,
@@ -272,7 +273,7 @@ function BadgeInfo({
                 <Box key={index}>
                   <Box display="flex" justifyContent="space-between" alignItems="center" paddingY="4px">
                     <Typography color="#4B4B4E" fontSize="12px">
-                      {currentBadge.metadata.condition.replace('{{variable}}', tier.metadata.minValue.toString())}
+                      {currentBadge.metadata.condition.replace('{{variable}}', formatXP(tier.metadata.minValue))}
                     </Typography>
 
                     <SvgIcon
