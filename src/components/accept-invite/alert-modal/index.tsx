@@ -6,6 +6,8 @@ import AcceptInvite from './AcceptInvite'
 import { ModalContext } from '..'
 import LoadingTxn from './LoadingTxn'
 import FailedTxn from './FailedTxn'
+import axios from 'axios'
+import { BACKEND_BASE_URI } from '@/config/constants'
 export const ADD_OWNER_MODAL_QUERY_PARAM = 'addOwnerModal'
 
 export enum ModalState {
@@ -32,6 +34,7 @@ function AlertModal({ modalContext, onClose }: { modalContext: ModalContext; onC
       ])
       await publicClient.waitForTransactionReceipt({ hash: hash! })
       await new Promise((resolve) => setTimeout(resolve, 5000))
+      await axios.post(`${BACKEND_BASE_URI}/user/${modalContext.safe}/refresh-eoas`)
       onCloseAndErase()
       router.push({
         pathname: AppRoutes.home,

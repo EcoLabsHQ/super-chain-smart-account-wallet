@@ -12,7 +12,7 @@ type Noun = {
 
 export type Leaderboard = {
   data: {
-    level: number
+    levels: number
     noun: string
     superChainId: string
     superaccount: string

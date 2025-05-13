@@ -139,3 +139,7 @@ body.beamerAnnouncementBarTopActive {
 .MuiTableRow-root:hover {
   background-color: transparent !important;
 }
+.MuiPaper-root{
+  border-radius: 12px;
+  
+}

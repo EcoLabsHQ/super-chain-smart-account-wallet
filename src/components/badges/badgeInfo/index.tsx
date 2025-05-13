@@ -13,6 +13,7 @@ import Image from 'next/image'
 import CheckCircleIcon from '@/public/images/common/check-circle.svg'
 import NetworkChip from '../networkChip'
 import SeasonChip from '../seasonChip'
+import { formatXP } from '../badge'
 
 function BadgeInfo({
   currentBadge,
@@ -57,7 +58,7 @@ function BadgeInfo({
         justifyContent="center"
         alignItems="center"
       >
-        <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" p="10px 30px">
+        <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" p="10px 30px 0px 30px">
           <SeasonChip season={currentBadge.metadata.season} style="info" />
 
           <Box display="flex" alignItems="center" gap={1}>
@@ -75,7 +76,7 @@ function BadgeInfo({
           </Box>
         </Box>
       </Box>
-      <Card sx={{ border: 'none', borderRadius: 0, width: '100%' }}>
+      <Card sx={{ border: 'none', borderRadius: '0px', width: '100%', pt: '10px' }}>
         <CardMedia
           sx={{
             position: 'relative',
@@ -269,7 +270,7 @@ function BadgeInfo({
                 <Box key={index}>
                   <Box display="flex" justifyContent="space-between" alignItems="center" paddingY="4px">
                     <Typography color="#4B4B4E" fontSize="12px">
-                      {currentBadge.metadata.condition.replace('{{variable}}', tier.metadata.minValue.toString())}
+                      {currentBadge.metadata.condition.replace('{{variable}}', formatXP(tier.metadata.minValue))}
                     </Typography>
 
                     <SvgIcon

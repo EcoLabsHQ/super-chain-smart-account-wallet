@@ -12,7 +12,7 @@ import useSafeInfo from '@/hooks/useSafeInfo'
 
 export const networks = [
   {
-    label: 'OP ',
+    label: 'Optimism',
     value: 'optimism',
     icon: 'https://safe-transaction-assets.safe.global/chains/10/chain_logo.png',
   },
@@ -34,6 +34,11 @@ export const networks = [
     label: 'Soneium',
     value: 'soneium',
     icon: '/chains/1868/chain_logo.svg',
+  },
+  {
+    label: 'World',
+    value: 'worldcoin',
+    icon: 'https://safe-transaction-assets.safe.global/chains/480/chain_logo.png',
   },
 ]
 

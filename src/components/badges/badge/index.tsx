@@ -345,7 +345,7 @@ function Badge({
                 return (
                   <Box key={index} className={css.tierRow}>
                     <Typography fontSize="12px" fontWeight={500} fontFamily="Sora">
-                      {data.metadata.condition.replace('{{variable}}', tier.metadata.minValue.toString())}
+                      {data.metadata.condition.replace('{{variable}}', formatXP(tier.metadata.minValue))}
                     </Typography>
                     <SvgIcon
                       inheritViewBox
@@ -371,3 +371,13 @@ function Badge({
 }
 
 export default Badge
+
+export function formatXP(value: number): string {
+  if (value >= 1_000_000) {
+    return `${(value / 1_000_000).toFixed(2).replace(/\.00$/, '')}M`
+  }
+  if (value >= 1_000) {
+    return `${(value / 1_000).toFixed(2).replace(/\.00$/, '')}K`
+  }
+  return `${value}`
+}
