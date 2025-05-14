@@ -58,6 +58,7 @@ function Badges({ season }: { season?: { code: number; name: string } }) {
   const { safeAddress, safeLoaded } = useSafeInfo()
   const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)
   const [selectedNetworks, setSelectedNetworks] = useState<string[]>([])
+  const [selectedSeason, setSelectedSeason] = useState<string>('')
 
   const { data, isLoading, error } = useQuery<{
     currentBadges: ResponseBadge[]
@@ -77,11 +78,16 @@ function Badges({ season }: { season?: { code: number; name: string } }) {
     let filtered = currentPageBadges
 
     if (searchTerm) {
-      filtered = filtered.filter(
-        (badge) =>
-          badge.metadata.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          badge.metadata.platform.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
+      if (searchTerm.startsWith('season:')) {
+        const seasonNumber = searchTerm.split(':')[1]
+        filtered = filtered.filter((badge) => badge.metadata.season === Number(seasonNumber))
+      } else {
+        filtered = filtered.filter(
+          (badge) =>
+            badge.metadata.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            badge.metadata.platform.toLowerCase().includes(searchTerm.toLowerCase()),
+        )
+      }
     }
     if (selectedNetworks.length > 0) {
       filtered = filtered.filter((badge) =>

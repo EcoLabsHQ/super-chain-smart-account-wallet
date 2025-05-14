@@ -68,6 +68,7 @@ function BadgesActions({
 }) {
   const { safeAddress, safeLoaded } = useSafeInfo()
   const { data: superChainAccount } = useAppSelector(selectSuperChainAccount)
+  const [selectedSeason, setSelectedSeason] = useState<string>('')
 
   const router = useRouter()
   const [isClaimModalOpen, setIsClaimModalOpen] = useState(false)
@@ -132,6 +133,12 @@ function BadgesActions({
     setNetworks(typeof value === 'string' ? value.split(',') : value)
   }
 
+  const handleSeasonChange = (event: SelectChangeEvent<string>) => {
+    const value = event.target.value
+    setSelectedSeason(value)
+    setFilter(value ? `season:${value}` : '')
+  }
+
   return (
     <>
       <ClaimModal onLevelUp={handleLevelUp} data={claimData} open={isClaimModalOpen} onClose={handleCloseClaimModal} />
@@ -144,8 +151,8 @@ function BadgesActions({
       <FailedTxnModal open={isError} onClose={handleCloseLevelUpModal} handleRetry={() => mutate()} />
       <Grid container spacing={1} item>
         <Divider sx={{ mt: 1, mb: 2, width: '100%' }} />
-        <Grid container spacing={2} item>
-          <Grid item xs={12} lg={2.3}>
+        <Grid container spacing={2} item xs={12}>
+          <Grid item xs={12} lg={3}>
             <TextField
               placeholder="Search"
               sx={{
@@ -187,8 +194,63 @@ function BadgesActions({
               fullWidth
             />
           </Grid>
-          <Grid item xs={12} lg={3}>
+          <Grid item xs={12} lg={4}>
             <Box display="flex" gap={2}>
+              <Select
+                fullWidth
+                value={selectedSeason}
+                onChange={handleSeasonChange}
+                displayEmpty
+                renderValue={(selected) => (
+                  <Box sx={{ fontWeight: 600, color: 'black' }}>{selected ? 'SuperStacks' : 'All Campaigns'}</Box>
+                )}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      borderRadius: '16px',
+                    },
+                  },
+                }}
+                sx={{
+                  borderRadius: '25px',
+                  backgroundColor: '#F4F4F5',
+                  height: '34px',
+                  border: '1px solid transparent',
+                  boxShadow: 'none',
+                  maxWidth: { xs: '100%', lg: '200px' },
+                  lineHeight: '2em',
+                  '& .MuiSelect-select': {
+                    paddingX: '12px',
+                    height: '34px',
+                    display: 'flex',
+                    alignItems: 'center',
+                  },
+                  '&:hover': {
+                    backgroundColor: '#E0E0E0',
+                  },
+                  '&.Mui-focused': {
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid black',
+                  },
+                  '&:before, &:after': {
+                    border: 'none !important',
+                    display: 'none !important',
+                  },
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    border: 'none !important',
+                  },
+                }}
+              >
+                <MenuItem value="">
+                  <Typography fontSize={14}>All Campaigns</Typography>
+                </MenuItem>
+                <MenuItem value="1">
+                  <Typography fontSize={14}>SuperStacks</Typography>
+                </MenuItem>
+                <MenuItem value="2">
+                  <Typography fontSize={14}>Lisk Surge</Typography>
+                </MenuItem>
+              </Select>
               <Select
                 multiple
                 fullWidth
@@ -203,7 +265,7 @@ function BadgesActions({
                 MenuProps={{
                   PaperProps: {
                     sx: {
-                      borderRadius: '16px', // 🎯 Aquí se aplica el border radius al menú desplegable
+                      borderRadius: '16px',
                     },
                   },
                 }}
@@ -289,8 +351,7 @@ function BadgesActions({
               </Box>
             </Box>
           </Grid>
-
-          <Grid item xs={12} lg={6.7}>
+          <Grid item xs={12} lg={3}>
             <Box display="flex" justifyContent="flex-end" width="100%">
               <Button
                 fullWidth
