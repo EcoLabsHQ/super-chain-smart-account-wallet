@@ -351,7 +351,7 @@ function BadgesActions({
               </Box>
             </Box>
           </Grid>
-          <Grid item xs={12} lg={3}>
+          <Grid item xs={12} lg={5}>
             <Box display="flex" justifyContent="flex-end" width="100%">
               <Button
                 fullWidth
