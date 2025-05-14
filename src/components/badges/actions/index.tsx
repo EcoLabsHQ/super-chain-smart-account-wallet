@@ -59,16 +59,19 @@ function BadgesActions({
   claimable,
   setFilter,
   setNetworks,
+  setCampaign,
+  selectedCampaign,
   selectedNetworks,
 }: {
   claimable: boolean
   setFilter: (filter: string) => void
   setNetworks: (networks: string[]) => void
+  setCampaign: (campaign: string) => void
   selectedNetworks: string[]
+  selectedCampaign: string
 }) {
   const { safeAddress, safeLoaded } = useSafeInfo()
   const { data: superChainAccount } = useAppSelector(selectSuperChainAccount)
-  const [selectedSeason, setSelectedSeason] = useState<string>('')
 
   const router = useRouter()
   const [isClaimModalOpen, setIsClaimModalOpen] = useState(false)
@@ -128,15 +131,14 @@ function BadgesActions({
     setIsLevelUpModalOpen(true)
   }
 
-  const handleChange = (event: SelectChangeEvent<string[]>) => {
+  const handleNetworksChange = (event: SelectChangeEvent<string[]>) => {
     const value = event.target.value
     setNetworks(typeof value === 'string' ? value.split(',') : value)
   }
 
-  const handleSeasonChange = (event: SelectChangeEvent<string>) => {
+  const handleCampaignChange = (event: SelectChangeEvent<string>) => {
     const value = event.target.value
-    setSelectedSeason(value)
-    setFilter(value ? `season:${value}` : '')
+    setCampaign(value)
   }
 
   return (
@@ -198,11 +200,11 @@ function BadgesActions({
             <Box display="flex" gap={2}>
               <Select
                 fullWidth
-                value={selectedSeason}
-                onChange={handleSeasonChange}
+                value={selectedCampaign}
+                onChange={handleCampaignChange}
                 displayEmpty
                 renderValue={(selected) => (
-                  <Box sx={{ fontWeight: 600, color: 'black' }}>{selected ? 'SuperStacks' : 'All Campaigns'}</Box>
+                  <Box sx={{ fontWeight: 600, color: 'black' }}>{selected || 'All Campaigns'}</Box>
                 )}
                 MenuProps={{
                   PaperProps: {
@@ -244,10 +246,10 @@ function BadgesActions({
                 <MenuItem value="">
                   <Typography fontSize={14}>All Campaigns</Typography>
                 </MenuItem>
-                <MenuItem value="1">
+                <MenuItem value="SuperStacks">
                   <Typography fontSize={14}>SuperStacks</Typography>
                 </MenuItem>
-                <MenuItem value="2">
+                <MenuItem value="Lisk Surge">
                   <Typography fontSize={14}>Lisk Surge</Typography>
                 </MenuItem>
               </Select>
@@ -255,7 +257,7 @@ function BadgesActions({
                 multiple
                 fullWidth
                 value={selectedNetworks}
-                onChange={handleChange}
+                onChange={handleNetworksChange}
                 displayEmpty
                 renderValue={(selected) => (
                   <Box sx={{ fontWeight: 600, color: 'black' }}>
