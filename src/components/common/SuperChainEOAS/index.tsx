@@ -4,7 +4,7 @@ import MoreIcon from '@/public/images/common/more.svg'
 import useSafeInfo from '@/hooks/useSafeInfo'
 import EthHashInfo from '../EthHashInfo'
 import AddEOAModal from '@/components/superChain/AddEOAModal'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import usePopulatedEOASRequest from '@/hooks/super-chain/usePopulatedEOASRequest'
 import type { Address } from 'viem'
 import RemovePopulateModal from '@/components/superChain/RemovePopulateModal'
@@ -25,6 +25,27 @@ const SuperChainEOAS = () => {
     loading: populatedOwnersLoading,
     updateQuery,
   } = usePopulatedEOASRequest(safe.address.value as Address)
+
+  const boxRef = useRef<HTMLDivElement>(null)
+  const [isCompact, setIsCompact] = useState(false)
+
+  useEffect(() => {
+    const observer = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const width = entry.contentRect.width
+        setIsCompact(width < 480)
+      }
+    })
+
+    if (boxRef.current) {
+      observer.observe(boxRef.current)
+    }
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
+
   return (
     <div className={css.container}>
       <Typography fontWeight={600} fontSize={16} marginBottom={1}>
@@ -71,6 +92,7 @@ const SuperChainEOAS = () => {
             </Box>
             <Divider />
             <Box
+              ref={boxRef}
               p={2}
               gap={2}
               alignItems="center"
@@ -86,7 +108,7 @@ const SuperChainEOAS = () => {
                   address={owner.value}
                   showCopyButton
                   prefix=""
-                  shortAddress={false}
+                  shortAddress={isCompact}
                   showName={false}
                   hasExplorer
                 />
@@ -101,7 +123,7 @@ const SuperChainEOAS = () => {
                   address={owner.newOwner}
                   showCopyButton
                   prefix=""
-                  shortAddress={false}
+                  shortAddress={isCompact}
                   showName={false}
                   hasExplorer
                 />
