@@ -120,7 +120,7 @@ function DepositModal({
     onClose()
   }
 
-  const isValidAmount = Boolean(amount) && Number(amount) > 0
+  const isValidAmount = Boolean(amount) && Number(amount) > 0 && maxAmount >= Number(amount)
   const meetsMinDeposit = Number(vaultBalance) > 0 || Number(amount) >= Number(minDepositAmount)
   const canDeposit = isValidAmount && meetsMinDeposit
 
