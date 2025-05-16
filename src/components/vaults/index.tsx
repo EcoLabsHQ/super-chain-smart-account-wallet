@@ -13,6 +13,7 @@ import WithdrawModal from './WithdrawModal'
 import { Address } from 'viem'
 import SuccessModal from './SuccessModal'
 import Image from 'next/image'
+import ErrorModal from './ErrorModal'
 
 interface Vault {
   comet: string
@@ -51,7 +52,9 @@ function VaultCard({
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false)
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false)
   const [showSuccess, setShowSuccess] = useState(false)
-  const [depositAmount, setDepositAmount] = useState('')
+  const [showError, setShowError] = useState(false)
+
+  const [amount, setAmount] = useState('')
   const [txHash, setTxHash] = useState('')
   const [newBalance, setNewBalance] = useState(value.toString())
   const [maxAmount, setMaxAmount] = useState(value)
@@ -75,12 +78,33 @@ function VaultCard({
 
   const handleCloseSuccess = () => {
     setShowSuccess(false)
-    setDepositAmount('')
+    setAmount('')
     setTxHash('')
   }
 
+  const handleCloseShowError = () => {
+    setShowError(false)
+    setIsWithdrawModalOpen(false)
+    setIsDepositModalOpen(false)
+    setAmount('')
+    setTxHash('')
+  }
+
+  const handleTryAgain = (type: 'deposit' | 'withdraw') => {
+    setAmount('')
+    setTxHash('')
+    setShowError(false)
+    if (type === 'deposit') {
+      setIsDepositModalOpen(false)
+      setIsDepositModalOpen(true)
+    } else {
+      setIsWithdrawModalOpen(false)
+      setIsWithdrawModalOpen(true)
+    }
+  }
+
   const handleDepositSuccess = (amount: string, hash: string, balance: string) => {
-    setDepositAmount(amount)
+    setAmount(amount)
     setTxHash(hash)
     setNewBalance(balance)
     setMaxAmount(Number(balance))
@@ -90,13 +114,25 @@ function VaultCard({
   }
 
   const handleWithdrawSuccess = (amount: string, hash: string, balance: string) => {
-    setDepositAmount(amount)
+    setAmount(amount)
     setTxHash(hash)
     setNewBalance(balance)
     setMaxAmount(Number(balance))
     setLastOperationType('withdraw')
     setShowSuccess(true)
     setIsWithdrawModalOpen(false)
+  }
+
+  const handleWithdrawError = () => {
+    setLastOperationType('withdraw')
+    setShowError(true)
+    setIsWithdrawModalOpen(false)
+  }
+
+  const handleDepositError = () => {
+    setLastOperationType('deposit')
+    setShowError(true)
+    setIsDepositModalOpen(false)
   }
 
   return (
@@ -218,6 +254,7 @@ function VaultCard({
         tokenIcon={tokenIcon}
         onSuccess={handleDepositSuccess}
         minDepositAmount={minDepositAmount}
+        onError={handleDepositError}
       />
 
       <WithdrawModal
@@ -229,17 +266,25 @@ function VaultCard({
         tokenAddress={tokenAddress as Address}
         supplyTokenAddress={comet as Address}
         onSuccess={handleWithdrawSuccess}
+        onError={handleWithdrawError}
       />
 
       <SuccessModal
         open={showSuccess}
         onClose={handleCloseSuccess}
-        amount={depositAmount}
+        amount={amount}
         symbol={title}
         txHash={txHash}
         vaultBalance={newBalance}
         icon={icon}
         type={lastOperationType}
+      />
+
+      <ErrorModal
+        open={showError}
+        onClose={handleCloseShowError}
+        type={lastOperationType}
+        onTryAgain={handleTryAgain}
       />
     </Grid>
   )

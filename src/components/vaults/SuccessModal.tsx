@@ -13,7 +13,7 @@ import {
   SvgIcon,
 } from '@mui/material'
 import LaunchIcon from '@mui/icons-material/Launch'
-
+import Image from 'next/image'
 interface SuccessModalProps {
   open: boolean
   onClose: () => void
@@ -55,7 +55,7 @@ function SuccessModal({ open, onClose, amount, symbol, txHash, vaultBalance, ico
               Updated Vault Balance
             </Typography>
             <Stack direction="row" justifyContent="center" fontSize="16px" gap="6px" alignItems="center">
-              <SvgIcon component={icon} inheritViewBox fontSize="inherit" width={16} height={16} />
+              <Image src={icon} alt={symbol} width={28} height={24} />
               <Typography variant="h4" textAlign="center" fontWeight="medium">
                 {Number(vaultBalance).toFixed(2)}
               </Typography>

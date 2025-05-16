@@ -19,7 +19,6 @@ import { Address } from 'viem'
 import axios from 'axios'
 import { BACKEND_BASE_URI } from '@/config/constants'
 import useSafeAddress from '@/hooks/useSafeAddress'
-import SuccessModal from './SuccessModal'
 import useSuperChainAccount from '@/hooks/super-chain/useSuperChainAccount'
 import Image from 'next/image'
 
@@ -32,6 +31,7 @@ interface WithdrawModalProps {
   tokenAddress: Address
   supplyTokenAddress: Address
   onSuccess: (amount: string, hash: string, balance: string) => void
+  onError: () => void
 }
 
 function WithdrawModal({
@@ -43,32 +43,38 @@ function WithdrawModal({
   tokenAddress,
   supplyTokenAddress,
   onSuccess,
+  onError,
 }: WithdrawModalProps) {
   const address = useSafeAddress()
   const queryClient = useQueryClient()
   const { publicClient } = useSuperChainAccount()
   const { getCompoundWithdrawCallable } = useCompound()
   const [amount, setAmount] = useState<string>('')
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [txHash, setTxHash] = useState<string>('')
-  const [newBalance, setNewBalance] = useState<string>('')
 
   const { mutate: withdraw, isPending: isWithdrawing } = useMutation({
     mutationFn: async () => {
-      const withdrawCallable = getCompoundWithdrawCallable(tokenAddress, supplyTokenAddress)
-      const tx = await withdrawCallable.callContract(amount)
-      const hash = tx.toString()
+      let hash = ''
 
+      try {
+        const withdrawCallable = getCompoundWithdrawCallable(tokenAddress, supplyTokenAddress)
+        const tx = await withdrawCallable.callContract(amount)
+        hash = tx.toString()
+      } catch (error) {
+        console.log(error)
+        setAmount('')
+        onError()
+        return
+      }
       try {
         await publicClient.waitForTransactionReceipt({ hash: hash as `0x${string}`, timeout: 5000 })
       } catch (error) {
         console.log(error)
       }
+
       const calculatedNewBalance = (Number(maxAmount) - Number(amount)).toString()
       await axios.post(`${BACKEND_BASE_URI}/vaults/${address}/refresh`)
-      setTxHash(hash)
-      setNewBalance(calculatedNewBalance)
       onSuccess(amount, hash, calculatedNewBalance)
+      setAmount('')
     },
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: ['vaults', address] })
@@ -91,29 +97,26 @@ function WithdrawModal({
     withdraw()
   }
 
-  const handleCloseSuccess = () => {
-    setShowSuccess(false)
+  const handleClose = () => {
     setAmount('')
-    setTxHash('')
-    setNewBalance('')
+    onClose()
   }
 
   const isValidAmount = Boolean(amount) && Number(amount) >= 0
 
   return (
     <>
-      <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
+      <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: '24px' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Box width={24} height={24} fontSize="24px">
               <Image src={icon} alt={symbol} width={28} height={24} />
-              {/* <SvgIcon component={icon} inheritViewBox fontSize="inherit" width={24} height={24} /> */}
             </Box>
             <Typography fontSize="24px" fontWeight="bold">
               {symbol} Vault
             </Typography>
           </Box>
-          <IconButton onClick={onClose} size="small">
+          <IconButton onClick={handleClose} size="small">
             <CloseIcon />
           </IconButton>
         </DialogTitle>
@@ -161,7 +164,6 @@ function WithdrawModal({
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <Box width={24} height={24} fontSize="24px">
                     <Image src={icon} alt={symbol} width={28} height={24} />
-                    {/* <SvgIcon component={icon} inheritViewBox fontSize="inherit" width={24} height={24} /> */}
                   </Box>
                   <Typography fontSize="16px" fontWeight="bold">
                     {symbol}
@@ -216,17 +218,6 @@ function WithdrawModal({
           </Box>
         </DialogContent>
       </Dialog>
-
-      <SuccessModal
-        open={showSuccess}
-        onClose={handleCloseSuccess}
-        amount={amount}
-        symbol={symbol}
-        icon={icon}
-        txHash={txHash}
-        vaultBalance={newBalance}
-        type="withdraw"
-      />
     </>
   )
 }

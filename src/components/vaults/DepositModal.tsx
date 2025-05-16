@@ -21,7 +21,6 @@ import axios from 'axios'
 import { BACKEND_BASE_URI } from '@/config/constants'
 import useSafeAddress from '@/hooks/useSafeAddress'
 import useBalances from '@/hooks/useBalances'
-import SuccessModal from './SuccessModal'
 import useSuperChainAccount from '@/hooks/super-chain/useSuperChainAccount'
 import QrCodeButton from '../sidebar/QrCodeButton'
 import Image from 'next/image'
@@ -35,6 +34,7 @@ interface DepositModalProps {
   supplyTokenAddress: Address
   vaultBalance: string
   onSuccess: (amount: string, hash: string, balance: string) => void
+  onError: () => void
   minDepositAmount?: string
   tokenIcon: string
 }
@@ -48,6 +48,7 @@ function DepositModal({
   supplyTokenAddress,
   vaultBalance,
   onSuccess,
+  onError,
   minDepositAmount = '100',
   tokenIcon,
 }: DepositModalProps) {
@@ -57,9 +58,6 @@ function DepositModal({
   const queryClient = useQueryClient()
   const { balances, loading } = useBalances()
   const [amount, setAmount] = useState<string>('')
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [txHash, setTxHash] = useState<string>('')
-  const [newBalance, setNewBalance] = useState<string>('')
   const [isTouched, setIsTouched] = useState(false)
 
   const maxAmount = useMemo(() => {
@@ -72,9 +70,17 @@ function DepositModal({
 
   const { mutate: deposit, isPending: isDepositing } = useMutation({
     mutationFn: async () => {
-      const depositCallable = getCompoundDepositCallable(tokenAddress, supplyTokenAddress)
-      const tx = await depositCallable.callContract(amount)
-      const hash = tx.toString()
+      let hash = ''
+      try {
+        const depositCallable = getCompoundDepositCallable(tokenAddress, supplyTokenAddress)
+        const tx = await depositCallable.callContract(amount)
+        hash = tx.toString()
+      } catch (error) {
+        console.log(error)
+        onError()
+        setAmount('')
+        return
+      }
       try {
         await publicClient.waitForTransactionReceipt({ hash: hash as `0x${string}`, timeout: 5000 })
       } catch (error) {
@@ -83,9 +89,9 @@ function DepositModal({
 
       const calculatedNewBalance = (Number(vaultBalance) + Number(amount)).toString()
       await axios.post(`${BACKEND_BASE_URI}/vaults/${address}/refresh`)
-      setTxHash(hash)
-      setNewBalance(calculatedNewBalance)
+
       onSuccess(amount, hash, calculatedNewBalance)
+      setAmount('')
     },
     onSuccess: () => {
       queryClient.refetchQueries({ queryKey: ['vaults', address] })
@@ -114,13 +120,6 @@ function DepositModal({
     onClose()
   }
 
-  const handleCloseSuccess = () => {
-    setShowSuccess(false)
-    setAmount('')
-    setTxHash('')
-    setNewBalance('')
-  }
-
   const isValidAmount = Boolean(amount) && Number(amount) > 0
   const meetsMinDeposit = Number(vaultBalance) > 0 || Number(amount) >= Number(minDepositAmount)
   const canDeposit = isValidAmount && meetsMinDeposit
@@ -131,7 +130,6 @@ function DepositModal({
         <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: '24px' }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <Box width={24} height={24} fontSize="24px">
-              {/* <SvgIcon component={icon} inheritViewBox fontSize="inherit" width={24} height={24} /> */}
               <Image src={icon} alt={symbol} width={28} height={24} />
             </Box>
             <Typography fontSize="24px" fontWeight="bold">
@@ -264,17 +262,6 @@ function DepositModal({
           </Box>
         </DialogContent>
       </Dialog>
-
-      <SuccessModal
-        open={showSuccess}
-        onClose={handleCloseSuccess}
-        amount={amount}
-        symbol={symbol}
-        icon={icon}
-        txHash={txHash}
-        vaultBalance={newBalance}
-        type="deposit"
-      />
     </>
   )
 }
