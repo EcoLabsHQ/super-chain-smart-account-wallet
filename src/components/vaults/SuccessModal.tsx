@@ -10,7 +10,6 @@ import {
   DialogTitle,
   DialogActions,
   Stack,
-  SvgIcon,
 } from '@mui/material'
 import LaunchIcon from '@mui/icons-material/Launch'
 import Image from 'next/image'
