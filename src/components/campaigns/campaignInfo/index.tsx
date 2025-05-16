@@ -91,28 +91,25 @@ function CampaignInfo({
               </Typography>
             </Box>
           )}
-          {currentCampaign.network.map((network: string, index: number) => {
-            return (
-              <Box
-                key={`box${currentCampaign.id + network}`}
-                sx={{
-                  borderRadius: '100px',
-                  border: '1px solid #E1E2EA',
-                  width: '30px',
-                  pl: '2px',
-                  pt: '2px',
-                  height: '30px',
-                }}
-              >
-                <NetworkChip
-                  key={`${currentCampaign.id + network}`}
-                  network={network}
-                  style="badge"
-                  isFavorite={false}
-                />
-              </Box>
-            )
-          })}
+          {currentCampaign.network.map((network: string, index: number) => (
+            <Box
+              key={`box${currentCampaign.id + network}`}
+              sx={{
+                ml: index === 0 ? 0 : '-15px',
+                borderRadius: '100px',
+                border: '1px solid #E1E2EA',
+                width: '30px',
+                height: '30px',
+                pl: '2px',
+                pt: '2px',
+                backgroundColor: 'white',
+                zIndex: currentCampaign.network.length - index,
+                position: 'relative',
+              }}
+            >
+              <NetworkChip key={`${currentCampaign.id + network}`} network={network} style="badge" isFavorite={false} />
+            </Box>
+          ))}
         </Box>
         <IconButton size="small" onClick={() => setCurrentCampaign(null)}>
           <CloseIcon />
