@@ -181,6 +181,7 @@ function CampaignCard({
               background: '#EBF0FF',
               px: 1.5,
               py: 0.5,
+              visibility: campaign.totalBoost > 0 ? 'visible' : 'hidden',
             }}
           >
             <OfflineBoltOutlinedIcon sx={{ color: ' #386AFF', pr: '4px' }} />
@@ -188,25 +189,27 @@ function CampaignCard({
               {campaign.totalBoost}% Boost
             </Typography>
           </Box>
-          {campaign.network.map((network: string, index: number) => {
-            return (
+          <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto' }}>
+            {campaign.network.map((network: string, index: number) => (
               <Box
                 key={`box${campaign.id + network}`}
                 sx={{
-                  ml: 'auto',
-                  mr: '-10px',
+                  ml: index === 0 ? 0 : '-10px',
                   borderRadius: '100px',
                   border: '1px solid #E1E2EA',
                   width: '30px',
+                  height: '30px',
                   pl: '2px',
                   pt: '2px',
-                  height: '30px',
+                  backgroundColor: 'white',
+                  zIndex: campaign.network.length - index,
+                  position: 'relative',
                 }}
               >
                 <NetworkChip key={`${campaign.id + network}`} network={network} style="badge" isFavorite={false} />
               </Box>
-            )
-          })}
+            ))}
+          </Box>
         </Box>
       </Box>
     </Card>
