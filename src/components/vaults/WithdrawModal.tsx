@@ -94,6 +94,14 @@ function WithdrawModal({
 
   const handleWithdraw = () => {
     if (isWithdrawing) return
+
+    const withdrawAmount = Number(amount)
+    const epsilon = 1e-2
+
+    if (Math.abs(withdrawAmount - maxAmount) <= epsilon) {
+      setAmount(maxAmount.toString())
+    }
+
     withdraw()
   }
 
@@ -175,7 +183,7 @@ function WithdrawModal({
                   ${(Number(amount) || 0).toFixed(2)}
                 </Typography>
                 <Typography color="text.secondary" fontSize="14px">
-                  Available: {maxAmount.toFixed(2)}{' '}
+                  Available: {maxAmount.toFixed(5)}{' '}
                   <Button
                     onClick={handleSetMax}
                     size="small"

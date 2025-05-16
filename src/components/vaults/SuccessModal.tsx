@@ -56,7 +56,7 @@ function SuccessModal({ open, onClose, amount, symbol, txHash, vaultBalance, ico
             <Stack direction="row" justifyContent="center" fontSize="16px" gap="6px" alignItems="center">
               <Image src={icon} alt={symbol} width={28} height={24} />
               <Typography variant="h4" textAlign="center" fontWeight="medium">
-                {Number(vaultBalance).toFixed(2)}
+                {Number(vaultBalance) === 0 ? '0.00' : Number(vaultBalance).toFixed(5)}
               </Typography>
             </Stack>
           </Box>

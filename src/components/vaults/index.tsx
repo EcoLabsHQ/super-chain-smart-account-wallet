@@ -203,7 +203,7 @@ function VaultCard({
             <Image src={tokenIcon} alt={title} width={16} height={16} />
 
             <Typography fontSize="18px" variant="h4" fontWeight="bold">
-              {value.toFixed(decimals)}
+              {value === 0 ? '0.00' : value.toFixed(5)}
             </Typography>
           </Box>
         </Box>
