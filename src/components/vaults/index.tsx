@@ -38,6 +38,7 @@ function VaultCard({
   tokenIcon,
   depreciated = false,
   minDepositAmount = '100',
+  decimals = 6,
 }: {
   title: string
   value: number
@@ -48,6 +49,7 @@ function VaultCard({
   tokenIcon: any
   depreciated?: boolean
   minDepositAmount?: string
+  decimals: number
 }) {
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false)
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false)
@@ -201,7 +203,7 @@ function VaultCard({
             <Image src={tokenIcon} alt={title} width={16} height={16} />
 
             <Typography fontSize="18px" variant="h4" fontWeight="bold">
-              {value.toFixed(2)}
+              {value.toFixed(decimals)}
             </Typography>
           </Box>
         </Box>
@@ -432,6 +434,7 @@ function Vaults() {
               tokenAddress={vault.asset}
               depreciated={vault.depreciated}
               minDepositAmount={vault.min_deposit}
+              decimals={vault.decimals}
             />
           )
         })}
