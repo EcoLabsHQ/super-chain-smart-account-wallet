@@ -1,4 +1,4 @@
-import { Box, Stack, Typography, IconButton, Button, Divider, Tooltip } from '@mui/material'
+import { Box, Stack, Typography, IconButton, Button, Divider, Tooltip, Link } from '@mui/material'
 import OfflineBoltOutlinedIcon from '@mui/icons-material/OfflineBoltOutlined'
 import InsertInvitationTwoToneIcon from '@mui/icons-material/InsertInvitationTwoTone'
 import CloseIcon from '@mui/icons-material/Close'
@@ -7,6 +7,8 @@ import css from './styles.module.css'
 import { Campaign } from '..'
 import NetworkChip from '@/components/badges/networkChip'
 import Image from 'next/image'
+import router from 'next/router'
+import { AppRoutes } from '@/config/routes'
 
 function CampaignInfo({
   currentCampaign,
@@ -20,6 +22,13 @@ function CampaignInfo({
   const start = new Date(currentCampaign.start_date)
   const end = new Date(currentCampaign.end_date)
   const isLive = now >= start && now <= end
+
+  const handleBadgeClick = () => {
+    router.push({
+      pathname: AppRoutes.badges.allTime,
+      query: { safe: router.query.safe, campaign: currentCampaign.name },
+    })
+  }
 
   const formatDate = (date: Date) =>
     date.toLocaleDateString('en-US', {
@@ -324,48 +333,50 @@ function CampaignInfo({
               const maxLevel = typeof badge.maxLevel === 'number' ? badge.maxLevel : 0
               return (
                 <Box key={badge.badgeName} display="flex" alignItems="center" gap={2}>
-                  <Box
-                    width={58}
-                    height={58}
-                    padding="8px"
-                    borderRadius="12px"
-                    display="flex"
-                    flexDirection="column"
-                    alignItems="center"
-                    justifyContent="center"
-                    gap="6px"
-                    border={isActive ? '1px solid #39D551' : '1px solid #E1E2EA'}
-                    sx={{
-                      backgroundColor: isActive ? '#EBFBEE' : '#FFF',
-                      transition: 'all 0.2s ease-in-out',
-                      animation: 'fadeIn 0.3s ease-out',
-                      '&:hover': {
-                        boxShadow: isActive ? '0 0 16px rgba(57, 213, 81, 0.35)' : '0 0 8px rgba(0, 0, 0, 0.05)',
-                      },
-                      '@keyframes fadeIn': {
-                        '0%': {
-                          opacity: 0.8,
-                          transform: 'scale(0.98)',
+                  <Link onClick={handleBadgeClick} sx={{ cursor: 'pointer' }}>
+                    <Box
+                      width={58}
+                      height={58}
+                      padding="8px"
+                      borderRadius="12px"
+                      display="flex"
+                      flexDirection="column"
+                      alignItems="center"
+                      justifyContent="center"
+                      gap="6px"
+                      border={isActive ? '1px solid #39D551' : '1px solid #E1E2EA'}
+                      sx={{
+                        backgroundColor: isActive ? '#EBFBEE' : '#FFF',
+                        transition: 'all 0.2s ease-in-out',
+                        animation: 'fadeIn 0.3s ease-out',
+                        '&:hover': {
+                          boxShadow: isActive ? '0 0 16px rgba(57, 213, 81, 0.35)' : '0 0 8px rgba(0, 0, 0, 0.05)',
                         },
-                        '100%': {
-                          opacity: 1,
-                          transform: 'scale(1)',
+                        '@keyframes fadeIn': {
+                          '0%': {
+                            opacity: 0.8,
+                            transform: 'scale(0.98)',
+                          },
+                          '100%': {
+                            opacity: 1,
+                            transform: 'scale(1)',
+                          },
                         },
-                      },
-                    }}
-                  >
-                    {badge.image && <Image src={badge.image} alt={badge.badgeName} width={32} height={32} />}
-                    {maxLevel > 0 && (
-                      <Box display="flex" gap="2px" justifyContent="center">
-                        {[...Array(currentLevel)].map((_, i) => (
-                          <Box key={i} width={4} height={4} borderRadius="100px" bgcolor="#39D551" />
-                        ))}
-                        {[...Array(maxLevel - currentLevel)].map((_, i) => (
-                          <Box key={i} width={4} height={4} borderRadius="100px" bgcolor="#EBECF1" />
-                        ))}
-                      </Box>
-                    )}
-                  </Box>
+                      }}
+                    >
+                      {badge.image && <Image src={badge.image} alt={badge.badgeName} width={32} height={32} />}
+                      {maxLevel > 0 && (
+                        <Box display="flex" gap="2px" justifyContent="center">
+                          {[...Array(currentLevel)].map((_, i) => (
+                            <Box key={i} width={4} height={4} borderRadius="100px" bgcolor="#39D551" />
+                          ))}
+                          {[...Array(maxLevel - currentLevel)].map((_, i) => (
+                            <Box key={i} width={4} height={4} borderRadius="100px" bgcolor="#EBECF1" />
+                          ))}
+                        </Box>
+                      )}
+                    </Box>
+                  </Link>
                   <Box flex={1}>
                     <Box display="flex" alignItems="center" gap={1}>
                       <Typography fontWeight={600}>{badge.badgeName}</Typography>

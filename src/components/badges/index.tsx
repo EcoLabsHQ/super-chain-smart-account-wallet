@@ -9,6 +9,7 @@ import { useAppSelector } from '@/store'
 import { selectSuperChainAccount } from '@/store/superChainAccountSlice'
 import badgesService from '@/features/superChain/services/badges.service'
 import useSafeInfo from '@/hooks/useSafeInfo'
+import { useRouter } from 'next/router'
 
 export const networks = [
   {
@@ -58,7 +59,9 @@ function Badges({ season }: { season?: { code: number; name: string } }) {
   const { safeAddress, safeLoaded } = useSafeInfo()
   const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)
   const [selectedNetworks, setSelectedNetworks] = useState<string[]>([])
-  const [selectedCampaign, setSelectedCampaign] = useState<string>('')
+  const router = useRouter()
+  const { campaign } = router.query
+  const [selectedCampaign, setSelectedCampaign] = useState<string>(campaign as string)
 
   const { data, isLoading, error } = useQuery<{
     currentBadges: ResponseBadge[]
