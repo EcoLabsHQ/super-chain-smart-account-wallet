@@ -11,6 +11,7 @@ export const AppRoutes = {
     allTime: '/badges',
     season7: '/badges/season-7',
   },
+  campaigns: '/campaigns',
   cookie: '/cookie',
   contacts: '/contacts',
   addOwner: '/addOwner',
@@ -22,6 +23,9 @@ export const AppRoutes = {
     index: '/apps',
     custom: '/apps/custom',
     bookmarked: '/apps/bookmarked',
+  },
+  vaults: {
+    index: '/vaults',
   },
   balances: {
     nfts: '/balances/nfts',

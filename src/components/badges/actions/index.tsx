@@ -59,12 +59,16 @@ function BadgesActions({
   claimable,
   setFilter,
   setNetworks,
+  setCampaign,
+  selectedCampaign,
   selectedNetworks,
 }: {
   claimable: boolean
   setFilter: (filter: string) => void
   setNetworks: (networks: string[]) => void
+  setCampaign: (campaign: string) => void
   selectedNetworks: string[]
+  selectedCampaign: string
 }) {
   const { safeAddress, safeLoaded } = useSafeInfo()
   const { data: superChainAccount } = useAppSelector(selectSuperChainAccount)
@@ -127,9 +131,14 @@ function BadgesActions({
     setIsLevelUpModalOpen(true)
   }
 
-  const handleChange = (event: SelectChangeEvent<string[]>) => {
+  const handleNetworksChange = (event: SelectChangeEvent<string[]>) => {
     const value = event.target.value
     setNetworks(typeof value === 'string' ? value.split(',') : value)
+  }
+
+  const handleCampaignChange = (event: SelectChangeEvent<string>) => {
+    const value = event.target.value
+    setCampaign(value)
   }
 
   return (
@@ -144,8 +153,8 @@ function BadgesActions({
       <FailedTxnModal open={isError} onClose={handleCloseLevelUpModal} handleRetry={() => mutate()} />
       <Grid container spacing={1} item>
         <Divider sx={{ mt: 1, mb: 2, width: '100%' }} />
-        <Grid container spacing={2} item>
-          <Grid item xs={12} lg={2.3}>
+        <Grid container spacing={2} item xs={12}>
+          <Grid item xs={12} lg={3}>
             <TextField
               placeholder="Search"
               sx={{
@@ -187,13 +196,68 @@ function BadgesActions({
               fullWidth
             />
           </Grid>
-          <Grid item xs={12} lg={3}>
+          <Grid item xs={12} lg={4}>
             <Box display="flex" gap={2}>
+              <Select
+                fullWidth
+                value={selectedCampaign}
+                onChange={handleCampaignChange}
+                displayEmpty
+                renderValue={(selected) => (
+                  <Box sx={{ fontWeight: 600, color: 'black' }}>{selected || 'All Campaigns'}</Box>
+                )}
+                MenuProps={{
+                  PaperProps: {
+                    sx: {
+                      borderRadius: '16px',
+                    },
+                  },
+                }}
+                sx={{
+                  borderRadius: '25px',
+                  backgroundColor: '#F4F4F5',
+                  height: '34px',
+                  border: '1px solid transparent',
+                  boxShadow: 'none',
+                  maxWidth: { xs: '100%', lg: '200px' },
+                  lineHeight: '2em',
+                  '& .MuiSelect-select': {
+                    paddingX: '12px',
+                    height: '34px',
+                    display: 'flex',
+                    alignItems: 'center',
+                  },
+                  '&:hover': {
+                    backgroundColor: '#E0E0E0',
+                  },
+                  '&.Mui-focused': {
+                    backgroundColor: '#FFFFFF',
+                    border: '1px solid black',
+                  },
+                  '&:before, &:after': {
+                    border: 'none !important',
+                    display: 'none !important',
+                  },
+                  '& .MuiOutlinedInput-notchedOutline': {
+                    border: 'none !important',
+                  },
+                }}
+              >
+                <MenuItem value="">
+                  <Typography fontSize={14}>All Campaigns</Typography>
+                </MenuItem>
+                <MenuItem value="SuperStacks">
+                  <Typography fontSize={14}>SuperStacks</Typography>
+                </MenuItem>
+                <MenuItem value="Lisk Surge">
+                  <Typography fontSize={14}>Lisk Surge</Typography>
+                </MenuItem>
+              </Select>
               <Select
                 multiple
                 fullWidth
                 value={selectedNetworks}
-                onChange={handleChange}
+                onChange={handleNetworksChange}
                 displayEmpty
                 renderValue={(selected) => (
                   <Box sx={{ fontWeight: 600, color: 'black' }}>
@@ -203,7 +267,7 @@ function BadgesActions({
                 MenuProps={{
                   PaperProps: {
                     sx: {
-                      borderRadius: '16px', // 🎯 Aquí se aplica el border radius al menú desplegable
+                      borderRadius: '16px',
                     },
                   },
                 }}
@@ -289,8 +353,7 @@ function BadgesActions({
               </Box>
             </Box>
           </Grid>
-
-          <Grid item xs={12} lg={6.7}>
+          <Grid item xs={12} lg={5}>
             <Box display="flex" justifyContent="flex-end" width="100%">
               <Button
                 fullWidth

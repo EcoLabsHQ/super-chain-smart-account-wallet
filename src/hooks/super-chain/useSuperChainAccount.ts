@@ -13,8 +13,9 @@ import { Safe4337Pack } from '@safe-global/relay-kit'
 import { BACKEND_BASE_URI } from '@/config/constants'
 import { ConnectedWallet } from '../wallets/useOnboard'
 import { MetaTransactionData } from '@safe-global/safe-core-sdk-types'
+import { patchFetch } from '@/services/airdrop/fecthPatch'
 
-let fetchPatched = false
+export let fetchPatched = false
 
 function useSuperChainAccount() {
   const { smartAccountClient } = usePimlico()
@@ -32,18 +33,7 @@ function useSuperChainAccount() {
   const getSponsoredCallableSuperChainSmartAccount = () => {
     return {
       callContract: async (wallet: ConnectedWallet, safeAddres: string, txData: `0x${string}`) => {
-        if (!fetchPatched) {
-          const originalFetch = window.fetch
-
-          window.fetch = (url, options = {}) => {
-            return originalFetch(url, {
-              ...options,
-              credentials: 'include',
-            })
-          }
-
-          fetchPatched = true
-        }
+        patchFetch()
 
         const safe4337Pack = await Safe4337Pack.init({
           provider: wallet.provider as Eip1193Provider,

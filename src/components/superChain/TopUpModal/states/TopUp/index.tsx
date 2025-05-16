@@ -8,7 +8,10 @@ import CopyButton from '@/components/common/CopyButton'
 import ExplorerButton from '@/components/common/ExplorerButton'
 import Image from 'next/image'
 import OETH from '@/public/images/currencies/ethereum.svg'
+import WETH from '@/public/images/currencies/weth.svg'
 import OP from '@/public/images/currencies/optimism.svg'
+import USDC from '@/public/images/currencies/usdc.svg'
+import USDT from '@/public/images/currencies/usdt.svg'
 import lightPalette from '@/components/theme/lightPalette'
 import { useAppSelector } from '@/store'
 import { selectSuperChainAccount } from '@/store/superChainAccountSlice'
@@ -51,19 +54,24 @@ export type Token = {
   icon: SvgIconComponent
 }
 
-const tokens: Record<string, Token> = {
+export const tokens: Record<string, Token> = {
   ETH: { values: [0.02, 0.05, 0.1], decimals: 18, address: '0x0000000000000000000000000000000000000000', icon: OETH },
+  WETH: { values: [0.02, 0.05, 0.1], decimals: 18, address: '0x4200000000000000000000000000000000000006', icon: WETH },
   OP: { values: [10, 20, 50], decimals: 18, address: '0x4200000000000000000000000000000000000042', icon: OP },
+  USDC: { values: [25, 50, 100], decimals: 6, address: '0x0b2c639c533813f4aa9d7837caf62653d097ff85', icon: USDC },
+  USDT: { values: [25, 50, 100], decimals: 6, address: '0x94b008aa00579c1307b0ef2c499ad98a8ce58e58', icon: USDT },
 }
 
 function TopUp({
   handleTopUp,
   open,
   onClose,
+  defaultToken,
 }: {
   handleTopUp: (value: bigint, token: Token) => void
   open: boolean
   onClose: () => void
+  defaultToken?: string
 }): ReactElement {
   const { publicClient } = useSuperChainAccount()
   const superChainSmartAccount = useAppSelector(selectSuperChainAccount)
@@ -76,8 +84,9 @@ function TopUp({
       : undefined
   const [selectedValue, setSelectedValue] = useState<number | null>(null)
   const [customValue, setCustomValue] = useState<string>('')
-  const [selectedToken, setSelectedToken] = useState<keyof typeof tokens>('ETH')
+  const [selectedToken, setSelectedToken] = useState<keyof typeof tokens>(defaultToken ?? 'ETH')
   const [tokenBalance, setTokenBalance] = useState<number>(0)
+
   const nounSeed = useMemo(() => {
     return {
       background: Number(superChainSmartAccount.data.noun[0]),
@@ -167,18 +176,14 @@ function TopUp({
               }}
               value={selectedToken}
             >
-              <MenuItem value="ETH">
-                <Box pr={1} display="flex" gap={1}>
-                  <SvgIcon component={OETH} />
-                  ETH
-                </Box>
-              </MenuItem>
-              <MenuItem value="OP">
-                <Box pr={1} display="flex" gap={1}>
-                  <SvgIcon component={OP} />
-                  OP
-                </Box>
-              </MenuItem>
+              {Object.keys(tokens).map((token) => (
+                <MenuItem value={token} key={token}>
+                  <Box pr={1} display="flex" gap={1}>
+                    <SvgIcon component={tokens[token].icon} width={36} height={36} inheritViewBox />
+                    {token}
+                  </Box>
+                </MenuItem>
+              ))}
             </Select>
             {tokens[selectedToken].values.map((value, index) => (
               <Button

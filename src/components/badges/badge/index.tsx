@@ -108,7 +108,7 @@ function Badge({
               <SvgIcon
                 component={isFavorite ? HeartFilled : Hearth}
                 sx={{
-                  color: isFavorite ? 'red' : '#E1E2EA',
+                  color: isFavorite ? 'red' : 'white',
                   fontSize: '20px',
                 }}
                 inheritViewBox
