@@ -52,8 +52,8 @@ class BadgesService {
     }>(`/user/${account}/badges`)
     return response.data
   }
-  public async attestBadges(account: Address) {
-    const response = await this.httpInstance.post(`/user/${account}/badges/claim`)
+  public async attestBadges(account: Address, captchaToken: string | null) {
+    const response = await this.httpInstance.post(`/user/${account}/badges/claim`, { captchaToken })
     return response.data
   }
   public async getPerks(account: Address) {

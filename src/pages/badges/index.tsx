@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import Turnstile from 'react-cloudflare-turnstile'
+import Turnstile from 'react-turnstile'
 import Badges from '@/components/badges'
 import { useState } from 'react'
 
@@ -10,6 +10,7 @@ const Home: NextPage = () => {
     setToken(token)
     console.log('Captcha token:', token)
   }
+
   return (
     <>
       <Head>
@@ -17,8 +18,8 @@ const Home: NextPage = () => {
       </Head>
 
       <main>
-        <Badges />
-        <Turnstile callback={handleToken} turnstileSiteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!} />
+        <Badges captchaToken={token} />
+        <Turnstile onSuccess={handleToken} sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!} />
       </main>
     </>
   )

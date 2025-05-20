@@ -62,6 +62,7 @@ function BadgesActions({
   setCampaign,
   selectedCampaign,
   selectedNetworks,
+  captchaToken,
 }: {
   claimable: boolean
   setFilter: (filter: string) => void
@@ -69,6 +70,7 @@ function BadgesActions({
   setCampaign: (campaign: string) => void
   selectedNetworks: string[]
   selectedCampaign: string
+  captchaToken: string | null
 }) {
   const { safeAddress, safeLoaded } = useSafeInfo()
   const { data: superChainAccount } = useAppSelector(selectSuperChainAccount)
@@ -80,7 +82,7 @@ function BadgesActions({
   const queryClient = useQueryClient()
   const { mutate, isPending, isError } = useMutation({
     mutationFn: async () => {
-      return await badgesService.attestBadges(safeAddress as Address)
+      return await badgesService.attestBadges(safeAddress as Address, captchaToken)
     },
     onError: (error) => {
       console.error(error)
@@ -357,7 +359,7 @@ function BadgesActions({
             <Box display="flex" justifyContent="flex-end" width="100%">
               <Button
                 fullWidth
-                disabled={!claimable || isPending}
+                disabled={!claimable || isPending || !captchaToken}
                 variant="contained"
                 onClick={() => mutate()}
                 endIcon={<SvgIcon component={AutorenewIcon} width={16} height={16} inheritViewBox color="inherit" />}
