@@ -1,5 +1,5 @@
 import { Box, Dialog, Stack, SvgIcon, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import SuperChainStart from '@/public/images/common/superchain-star.svg'
 import css from './styles.module.css'
 import { getBlockExplorerLink } from '@/utils/chains'
@@ -10,6 +10,20 @@ import LinkIconBold from '@/public/images/sidebar/link-bold.svg'
 function LoadingModal({ open, title, hash }: { open: boolean; title: string; hash?: string }) {
   const chain = useCurrentChain()
   const blockExplorerLink = chain && hash ? getBlockExplorerLink(chain, hash) : undefined
+
+  const [showWaitMessage, setShowWaitMessage] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (!hash) {
+      const timeout = setTimeout(() => {
+        setShowWaitMessage(true)
+      }, 30_000)
+
+      return () => clearTimeout(timeout)
+    } else {
+      setShowWaitMessage(false)
+    }
+  }, [hash])
 
   return (
     <Dialog className={css.container} open={open} onClose={() => {}}>
@@ -26,12 +40,18 @@ function LoadingModal({ open, title, hash }: { open: boolean; title: string; has
           {title}
         </Typography>
         <SvgIcon className={css.spin} component={SuperChainStart} inheritViewBox fontSize="inherit" />
-        {hash && (
+        {hash ? (
           <Stack direction="row" spacing={1} alignItems="center" justifyContent="center" fontSize={12} color="GrayText">
             <Typography color="GrayText">View on explorer</Typography>
             <ExplorerButton {...blockExplorerLink} icon={LinkIconBold} fontSize="inherit" color="inherit" />
           </Stack>
-        )}
+        ) : showWaitMessage ? (
+          <Typography fontSize={12} color="GrayText">
+            Is this taking too long?
+            <br />
+            You can close this page. Your claim will be processed in the order it was received.
+          </Typography>
+        ) : null}
       </Box>
     </Dialog>
   )
