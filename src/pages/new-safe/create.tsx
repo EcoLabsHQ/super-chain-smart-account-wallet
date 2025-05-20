@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import type { NextPage } from 'next'
-
 import CreateSafe from '@/components/new-safe/create'
+import { PendingSafeProvider } from '@/components/new-safe/create/steps/StatusStep/PendingSafeContext'
 
 const Open: NextPage = () => {
   return (
@@ -10,7 +10,9 @@ const Open: NextPage = () => {
         <title>Super Account – Create Safe Account</title>
       </Head>
 
-      <CreateSafe />
+      <PendingSafeProvider>
+        <CreateSafe />
+      </PendingSafeProvider>
     </main>
   )
 }

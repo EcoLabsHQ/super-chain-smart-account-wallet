@@ -1,13 +1,10 @@
 import { useCurrentChain } from '@/hooks/useChains'
-import useLocalStorage from '@/services/local-storage/useLocalStorage'
-import { useCallback } from 'react'
-import type { PendingSafeByChain, PendingSafeData } from '../../types'
-
-const SAFE_PENDING_CREATION_STORAGE_KEY = 'pendingSafe_v2'
+import { useCallback, useContext } from 'react'
+import type { PendingSafeData } from '../../types'
+import { PendingSafeContext } from './PendingSafeContext'
 
 export const usePendingSafe = (): [PendingSafeData | undefined, (safe: PendingSafeData | undefined) => void] => {
-  const [pendingSafes, setPendingSafes] = useLocalStorage<PendingSafeByChain>(SAFE_PENDING_CREATION_STORAGE_KEY)
-
+  const { pendingSafes, setPendingSafes } = useContext(PendingSafeContext)
   const chainInfo = useCurrentChain()
 
   const pendingSafe = chainInfo && pendingSafes?.[chainInfo.chainId]
@@ -17,8 +14,7 @@ export const usePendingSafe = (): [PendingSafeData | undefined, (safe: PendingSa
         return
       }
 
-      // Always copy the object because useLocalStorage does not check for deep equality when writing back to ls
-      const newPendingSafes = pendingSafes ? { ...pendingSafes } : {}
+      const newPendingSafes = { ...pendingSafes }
       newPendingSafes[chainInfo.chainId] = safe
       setPendingSafes(newPendingSafes)
     },
