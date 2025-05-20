@@ -18061,6 +18061,11 @@ rc@^1.2.7:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
+react-cloudflare-turnstile@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/react-cloudflare-turnstile/-/react-cloudflare-turnstile-2.0.0.tgz#730b03788b34208aa8efce77d347fe81598244e3"
+  integrity sha512-wWkOOH8uq8UIcyyqAcz+hBtRJNGeCwaoTi+qcIBR8t0QumHida1wZ8ZpcG+GuM3BIirq0T++C0TRICrxxC3fLA==
+
 react-colorful@^5.1.2:
   version "5.6.1"
   resolved "https://registry.yarnpkg.com/react-colorful/-/react-colorful-5.6.1.tgz#7dc2aed2d7c72fac89694e834d179e32f3da563b"
