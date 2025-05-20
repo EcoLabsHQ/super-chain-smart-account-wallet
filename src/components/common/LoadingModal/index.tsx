@@ -14,7 +14,7 @@ function LoadingModal({ open, title, hash }: { open: boolean; title: string; has
   const [showWaitMessage, setShowWaitMessage] = useState<boolean>(false)
 
   useEffect(() => {
-    if (!hash) {
+    if (open && !hash) {
       const timeout = setTimeout(() => {
         setShowWaitMessage(true)
       }, 30_000)
