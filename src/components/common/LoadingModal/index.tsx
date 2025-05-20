@@ -23,7 +23,7 @@ function LoadingModal({ open, title, hash }: { open: boolean; title: string; has
     } else {
       setShowWaitMessage(false)
     }
-  }, [hash])
+  }, [open, hash])
 
   return (
     <Dialog className={css.container} open={open} onClose={() => {}}>
