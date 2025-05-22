@@ -38,12 +38,7 @@ const SidebarFooter = (): ReactElement => {
       )} */}
 
       <ListItem disablePadding>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://tally.superchain.eco/accountsform"
-          style={{ width: '100%' }}
-        >
+        <a target="_blank" rel="noopener noreferrer" href="https://t.me/superchaineco" style={{ width: '100%' }}>
           <SidebarListItemButton>
             <SidebarListItemIcon color="primary">
               <FeedbackIcon />
@@ -55,12 +50,7 @@ const SidebarFooter = (): ReactElement => {
         </a>
       </ListItem>
       <ListItem disablePadding>
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://ecosystem-accounts.super.site/"
-          style={{ width: '100%' }}
-        >
+        <a target="_blank" rel="noopener noreferrer" href=" https://docs.superchain.eco/" style={{ width: '100%' }}>
           <SidebarListItemButton>
             <SidebarListItemIcon color="primary">
               <DocsIcon />
