@@ -14,7 +14,7 @@ type Noun = {
 type UserRank = {
   rank: number
   data: {
-    level: number
+    levels: number
     noun: string
     superChainId: string
     superaccount: string
