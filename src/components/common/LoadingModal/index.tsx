@@ -1,5 +1,5 @@
 import { Box, Dialog, Stack, SvgIcon, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import SuperChainStart from '@/public/images/common/superchain-star.svg'
 import css from './styles.module.css'
 import { getBlockExplorerLink } from '@/utils/chains'
