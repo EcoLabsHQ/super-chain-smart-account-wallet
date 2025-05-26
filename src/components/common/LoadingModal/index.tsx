@@ -11,20 +11,6 @@ function LoadingModal({ open, title, hash }: { open: boolean; title: string; has
   const chain = useCurrentChain()
   const blockExplorerLink = chain && hash ? getBlockExplorerLink(chain, hash) : undefined
 
-  const [showWaitMessage, setShowWaitMessage] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (open && !hash) {
-      const timeout = setTimeout(() => {
-        setShowWaitMessage(true)
-      }, 30_000)
-
-      return () => clearTimeout(timeout)
-    } else {
-      setShowWaitMessage(false)
-    }
-  }, [open, hash])
-
   return (
     <Dialog className={css.container} open={open} onClose={() => {}}>
       <Box
@@ -40,18 +26,12 @@ function LoadingModal({ open, title, hash }: { open: boolean; title: string; has
           {title}
         </Typography>
         <SvgIcon className={css.spin} component={SuperChainStart} inheritViewBox fontSize="inherit" />
-        {hash ? (
+        {hash && (
           <Stack direction="row" spacing={1} alignItems="center" justifyContent="center" fontSize={12} color="GrayText">
             <Typography color="GrayText">View on explorer</Typography>
             <ExplorerButton {...blockExplorerLink} icon={LinkIconBold} fontSize="inherit" color="inherit" />
           </Stack>
-        ) : showWaitMessage ? (
-          <Typography fontSize={12} color="GrayText">
-            Is this taking too long?
-            <br />
-            You can close this page. Your claim will be processed in the order it was received.
-          </Typography>
-        ) : null}
+        )}
       </Box>
     </Dialog>
   )
