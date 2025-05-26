@@ -52,10 +52,36 @@ class BadgesService {
     }>(`/user/${account}/badges`)
     return response.data
   }
-  public async attestBadges(account: Address, captchaToken: string | null) {
-    const response = await this.httpInstance.post(`/user/${account}/badges/claim`, { captchaToken })
-    return response.data
+  // public async attestBadges(account: Address, captchaToken: string | null) {
+  //   const response = await this.httpInstance.post(`/user/${account}/badges/claim`, { captchaToken })
+  //   return response.data
+  // }
+
+  public async attestBadges(account: Address, captchaToken: string | null): Promise<any> {
+    const maxRetries: number = 1
+    let attempt: number = 0
+
+    while (attempt <= maxRetries) {
+      try {
+        const response = await this.httpInstance.post(`/user/${account}/badges/claim`, { captchaToken })
+
+        if (response.status === 201) {
+          return response.data
+        }
+
+        attempt++
+      } catch (error) {
+        attempt++
+
+        if (attempt > maxRetries) {
+          throw error
+        }
+      }
+    }
+
+    throw new Error('Claiming failed after retries')
   }
+
   public async getPerks(account: Address) {
     const response = await this.httpInstance.get<{ perks: Perks }>(`/user/${account}/perks`)
     return response.data.perks
