@@ -6,7 +6,7 @@ import { MetaTransactionData } from '@safe-global/safe-core-sdk-types'
 import useWallet from '../wallets/useWallet'
 import useSafeAddress from '../useSafeAddress'
 import { COMPOUND_ABI } from '@/features/superChain/constants'
-import { patchFetch } from '@/services/airdrop/fecthPatch'
+import { patchFetch } from '@/utils/fecthPatch'
 
 function useCompound() {
   const wallet = useWallet()

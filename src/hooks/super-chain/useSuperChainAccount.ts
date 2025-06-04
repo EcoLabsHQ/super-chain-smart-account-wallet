@@ -13,7 +13,7 @@ import { Safe4337Pack } from '@safe-global/relay-kit'
 import { BACKEND_BASE_URI } from '@/config/constants'
 import { ConnectedWallet } from '../wallets/useOnboard'
 import { MetaTransactionData } from '@safe-global/safe-core-sdk-types'
-import { patchFetch } from '@/services/airdrop/fecthPatch'
+import { patchFetch } from '@/utils/fecthPatch'
 
 export let fetchPatched = false
 
