@@ -151,7 +151,7 @@ function BadgesActions({
         level={Number(superChainAccount?.level)}
         onClose={handleCloseLevelUpModal}
       />
-      <LoadingModal open={isPending} title="Updating badges" />
+      <LoadingModal open={isPending} title="Claiming badges" />
       <FailedTxnModal open={isError} onClose={handleCloseLevelUpModal} handleRetry={() => mutate()} />
       <Grid container spacing={1} item>
         <Divider sx={{ mt: 1, mb: 2, width: '100%' }} />
