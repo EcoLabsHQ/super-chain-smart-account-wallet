@@ -225,6 +225,7 @@ function Campaigns() {
       const response = await axios.get(`${BACKEND_BASE_URI}/campaigns/${address}`)
       return response.data
     },
+    refetchInterval: 10000,
     enabled: !!address,
   })
 
