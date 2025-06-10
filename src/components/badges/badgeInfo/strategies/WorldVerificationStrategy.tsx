@@ -8,7 +8,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import useSafeAddress from '@/hooks/useSafeAddress'
 import CloseIcon from '@mui/icons-material/Close'
 import { uuidv4 } from '@walletconnect/utils'
-import { IDKitWidget, VerificationLevel } from '@worldcoin/idkit'
+import { IDKitWidget, ISuccessResult, VerificationLevel } from '@worldcoin/idkit'
 
 class WorldIDVerificationStrategy implements BadgeRenderStrategy {
   canRender(badge: ResponseBadge): boolean {
@@ -56,9 +56,9 @@ export function WorldIDVerificationComponent({ badge }: { badge: ResponseBadge }
 
   return (
     <>
-      <IDKitWidget
-        app_id="app_GBkZ1KlVUdFTjeMXKlVUdFT"
-        action="vote_1"
+      {/* <IDKitWidget
+        app_id="app_staging_7b1ab4e8a1f7e1e26a23b6040af1bded"
+        action="worldcoin-badge-validation"
         signal="user_value"
         onSuccess={onSuccess}
         verification_level={VerificationLevel.Device}
@@ -75,7 +75,7 @@ export function WorldIDVerificationComponent({ badge }: { badge: ResponseBadge }
             </Button>
           )
         }}
-      </IDKitWidget>
+      </IDKitWidget> */}
 
       <Dialog
         open={isValidationModalOpen}
