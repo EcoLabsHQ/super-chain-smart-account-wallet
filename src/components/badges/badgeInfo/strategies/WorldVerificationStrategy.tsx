@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import type { ResponseBadge } from '@/types/super-chain'
 import type { BadgeRenderStrategy } from '../BadgeStrategyRenderer'
 import { Box, Button, Dialog, DialogContent, DialogTitle, Divider, IconButton, Typography } from '@mui/material'
-import axios from 'axios'
-import { BACKEND_BASE_URI } from '@/config/constants'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from '@tanstack/react-query'
 import useSafeAddress from '@/hooks/useSafeAddress'
 import CloseIcon from '@mui/icons-material/Close'
 import { uuidv4 } from '@walletconnect/utils'
-import { IDKitWidget, ISuccessResult, VerificationLevel } from '@worldcoin/idkit'
+import { ISuccessResult } from '@worldcoin/idkit'
 
 class WorldIDVerificationStrategy implements BadgeRenderStrategy {
   canRender(badge: ResponseBadge): boolean {
