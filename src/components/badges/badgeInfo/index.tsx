@@ -14,6 +14,8 @@ import CheckCircleIcon from '@/public/images/common/check-circle.svg'
 import NetworkChip from '../networkChip'
 import SeasonChip from '../seasonChip'
 import { formatXP } from '../badge'
+import BadgeStrategyRenderer from './BadgeStrategyRenderer'
+import { WorldIDVerificationStrategy } from './strategies/WorldVerificationStrategy'
 
 function BadgeInfo({
   currentBadge,
@@ -47,6 +49,7 @@ function BadgeInfo({
   if (!currentBadge) return null
 
   const isCompleted = Number(currentBadge.tier) === currentBadge.badgeTiers.length
+  const strategies = [new WorldIDVerificationStrategy()]
 
   return (
     <Stack justifyContent="flex-start" alignItems="center" spacing={2} className={css.drawer}>
@@ -289,6 +292,7 @@ function BadgeInfo({
                 </Box>
               ))}
             </Box>
+            <BadgeStrategyRenderer badge={currentBadge} strategies={strategies} />
           </Box>
         </CardContent>
       </Card>
