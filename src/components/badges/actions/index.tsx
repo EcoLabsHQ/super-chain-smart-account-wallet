@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import SearchIcon from '@/public/images/common/search.svg'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -78,6 +78,8 @@ function BadgesActions({
   const router = useRouter()
   const [isClaimModalOpen, setIsClaimModalOpen] = useState(false)
   const [claimData, setClaimData] = useState<ClaimData | null>(null)
+  const [claimRequestBody, setClaimRequestBody] = useState<any | null>(null)
+
   const [isLevelUpModalOpen, setIsLevelUpModalOpen] = useState(false)
   const queryClient = useQueryClient()
   const { mutate, isPending, isError } = useMutation({
@@ -118,7 +120,20 @@ function BadgesActions({
       setIsClaimModalOpen(true)
     },
   })
+  useEffect(() => {
+    const handler = (event: Event) => {
+      const customEvent = event as CustomEvent
+      const data = customEvent.detail
+      setClaimRequestBody(data ?? {})
+      mutate()
+    }
 
+    window.addEventListener('claim-badges', handler)
+
+    return () => {
+      window.removeEventListener('claim-badges', handler)
+    }
+  }, [mutate])
   const handleCloseClaimModal = () => {
     setIsClaimModalOpen(false)
   }

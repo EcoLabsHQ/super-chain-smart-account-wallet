@@ -6,7 +6,10 @@ export function patchFetch() {
     window.fetch = (url, options = {}) => {
       return originalFetch(url, {
         ...options,
-        credentials: url.toString().includes('user-op-reverse-proxy') ? 'include' : undefined,
+        credentials:
+          url.toString().includes('user-op-reverse-proxy') || url.toString().includes('/world-id/verify')
+            ? 'include'
+            : undefined,
       })
     }
 
