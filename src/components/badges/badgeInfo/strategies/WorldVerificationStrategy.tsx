@@ -4,6 +4,7 @@ import { Button } from '@mui/material'
 import axios from 'axios'
 import { IDKitWidget, ISuccessResult, VerificationLevel } from '@worldcoin/idkit'
 import { BACKEND_BASE_URI } from '@/config/constants'
+import React from 'react'
 
 class WorldIDVerificationStrategy implements BadgeRenderStrategy {
   canRender(badge: ResponseBadge): boolean {
