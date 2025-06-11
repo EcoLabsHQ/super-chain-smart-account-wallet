@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react'
 import type { ResponseBadge } from '@/types/super-chain'
 import type { BadgeRenderStrategy } from '../BadgeStrategyRenderer'
 import { Button } from '@mui/material'
