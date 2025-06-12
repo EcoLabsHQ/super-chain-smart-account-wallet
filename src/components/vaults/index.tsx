@@ -138,7 +138,7 @@ function VaultCard({
   }
 
   return (
-    <Grid item xs={4}>
+    <Grid item xs={12} sm={6} md={4}>
       <Card variant="outlined" sx={{ p: 0 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -310,7 +310,7 @@ function Vaults() {
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <Card variant="outlined">
-              <CardContent>
+              <CardContent sx={{ minHeight: { xs: 114, sm: 'auto' } }}>
                 <Stack gap={1}>
                   <Skeleton variant="text" width={150} height={24} />
                   <Skeleton variant="text" width={120} height={32} />
@@ -320,7 +320,7 @@ function Vaults() {
           </Grid>
           <Grid item xs={6}>
             <Card variant="outlined">
-              <CardContent>
+              <CardContent sx={{ minHeight: { xs: 114, sm: 'auto' } }}>
                 <Stack gap={1}>
                   <Skeleton variant="text" width={150} height={24} />
                   <Skeleton variant="text" width={120} height={32} />
@@ -331,7 +331,7 @@ function Vaults() {
         </Grid>
         <Grid container spacing={2}>
           {[1, 2, 3].map((index) => (
-            <Grid item xs={4} key={index}>
+            <Grid item xs={12} sm={6} md={4} key={index}>
               <Card variant="outlined" sx={{ p: 0 }}>
                 <Box sx={{ p: 2 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -388,7 +388,7 @@ function Vaults() {
       <Grid container spacing={2}>
         <Grid item xs={6}>
           <Card variant="outlined">
-            <CardContent>
+            <CardContent sx={{ minHeight: { xs: 114, sm: 'auto' } }}>
               <Stack gap={1}>
                 <Typography fontSize="16px" color="GrayText">
                   Total Vault Deposits
@@ -402,7 +402,7 @@ function Vaults() {
         </Grid>
         <Grid item xs={6}>
           <Card variant="outlined">
-            <CardContent>
+            <CardContent sx={{ minHeight: { xs: 114, sm: 'auto' } }}>
               <Stack gap={1}>
                 <Typography fontSize="16px" color="GrayText">
                   Average APY
