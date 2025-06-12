@@ -5,6 +5,7 @@ import axios from 'axios'
 import { IDKitWidget, ISuccessResult, VerificationLevel } from '@worldcoin/idkit'
 import { BACKEND_BASE_URI } from '@/config/constants'
 import React from 'react'
+import useSafeAddress from '@/hooks/useSafeAddress'
 
 class WorldIDVerificationStrategy implements BadgeRenderStrategy {
   canRender(badge: ResponseBadge): boolean {
@@ -24,8 +25,9 @@ export function WorldIDVerificationComponent({ badge }: { badge: ResponseBadge }
       baseURL: BACKEND_BASE_URI,
       withCredentials: true,
     })
+    const address = useSafeAddress()
     try {
-      await httpInstance.post(`${BACKEND_BASE_URI}/world-id/verify`, { ...result })
+      await httpInstance.post(`${BACKEND_BASE_URI}/world-id/verify/${address}`, { ...result })
       window.dispatchEvent(new CustomEvent('claim-badges'))
     } catch (error) {
       console.error('Verification failed:', error)
