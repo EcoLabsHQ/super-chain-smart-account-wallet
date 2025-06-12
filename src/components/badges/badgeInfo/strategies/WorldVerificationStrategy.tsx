@@ -42,7 +42,7 @@ export function WorldIDVerificationComponent({ badge }: { badge: ResponseBadge }
         action="super-account-badge-validation"
         signal="verify"
         onSuccess={onSuccess}
-        verification_level={VerificationLevel.Device}
+        verification_level={VerificationLevel.Orb}
       >
         {({ open }) => {
           return (
