@@ -20,12 +20,13 @@ class WorldIDVerificationStrategy implements BadgeRenderStrategy {
 export { WorldIDVerificationStrategy }
 
 export function WorldIDVerificationComponent({ badge }: { badge: ResponseBadge }) {
+  const address = useSafeAddress()
   async function onSuccess(result: ISuccessResult): Promise<void> {
     const httpInstance = axios.create({
       baseURL: BACKEND_BASE_URI,
       withCredentials: true,
     })
-    const address = useSafeAddress()
+
     try {
       await httpInstance.post(`${BACKEND_BASE_URI}/world-id/verify/${address}`, { ...result })
       window.dispatchEvent(new CustomEvent('claim-badges'))
