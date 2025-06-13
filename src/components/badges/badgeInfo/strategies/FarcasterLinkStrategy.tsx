@@ -1,10 +1,8 @@
 import type { ResponseBadge } from '@/types/super-chain'
 import type { BadgeRenderStrategy } from '../BadgeStrategyRenderer'
-import axios from 'axios'
 import { AuthKitProvider, useSignIn, useProfile } from '@farcaster/auth-kit'
 import '@farcaster/auth-kit/styles.css'
 import QRCode from 'qrcode.react'
-import { BACKEND_BASE_URI } from '@/config/constants'
 import React, { useEffect, useState } from 'react'
 import useSafeAddress from '@/hooks/useSafeAddress'
 import { Box, Button, Dialog, DialogContent, DialogTitle, Divider, IconButton, Typography } from '@mui/material'
@@ -37,7 +35,7 @@ export function FarcasterVerificationComponent({ badge }: { badge: ResponseBadge
   return (
     <AuthKitProvider
       config={{
-        domain: domain,
+        domain,
         siweUri: redirectUri,
         rpcUrl: 'https://hub.farcaster.network',
       }}
