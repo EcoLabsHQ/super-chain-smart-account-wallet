@@ -242,13 +242,13 @@ const createSafeTheme = (mode: PaletteMode): Theme => {
           root: ({ theme }) => ({}),
         },
       },
-      MuiDialogTitle: {
-        styleOverrides: {
-          root: ({ theme }) => ({
-            borderBottom: `1px solid ${theme.palette.border.light} !important`,
-          }),
-        },
-      },
+      // MuiDialogTitle: {
+      //   styleOverrides: {
+      //     root: ({ theme }) => ({
+      //       borderBottom: `1px solid ${theme.palette.border.light} !important`,
+      //     }),
+      //   },
+      // },
       MuiDialogActions: {
         styleOverrides: {
           root: ({ theme }) => ({

@@ -341,7 +341,6 @@ function Badge({
             </Box>
             <Box className={css.tiersTooltip}>
               {data.badgeTiers.map((tier, index) => {
-                console.log(tier, ' todos son ', data.badgeTiers)
                 return (
                   <Box key={index} className={css.tierRow}>
                     <Typography fontSize="12px" fontWeight={500} fontFamily="Sora">
