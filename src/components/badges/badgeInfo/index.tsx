@@ -16,6 +16,7 @@ import SeasonChip from '../seasonChip'
 import { formatXP } from '../badge'
 import BadgeStrategyRenderer from './BadgeStrategyRenderer'
 import { WorldIDVerificationStrategy } from './strategies/WorldVerificationStrategy'
+import { FarcasterLinkStrategy } from './strategies/FarcasterLinkStrategy'
 
 function BadgeInfo({
   currentBadge,
@@ -49,7 +50,7 @@ function BadgeInfo({
   if (!currentBadge) return null
 
   const isCompleted = Number(currentBadge.tier) === currentBadge.badgeTiers.length
-  const strategies = [new WorldIDVerificationStrategy()]
+  const strategies = [new WorldIDVerificationStrategy(), new FarcasterLinkStrategy()]
 
   return (
     <Stack justifyContent="flex-start" alignItems="center" spacing={2} className={css.drawer}>
