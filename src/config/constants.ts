@@ -111,3 +111,7 @@ export const REDEFINE_ARTICLE = 'https://safe.mirror.xyz/rInLWZwD_sf7enjoFerj6FI
 
 export const BACKEND_BASE_URI = `${process.env.NEXT_PUBLIC_BACKEND_URI || 'http://localhost:3003'}/api`
 export const BACKEND_AUTH_URI = `${process.env.NEXT_PUBLIC_BACKEND_URI || 'http://localhost:3003'}/auth`
+
+export const WORLD_ID_APP_ID = process.env.WORLD_ID_APP_ID ?? ''
+export const WORLD_ID_ACTION = process.env.WORLD_ID_ACTION ?? ''
+export const WORLD_ID_SIGNAL = process.env.WORLD_ID_SIGNAL ?? ''

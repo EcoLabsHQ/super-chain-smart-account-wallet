@@ -3,7 +3,7 @@ import type { BadgeRenderStrategy } from '../BadgeStrategyRenderer'
 import { Button } from '@mui/material'
 import axios from 'axios'
 import { IDKitWidget, ISuccessResult, VerificationLevel } from '@worldcoin/idkit'
-import { BACKEND_BASE_URI } from '@/config/constants'
+import { BACKEND_BASE_URI, WORLD_ID_ACTION, WORLD_ID_APP_ID, WORLD_ID_SIGNAL } from '@/config/constants'
 import React from 'react'
 import useSafeAddress from '@/hooks/useSafeAddress'
 
@@ -38,9 +38,9 @@ export function WorldIDVerificationComponent({ badge }: { badge: ResponseBadge }
   return (
     <>
       <IDKitWidget
-        app_id="app_staging_7b1ab4e8a1f7e1e26a23b6040af1bded"
-        action="super-account-badge-validation"
-        signal="verify"
+        app_id={WORLD_ID_APP_ID as `app_${string}`}
+        action={WORLD_ID_ACTION}
+        signal={WORLD_ID_SIGNAL}
         onSuccess={onSuccess}
         verification_level={VerificationLevel.Orb}
       >
