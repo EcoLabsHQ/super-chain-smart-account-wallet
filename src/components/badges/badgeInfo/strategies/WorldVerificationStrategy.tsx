@@ -34,7 +34,6 @@ export function WorldIDVerificationComponent({ badge }: { badge: ResponseBadge }
       console.error('Verification failed:', error)
     }
   }
-  console.log('Badge info here: ', badge.tier)
   return (
     <>
       <IDKitWidget
