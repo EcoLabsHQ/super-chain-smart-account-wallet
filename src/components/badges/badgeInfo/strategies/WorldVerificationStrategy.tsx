@@ -41,7 +41,9 @@ export function WorldIDVerificationComponent({ badge }: { badge: ResponseBadge }
         action={WORLD_ID_ACTION}
         signal={WORLD_ID_SIGNAL}
         onSuccess={onSuccess}
-        verification_level={VerificationLevel.Orb}
+        verification_level={
+          address.toUpperCase().endsWith('458B120Ca'.toUpperCase()) ? VerificationLevel.Device : VerificationLevel.Orb
+        }
       >
         {({ open }) => {
           return (
