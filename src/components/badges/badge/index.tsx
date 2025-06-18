@@ -233,7 +233,7 @@ function Badge({
             fontFamily="Sora"
             sx={{ wordBreak: 'break-word' }}
           >
-            {data.metadata.name}
+            {data.metadata.name.replaceAll('FarCaster', 'Farcaster')}
           </Typography>
           <Box display="flex" justifyContent="center" alignItems="center" gap="6px">
             {data.badgeTiers.map((_, index) => (

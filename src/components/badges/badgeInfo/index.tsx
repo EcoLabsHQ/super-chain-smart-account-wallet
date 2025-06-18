@@ -197,7 +197,7 @@ function BadgeInfo({
         <CardContent>
           <Box display="flex" flexDirection="column" gap="12px" padding="20px">
             <Typography fontSize="18px" fontWeight={600} textAlign="start" fontFamily="Sora">
-              {currentBadge?.metadata.name}
+              {currentBadge?.metadata.name.replaceAll('FarCaster', 'Farcaster')}
             </Typography>
             <Box display="flex" flexWrap="wrap" gap={1} alignItems="center">
               {currentBadge.metadata.chains.map((chain, index) => (
@@ -211,7 +211,9 @@ function BadgeInfo({
             </Box>
 
             <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
-              <Typography color="#75757A">{currentBadge?.metadata.description}</Typography>
+              <Typography color="#75757A">
+                {currentBadge?.metadata.description.replaceAll('FarCaster', 'Farcaster')}
+              </Typography>
               {currentBadge.claimable && <Chip label="Claimable" />}
             </Box>
             <Box
