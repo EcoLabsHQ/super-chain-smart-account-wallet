@@ -12,7 +12,7 @@ import axios from 'axios'
 
 class FarcasterLinkStrategy implements BadgeRenderStrategy {
   canRender(badge: ResponseBadge): boolean {
-    return badge.metadata.name === 'Farcaster Link'
+    return badge.metadata.name === 'FarCaster Connection'
   }
 
   render(badge: ResponseBadge): React.ReactNode {
@@ -22,7 +22,7 @@ class FarcasterLinkStrategy implements BadgeRenderStrategy {
 
 export { FarcasterLinkStrategy }
 
-const domain = 'staging.account.superchain.eco'
+const domain = 'account.superchain.eco'
 const siweUri = BACKEND_AUTH_URI + '/verify'
 const rpcUrl = JSON_RPC_PROVIDER
 
@@ -51,20 +51,21 @@ export function FarcasterVerificationComponent({ badge }: { badge: ResponseBadge
       console.error('Verification failed:', error)
     }
   }
-
-  return (
-    <AuthKitProvider
-      config={{
-        domain,
-        siweUri,
-        rpcUrl,
-      }}
-    >
-      <Box ref={buttonRef} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <SignInButton hideSignOut={true} onSuccess={onSucess} />
-      </Box>
-    </AuthKitProvider>
-  )
+  if (Number(badge.tier) == 0)
+    return (
+      <AuthKitProvider
+        config={{
+          domain,
+          siweUri,
+          rpcUrl,
+        }}
+      >
+        <Box ref={buttonRef} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+          <SignInButton hideSignOut={true} onSuccess={onSucess} />
+        </Box>
+      </AuthKitProvider>
+    )
+  return <></>
 }
 
 export const MemoizedFarcasterVerificationComponent = React.memo(FarcasterVerificationComponent)

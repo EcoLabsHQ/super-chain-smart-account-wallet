@@ -50,7 +50,7 @@ export function WorldIDVerificationComponent({ badge }: { badge: ResponseBadge }
               color="primary"
               onClick={open}
               disabled={Number(badge.tier) > 0}
-              sx={{ borderRadius: '6px', textTransform: 'none', fontWeight: 600, padding: '8px 24px', mt: 2, mb: 2 }}
+              sx={{ borderRadius: '100px', textTransform: 'none', fontWeight: 600, padding: '8px 24px', mt: 2, mb: 2 }}
             >
               Verify
             </Button>

@@ -39,7 +39,6 @@ function Badge({
 
   const isCompleted = Number(data.tier) === data.badgeTiers.length
 
-  console.debug(data)
   return (
     <Box
       sx={{ maxWidth: '100%' }}

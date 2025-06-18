@@ -14,7 +14,6 @@ interface NetworkChipProps {
 const NetworkChip: React.FC<NetworkChipProps> = ({ network, style, isFavorite, className, offSet }) => {
   const networkData = networks.find((x) => x.value === network.toLocaleLowerCase())
   const isBadge = style === 'badge'
-  console.log(network)
 
   return isBadge ? (
     <Image
