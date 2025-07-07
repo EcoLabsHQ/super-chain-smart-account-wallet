@@ -13,6 +13,10 @@ export const badgesNavItems = [
     label: 'Season 7',
     href: AppRoutes.badges.season7,
   },
+  {
+    label: 'Season 8',
+    href: AppRoutes.badges.season8,
+  },
 ]
 
 function BadgesHeader({

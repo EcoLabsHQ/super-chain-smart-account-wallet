@@ -10,6 +10,7 @@ export const AppRoutes = {
   badges: {
     allTime: '/badges',
     season7: '/badges/season-7',
+    season8: '/badges/season-8',
   },
   campaigns: '/campaigns',
   cookie: '/cookie',

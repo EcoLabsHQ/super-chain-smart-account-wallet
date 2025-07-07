@@ -305,7 +305,7 @@ function BadgeInfo({
                   p: '7px',
                   height: '30px',
                 }}
-                label={<Box textAlign="center">Current count: {currentBadge.currentCount}</Box>}
+                label={<Box textAlign="center">Current count: {currentBadge.currentCount.toFixed(4)}</Box>}
               ></Chip>
             )}
             <BadgeStrategyRenderer badge={currentBadge} strategies={strategies} />
