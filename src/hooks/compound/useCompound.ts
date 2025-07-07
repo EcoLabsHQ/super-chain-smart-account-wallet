@@ -46,8 +46,7 @@ function useCompound() {
 
         //TODO improve
         const bigIntAmount =
-          supplyToken == '0x01f32b1c2345538c0c6f582fcb022739c4a194ebb' ? parseUnits(amount, 18) : parseUnits(amount, 6)
-
+          supplyToken == '0x4200000000000000000000000000000000000006' ? parseUnits(amount, 18) : parseUnits(amount, 6)
         const approveTx: MetaTransactionData = {
           to: supplyToken,
           value: '0',
