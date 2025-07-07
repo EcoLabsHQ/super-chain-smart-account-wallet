@@ -19,6 +19,7 @@ export type ResponseBadge = { tier: string; points: string } & Badge['badge'] & 
     claimableTier: number | null
     claimable: boolean
     campaigns: string[]
+    currentCount: number | undefined
   }
 export type SuperChainSmartAccountResponse = [Address, string, string, string, string[]]
 

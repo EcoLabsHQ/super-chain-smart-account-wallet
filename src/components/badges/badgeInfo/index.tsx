@@ -295,6 +295,19 @@ function BadgeInfo({
                 </Box>
               ))}
             </Box>
+            {currentBadge.currentCount != undefined && (
+              <Chip
+                sx={{
+                  backgroundColor: 'transparent',
+                  border: '1px solid #E1E2EA',
+                  color: 'black',
+                  fontSize: '12px',
+                  p: '7px',
+                  height: '30px',
+                }}
+                label={<Box textAlign="center">Current count: {currentBadge.currentCount}</Box>}
+              ></Chip>
+            )}
             <BadgeStrategyRenderer badge={currentBadge} strategies={strategies} />
           </Box>
         </CardContent>
