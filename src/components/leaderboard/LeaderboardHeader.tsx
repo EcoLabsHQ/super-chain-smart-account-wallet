@@ -5,6 +5,18 @@ import LeaderboardNavigation from './LeaderboardNavigation'
 import { Box, Typography } from '@mui/material'
 import RefreshTimer from './RefreshTimer'
 
+function getNextDeadlineUTC(): Date {
+  const now: Date = new Date()
+  const result: Date = new Date(now)
+
+  const currentUTCDay: number = now.getUTCDay()
+  const daysUntilNextSunday: number = currentUTCDay === 0 ? 7 : 7 - currentUTCDay
+  result.setUTCDate(now.getUTCDate() + daysUntilNextSunday)
+  result.setUTCHours(13, 40, 0, 0)
+
+  return result
+}
+
 function LeaderboardHeader({ children }: { children?: React.ReactNode }) {
   return (
     <PageHeader
@@ -13,7 +25,7 @@ function LeaderboardHeader({ children }: { children?: React.ReactNode }) {
           <Typography variant="h3" fontWeight={700}>
             Leaderboard
           </Typography>
-          <RefreshTimer />
+          <RefreshTimer deadLine={getNextDeadlineUTC()} message="Refreshes in " />
         </Box>
       }
       action={

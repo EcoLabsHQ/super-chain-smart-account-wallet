@@ -3,6 +3,7 @@ import Image from 'next/image'
 import NavTabs from '@/components/common/NavTabs'
 import { AppRoutes } from '@/config/routes'
 import { GradientProgress } from '..'
+import RefreshTimer from '@/components/leaderboard/RefreshTimer'
 
 export const badgesNavItems = [
   {
@@ -40,9 +41,13 @@ function BadgesHeader({
 
   return (
     <Box p={1} sx={{ width: '100%' }}>
-      <Typography variant="h2" fontWeight={700} gutterBottom pb={4}>
-        Badges
-      </Typography>
+      <Box display="flex" alignItems="center" gap={2} pb={4}>
+        <Typography variant="h2" fontWeight={700}>
+          Badges
+        </Typography>
+        <RefreshTimer deadLine={new Date(2025, 5, 11, 23, 59, 59, 999)} message="Season 7 • " />
+      </Box>
+
       <NavTabs tabs={badgesNavItems} />
       <Divider sx={{ mb: 2, width: '100%' }} />
 
