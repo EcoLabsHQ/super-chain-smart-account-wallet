@@ -53,7 +53,7 @@ export function FarcasterVerificationComponent({ badge }: { badge: ResponseBadge
     })
 
     try {
-      await httpInstance.post(`${BACKEND_BASE_URI}/farcaster/verify1/${address}`, { ...res })
+      await httpInstance.post(`${BACKEND_BASE_URI}/farcaster/verify/${address}`, { ...res })
       window.dispatchEvent(new CustomEvent('claim-badges'))
     } catch (e) {
       setErrorDetail(String(e))
