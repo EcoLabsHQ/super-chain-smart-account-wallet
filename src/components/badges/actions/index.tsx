@@ -74,6 +74,7 @@ function BadgesActions({
 }) {
   const { safeAddress, safeLoaded } = useSafeInfo()
   const { data: superChainAccount } = useAppSelector(selectSuperChainAccount)
+  const [captchaFailed, setcaptchaFailed] = useState<boolean>(false)
 
   const router = useRouter()
   const [isClaimModalOpen, setIsClaimModalOpen] = useState(false)
@@ -82,6 +83,15 @@ function BadgesActions({
 
   const [isLevelUpModalOpen, setIsLevelUpModalOpen] = useState(false)
   const queryClient = useQueryClient()
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setcaptchaFailed(true)
+    }, 10000)
+
+    return () => clearTimeout(timeout)
+  }, [captchaFailed])
+
   const { mutate, isPending, isError } = useMutation({
     mutationFn: async () => {
       return await badgesService.attestBadges(safeAddress as Address, captchaToken)
@@ -374,7 +384,7 @@ function BadgesActions({
             <Box display="flex" justifyContent="flex-end" width="100%">
               <Button
                 fullWidth
-                disabled={!claimable || isPending || !captchaToken}
+                disabled={!claimable || isPending || (!captchaToken && !captchaFailed)}
                 variant="contained"
                 onClick={() => mutate()}
                 endIcon={<SvgIcon component={AutorenewIcon} width={16} height={16} inheritViewBox color="inherit" />}
