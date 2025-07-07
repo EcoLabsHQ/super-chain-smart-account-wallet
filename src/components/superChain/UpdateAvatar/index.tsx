@@ -57,6 +57,8 @@ const UpdateAvatarModal = () => {
   const { address } = safe
   const queryClient = useQueryClient()
   const { getSponsoredCallableSuperChainSmartAccount } = useSuperChainAccount()
+  const [errorDetail, setErrorDetail] = useState<string>('')
+
   const [seed, setSeed] = useState<NounProps>({
     background: Math.floor(Math.random() * ImageData.bgcolors.length),
     body: Math.floor(Math.random() * ImageData.images.bodies.length),
@@ -140,6 +142,7 @@ const UpdateAvatarModal = () => {
       queryClient.refetchQueries({ queryKey: ['superChainAccount', address.value] })
     } catch (e) {
       setModalState(ModalState.Error)
+      setErrorDetail(String(e))
       console.error(e)
     }
   }
@@ -155,7 +158,9 @@ const UpdateAvatarModal = () => {
       {modalState === ModalState.Success && (
         <SuccessTxnModal open onClose={onClose} title="Avatar updated succesful" hash={transactionHash!} />
       )}
-      {modalState === ModalState.Error && <FailedTxnModal open onClose={onClose} handleRetry={handleSubmit} />}
+      {modalState === ModalState.Error && (
+        <FailedTxnModal open onClose={onClose} handleRetry={handleSubmit} errorDetail={errorDetail} />
+      )}
       <Container className={css.container}>
         <Grid container gap={3} justifyContent="center">
           {/* Main content */}

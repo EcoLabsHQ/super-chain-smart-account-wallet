@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Button, Dialog, Stack, SvgIcon, Typography } from '@mui/material'
+import { Box, Button, Dialog, Link, Stack, SvgIcon, Typography } from '@mui/material'
 import SuperChainBrokenStart from '@/public/images/common/superchain-star-broken.svg'
 import css from './styles.module.css'
 
@@ -7,11 +7,18 @@ function FailedTxnModal({
   open,
   onClose,
   handleRetry,
+  errorDetail,
 }: {
   open: boolean
   onClose: () => void
   handleRetry: () => void
+  errorDetail: string
 }) {
+  const handleCopyError = () => {
+    if (errorDetail) {
+      navigator.clipboard.writeText(errorDetail)
+    }
+  }
   return (
     <Dialog className={css.container} open={open} onClose={onClose}>
       <Box
@@ -29,6 +36,17 @@ function FailedTxnModal({
         <Typography color="GrayText">Something went wrong during the transaction.</Typography>
 
         <SvgIcon component={SuperChainBrokenStart} inheritViewBox fontSize="inherit" />
+        {errorDetail && (
+          <Link
+            component="button"
+            onClick={handleCopyError}
+            fontSize={12}
+            color="text.secondary"
+            sx={{ mt: 1, textDecoration: 'underline' }}
+          >
+            Click to copy error detail
+          </Link>
+        )}
       </Box>
       <Stack spacing={1} className={css.outsideButtonContainer} direction="row">
         <Button fullWidth onClick={onClose} variant="contained">

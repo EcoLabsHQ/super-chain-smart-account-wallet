@@ -5,9 +5,10 @@ import { useRouter } from 'next/router'
 import AcceptInvite from './AcceptInvite'
 import { ModalContext } from '..'
 import LoadingTxn from './LoadingTxn'
-import FailedTxn from './FailedTxn'
+
 import axios from 'axios'
 import { BACKEND_BASE_URI } from '@/config/constants'
+import FailedTxnModal from '@/components/common/ErrorModal'
 export const ADD_OWNER_MODAL_QUERY_PARAM = 'addOwnerModal'
 
 export enum ModalState {
@@ -18,6 +19,8 @@ export enum ModalState {
 
 function AlertModal({ modalContext, onClose }: { modalContext: ModalContext; onClose: () => void }) {
   const [modalState, setModalState] = useState<ModalState>(ModalState.AcceptInvite)
+
+  const [errorDetail, setErrorDetail] = useState<string>('')
   const router = useRouter()
   const { getWriteableSuperChainSmartAccount, publicClient } = useSuperChainAccount()
   const onCloseAndErase = () => {
@@ -46,6 +49,7 @@ function AlertModal({ modalContext, onClose }: { modalContext: ModalContext; onC
       })
     } catch (e) {
       console.error(e)
+      setErrorDetail(String(e))
       setModalState(ModalState.FailedTXN)
     }
   }
@@ -61,7 +65,12 @@ function AlertModal({ modalContext, onClose }: { modalContext: ModalContext; onC
       )}
       {modalState === ModalState.LoadingTXN && <LoadingTxn open={true} onClose={onCloseAndErase} />}
       {modalState === ModalState.FailedTXN && (
-        <FailedTxn open={true} onClose={onCloseAndErase} handleRetry={handleAcceptInvitation} />
+        <FailedTxnModal
+          open={true}
+          onClose={onCloseAndErase}
+          handleRetry={handleAcceptInvitation}
+          errorDetail={errorDetail}
+        />
       )}
     </>
   )

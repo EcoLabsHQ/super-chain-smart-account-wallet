@@ -1,6 +1,5 @@
 import { ReactElement, useState } from 'react'
 import LoadingTxn from './states/LoadingTxn'
-import FailedTxn from './states/FailedTxn'
 import SuccessTxn from './states/SuccessTxn'
 import TopUp, { Token } from './states/TopUp'
 import useSafeAddress from '@/hooks/useSafeAddress'
@@ -17,6 +16,7 @@ import {
 } from 'viem'
 import { sepolia, optimism } from 'viem/chains'
 import { CHAIN_ID, JSON_RPC_PROVIDER } from '@/features/superChain/constants'
+import FailedTxnModal from '@/components/common/ErrorModal'
 
 export enum ModalState {
   TopUp,
@@ -40,6 +40,7 @@ const TopUpModal = ({
   const [transactionHash, setTransactionHash] = useState<string | null>(null)
   const safeAddress = useSafeAddress()
   const wallet = useWallet()
+  const [errorDetail, setErrorDetail] = useState<string>('')
 
   const handleTopUp = async (value: bigint, token: Token) => {
     if (!wallet) return
@@ -85,7 +86,8 @@ const TopUpModal = ({
       }
 
       setModalState(ModalState.Success)
-    } catch (_) {
+    } catch (e) {
+      setErrorDetail(String(e))
       setModalState(ModalState.FailedTxn)
     }
   }
@@ -111,7 +113,7 @@ const TopUpModal = ({
         <LoadingTxn hash={transactionHash!} open={open} onClose={onCloseAndErase} />
       )}
       {modalState === ModalState.FailedTxn && (
-        <FailedTxn handleRetry={handleRetry} open={open} onClose={onCloseAndErase} />
+        <FailedTxnModal handleRetry={handleRetry} open={open} onClose={onCloseAndErase} errorDetail={errorDetail} />
       )}
       {modalState === ModalState.Success && (
         <SuccessTxn

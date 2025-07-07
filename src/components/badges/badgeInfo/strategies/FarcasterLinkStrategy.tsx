@@ -9,6 +9,7 @@ import { Box } from '@mui/material'
 import { JSON_RPC_PROVIDER } from '@/features/superChain/constants'
 import { BACKEND_AUTH_URI, BACKEND_BASE_URI } from '@/config/constants'
 import axios from 'axios'
+import FailedTxnModal from '@/components/common/ErrorModal'
 
 class FarcasterLinkStrategy implements BadgeRenderStrategy {
   canRender(badge: ResponseBadge): boolean {
@@ -30,6 +31,13 @@ export function FarcasterVerificationComponent({ badge }: { badge: ResponseBadge
   const address = useSafeAddress()
   const buttonRef = useRef<HTMLDivElement>(null)
   const [currentUser, setCurrentUser] = useState('Link Account')
+  const [errorDetail, setErrorDetail] = useState<string>('')
+  const [isError, setIsError] = useState<boolean>(false)
+
+  const onCloseError = () => {
+    setIsError(false)
+  }
+
   useEffect(() => {
     const innerSpan = buttonRef.current?.querySelector('span')
     if (innerSpan) {
@@ -45,10 +53,12 @@ export function FarcasterVerificationComponent({ badge }: { badge: ResponseBadge
     })
 
     try {
-      await httpInstance.post(`${BACKEND_BASE_URI}/farcaster/verify/${address}`, { ...res })
+      await httpInstance.post(`${BACKEND_BASE_URI}/farcaster/verify1/${address}`, { ...res })
       window.dispatchEvent(new CustomEvent('claim-badges'))
-    } catch (error) {
-      console.error('Verification failed:', error)
+    } catch (e) {
+      setErrorDetail(String(e))
+      setIsError(true)
+      console.error('Verification failed:', e)
     }
   }
   if (Number(badge.tier) == 0)
@@ -63,6 +73,15 @@ export function FarcasterVerificationComponent({ badge }: { badge: ResponseBadge
         <Box ref={buttonRef} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <SignInButton hideSignOut={true} onSuccess={onSucess} />
         </Box>
+        <FailedTxnModal
+          open={isError}
+          onClose={onCloseError}
+          handleRetry={() => {
+            const btn = buttonRef.current?.querySelector('button')
+            btn?.click()
+          }}
+          errorDetail={errorDetail}
+        />
       </AuthKitProvider>
     )
   return <></>

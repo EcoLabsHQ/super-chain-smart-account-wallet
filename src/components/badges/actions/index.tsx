@@ -83,6 +83,7 @@ function BadgesActions({
 
   const [isLevelUpModalOpen, setIsLevelUpModalOpen] = useState(false)
   const queryClient = useQueryClient()
+  const [errorDetail, setErrorDetail] = useState<string>('')
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -97,6 +98,7 @@ function BadgesActions({
       return await badgesService.attestBadges(safeAddress as Address, captchaToken)
     },
     onError: (error) => {
+      setErrorDetail(String(error))
       console.error(error)
     },
     onSuccess: (data) => {
@@ -177,7 +179,12 @@ function BadgesActions({
         onClose={handleCloseLevelUpModal}
       />
       <LoadingModal open={isPending} title="Claiming badges" />
-      <FailedTxnModal open={isError} onClose={handleCloseLevelUpModal} handleRetry={() => mutate()} />
+      <FailedTxnModal
+        open={isError}
+        onClose={handleCloseLevelUpModal}
+        handleRetry={() => mutate()}
+        errorDetail={errorDetail}
+      />
       <Grid container spacing={1} item>
         <Divider sx={{ mt: 1, mb: 2, width: '100%' }} />
         <Grid container spacing={2} item xs={12}>

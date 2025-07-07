@@ -32,6 +32,8 @@ const AddEOAModal = ({
   context: typeof ADD_EOA_INITIAL_STATE
   onClose: () => void
 }): ReactElement => {
+  const [errorDetail, setErrorDetail] = useState<string>('')
+
   const { getSponsoredCallableSuperChainSmartAccount } = useSuperChainAccount()
   const SmartAccountAddres = useSafeAddress()
   const [currentNewEOAAddress, setCurrentNewEOAAddress] = useState<Address | null>(null)
@@ -57,6 +59,7 @@ const AddEOAModal = ({
       }))
       setModalState(ModalState.Success)
     } catch (e) {
+      setErrorDetail(String(e))
       setModalState(ModalState.Error)
     }
   }
@@ -77,7 +80,12 @@ const AddEOAModal = ({
       {modalState === ModalState.Loading && <LoadingModal open={context.open} title="Inviting EOA" />}
       {modalState === ModalState.Success && <SuccessAdded onClose={onCloseAndClear} context={context} />}
       {modalState === ModalState.Error && (
-        <FailedTxnModal handleRetry={handleRetry} open={context.open} onClose={onCloseAndClear} />
+        <FailedTxnModal
+          handleRetry={handleRetry}
+          open={context.open}
+          onClose={onCloseAndClear}
+          errorDetail={errorDetail}
+        />
       )}
     </>
   )
