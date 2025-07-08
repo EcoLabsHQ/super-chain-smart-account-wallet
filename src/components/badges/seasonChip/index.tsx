@@ -1,7 +1,5 @@
-import { Box, SvgIcon, Typography } from '@mui/material'
+import { SvgIcon } from '@mui/material'
 import React from 'react'
-import { Chip } from '@/components/common/Chip'
-import Image from 'next/image'
 import Link from 'next/link'
 import { AppRoutes } from '@/config/routes'
 import { useRouter } from 'next/router'

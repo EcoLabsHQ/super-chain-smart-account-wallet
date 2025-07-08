@@ -1,4 +1,4 @@
-import { Box, Typography, Card, CardContent, Divider, Chip } from '@mui/material'
+import { Box, Typography, Card, CardContent, Divider } from '@mui/material'
 import Image from 'next/image'
 import NavTabs from '@/components/common/NavTabs'
 import { AppRoutes } from '@/config/routes'
