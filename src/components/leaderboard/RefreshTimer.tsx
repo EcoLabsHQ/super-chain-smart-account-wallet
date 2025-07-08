@@ -17,7 +17,7 @@ function getTimeDiff(nextDeadline: Date): { days: number; hours: number; minutes
   return { days, hours, minutes }
 }
 
-function RefreshTimer({ message, deadLine }: { message: string; deadLine: Date }) {
+function RefreshTimer({ message, deadLine, messageAfter }: { message: string; deadLine: Date; messageAfter?: string }) {
   const [timeLeft, setTimeLeft] = useState(getTimeDiff(deadLine))
 
   useEffect(() => {
@@ -57,6 +57,7 @@ function RefreshTimer({ message, deadLine }: { message: string; deadLine: Date }
           {timeLeft.days}d : {timeLeft.hours.toString().padStart(2, '0')}h :{' '}
           {timeLeft.minutes.toString().padStart(2, '0')}m
         </span>
+        {messageAfter}
       </Typography>
     </Box>
   )

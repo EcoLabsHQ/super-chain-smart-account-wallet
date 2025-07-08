@@ -54,7 +54,13 @@ export const GradientProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }))
 
-function Badges({ season, captchaToken }: { season?: { code: number; name: string }; captchaToken: string | null }) {
+function Badges({
+  season,
+  captchaToken,
+}: {
+  season?: { code: number; name: string; isActive: boolean }
+  captchaToken: string | null
+}) {
   const { data: superChainAccount, loading: isSuperChainLoading } = useAppSelector(selectSuperChainAccount)
   const { safeAddress, safeLoaded } = useSafeInfo()
   const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)

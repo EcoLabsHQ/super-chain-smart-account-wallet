@@ -4,6 +4,7 @@ import NavTabs from '@/components/common/NavTabs'
 import { AppRoutes } from '@/config/routes'
 import { GradientProgress } from '..'
 import RefreshTimer from '@/components/leaderboard/RefreshTimer'
+import SeasonChip from '../seasonChip'
 
 export const badgesNavItems = [
   {
@@ -34,7 +35,7 @@ function BadgesHeader({
   completeBadges: number
   pointsToNextLevel: number
   totalBadges: number
-  season?: { code: number; name: string }
+  season?: { code: number; name: string; isActive: boolean }
   isLoading: boolean
 }) {
   const progress = (points / pointsToNextLevel) * 100
@@ -45,7 +46,11 @@ function BadgesHeader({
         <Typography variant="h2" fontWeight={700}>
           Badges
         </Typography>
-        <RefreshTimer deadLine={new Date(2025, 5, 11, 23, 59, 59, 999)} message="Season 7 • " />
+        <RefreshTimer
+          deadLine={new Date(Date.UTC(2025, 6, 16, 17, 59, 59, 999))}
+          message="Season 8 • "
+          messageAfter=" left"
+        />
       </Box>
 
       <NavTabs tabs={badgesNavItems} />
@@ -61,8 +66,8 @@ function BadgesHeader({
             flexDirection: 'column',
             justifyContent: 'center',
             border: '1px solid',
-            borderColor: (theme) => (!season ? theme.palette.grey[500] : '#6B5DE7'),
-            backgroundColor: (theme) => (!season ? theme.palette.grey[50] : '#F4F0FF'),
+            borderColor: (theme) => (!(season?.isActive ?? false) ? theme.palette.grey[500] : '#6B5DE7'),
+            backgroundColor: (theme) => (!(season?.isActive ?? false) ? theme.palette.grey[50] : '#F4F0FF'),
           }}
         >
           <CardContent>
@@ -72,35 +77,36 @@ function BadgesHeader({
               </Typography>
 
               {season && (
-                <Chip
-                  label={
-                    <Box display="flex" alignItems="center" gap={0.5}>
-                      <Typography
-                        fontWeight={600}
-                        fontSize={13}
-                        sx={{
-                          color: '#6B5DE7',
-                          margin: '-5px',
-                        }}
-                      >
-                        {season.name}
-                      </Typography>
-                      <Image
-                        src="/images/badges/stars_custom.svg"
-                        alt="Star Icon"
-                        width={14}
-                        height={14}
-                        style={{ margin: '2px' }}
-                      />
-                    </Box>
-                  }
-                  sx={{
-                    backgroundColor: '#F4F0FF',
-                    fontWeight: 600,
-                    borderRadius: '20px',
-                    border: '1px solid #6B5DE7',
-                  }}
-                />
+                <SeasonChip season={season.code} style="badge" />
+                // <Chip
+                //   label={
+                //     <Box display="flex" alignItems="center" gap={0.5}>
+                //       <Typography
+                //         fontWeight={600}
+                //         fontSize={13}
+                //         sx={{
+                //           color: '#6B5DE7',
+                //           margin: '-5px',
+                //         }}
+                //       >
+                //         {season.name}
+                //       </Typography>
+                //       <Image
+                //         src="/images/badges/stars_custom.svg"
+                //         alt="Star Icon"
+                //         width={14}
+                //         height={14}
+                //         style={{ margin: '2px' }}
+                //       />
+                //     </Box>
+                //   }
+                //   sx={{
+                //     backgroundColor: '#F4F0FF',
+                //     fontWeight: 600,
+                //     borderRadius: '20px',
+                //     border: '1px solid #6B5DE7',
+                //   }}
+                // />
               )}
             </Box>
 
