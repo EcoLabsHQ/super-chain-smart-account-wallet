@@ -17,7 +17,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main>
-        <Badges season={{ code: 8, name: 'Season 8' }} captchaToken={token} />
+        <Badges season={{ code: 8, name: 'Season 8', isActive: true }} captchaToken={token} />
         <Turnstile onSuccess={handleToken} sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!} />
       </main>
     </>

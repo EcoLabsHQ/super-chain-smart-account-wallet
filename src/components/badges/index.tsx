@@ -49,12 +49,18 @@ export const GradientProgress = styled(LinearProgress)(({ theme }) => ({
   backgroundColor: 'transparent',
   border: '1px solid #D0D0D0',
   '& .MuiLinearProgress-bar': {
-    background: 'linear-gradient(90deg, #8B0000 0%, #FF0000 100%)',
+    background: 'linear-gradient(90deg, rgba(255, 148, 159, 1) 0%, rgba(255, 77, 97, 1) 100%)',
     borderRadius: 5,
   },
 }))
 
-function Badges({ season, captchaToken }: { season?: { code: number; name: string }; captchaToken: string | null }) {
+function Badges({
+  season,
+  captchaToken,
+}: {
+  season?: { code: number; name: string; isActive: boolean }
+  captchaToken: string | null
+}) {
   const { data: superChainAccount, loading: isSuperChainLoading } = useAppSelector(selectSuperChainAccount)
   const { safeAddress, safeLoaded } = useSafeInfo()
   const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)
