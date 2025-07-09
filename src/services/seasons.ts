@@ -2,15 +2,18 @@ import { AppRoutes } from '@/config/routes'
 import Season7 from '@/public/images/badges/season-7.svg'
 import Season8 from '@/public/images/badges/season-8.svg'
 
-function createSeason(name: string, code: number, toDate: Date, icon: any, link: string) {
+function createSeason(name: string, code: number, fromDate: Date, toDate: Date, icon: any, link: string) {
   return {
     name,
     code,
+    fromDate,
     toDate,
     icon,
     link,
     isActive: function () {
-      return this.toDate > new Date()
+      const now = new Date()
+      console.log(`Checking if season ${this.name} is active: from ${this.fromDate} to ${this.toDate}, now is ${now}`)
+      return this.fromDate <= now && this.toDate > now
     },
     status: function (): 'active' | 'inactive' | 'ending' {
       const now = new Date()
@@ -35,6 +38,20 @@ export function getSeasonByName(name: string) {
 }
 
 export const seasons = [
-  createSeason('Season 7', 7, new Date(Date.UTC(2025, 6, 17, 23, 59, 59, 999)), Season7, AppRoutes.badges.season7),
-  createSeason('Season 8', 8, new Date(Date.UTC(2025, 8, 16, 17, 59, 59, 999)), Season8, AppRoutes.badges.season8),
+  createSeason(
+    'Season 7',
+    7,
+    new Date(Date.UTC(2025, 0, 11, 23, 59, 59, 999)),
+    new Date(Date.UTC(2025, 6, 17, 23, 59, 59, 999)),
+    Season7,
+    AppRoutes.badges.season7,
+  ),
+  createSeason(
+    'Season 8',
+    8,
+    new Date(Date.UTC(2025, 6, 18, 0, 0, 0, 0)),
+    new Date(Date.UTC(2025, 8, 16, 17, 59, 59, 999)),
+    Season8,
+    AppRoutes.badges.season8,
+  ),
 ]

@@ -38,11 +38,13 @@ function BadgesHeader({
   completeBadges: number
   pointsToNextLevel: number
   totalBadges: number
-  season?: { code: number; name: string; isActive: boolean }
+  season?: { code: number; name: string }
   isLoading: boolean
 }) {
   const progress = (points / pointsToNextLevel) * 100
   const currentSeason = getCurrentSeason()
+  const seasonObject = getSeasonByCode(season?.code ?? 0)
+
   return (
     <Box p={1} sx={{ width: '100%' }}>
       <Box display="flex" alignItems="center" gap={2} pb={4}>
@@ -65,8 +67,8 @@ function BadgesHeader({
             flexDirection: 'column',
             justifyContent: 'center',
             border: '1px solid',
-            borderColor: (theme) => (!(season?.isActive ?? false) ? theme.palette.grey[500] : '#6B5DE7'),
-            backgroundColor: (theme) => (!(season?.isActive ?? false) ? theme.palette.grey[50] : '#F4F0FF'),
+            borderColor: (theme) => (!(seasonObject?.isActive() ?? false) ? theme.palette.grey[500] : '#6B5DE7'),
+            backgroundColor: (theme) => (!(seasonObject?.isActive() ?? false) ? theme.palette.grey[50] : '#F4F0FF'),
           }}
         >
           <CardContent>
