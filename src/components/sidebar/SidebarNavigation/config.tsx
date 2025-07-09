@@ -16,6 +16,7 @@ export type NavItem = {
   icon?: ReactElement
   href: string
   customComponent?: ReactNode
+  status?: 'active' | 'inactive' | 'ending'
 }
 
 export const navItems: NavItem[] = [

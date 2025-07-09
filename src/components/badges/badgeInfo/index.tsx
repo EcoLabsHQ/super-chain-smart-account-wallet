@@ -17,6 +17,7 @@ import { formatXP } from '../badge'
 import BadgeStrategyRenderer from './BadgeStrategyRenderer'
 import { WorldIDVerificationStrategy } from './strategies/WorldVerificationStrategy'
 import { FarcasterLinkStrategy } from './strategies/FarcasterLinkStrategy'
+import { getSeasonByCode } from '@/services/seasons'
 
 function BadgeInfo({
   currentBadge,
@@ -63,7 +64,10 @@ function BadgeInfo({
         alignItems="center"
       >
         <Box display="flex" alignItems="center" justifyContent="space-between" width="100%" p="10px 30px 0px 30px">
-          <SeasonChip season={currentBadge.metadata.season} style="info" />
+          <SeasonChip
+            season={currentBadge.metadata.season}
+            style={getSeasonByCode(currentBadge.metadata.season)?.status() ?? 'active'}
+          />
 
           <Box display="flex" alignItems="center" gap={1}>
             <IconButton onClick={handleSwitchFavorite} className={css.actionBtn}>
@@ -305,7 +309,7 @@ function BadgeInfo({
                   p: '7px',
                   height: '30px',
                 }}
-                label={<Box textAlign="center">Current count: {currentBadge.currentCount.toFixed(4)}</Box>}
+                label={<Box textAlign="center">Current count: {parseFloat(currentBadge.currentCount.toFixed(4))}</Box>}
               ></Chip>
             )}
             <BadgeStrategyRenderer badge={currentBadge} strategies={strategies} />

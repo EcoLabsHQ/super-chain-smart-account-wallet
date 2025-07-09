@@ -51,14 +51,15 @@ const NavTabs = ({ tabs }: { tabs: NavItem[] }) => {
               className={css.label}
             >
               {tab.label}
-              {tab.label.includes('Season') && (
+              {tab.status && (
                 <Box
                   component="span"
                   sx={{
                     width: 8,
                     height: 8,
                     ml: 1,
-                    backgroundColor: tab.label.includes('7') ? '#FA8900' : '#22C55E',
+                    backgroundColor:
+                      tab.status == 'active' ? '22C55E' : tab.status == 'inactive' ? '#E1E2EA' : '#FA8900',
                     borderRadius: '50%',
                     display: 'inline-block',
                   }}

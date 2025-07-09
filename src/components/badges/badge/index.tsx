@@ -12,6 +12,8 @@ import Hearth from '@/public/images/common/hearth.svg'
 import CheckCircleIcon from '@/public/images/common/check-circle.svg'
 import { Address } from 'viem'
 import useSafeInfo from '@/hooks/useSafeInfo'
+import { getSeasonByCode } from '@/services/seasons'
+
 function Badge({
   data,
   switchFavorite,
@@ -38,10 +40,10 @@ function Badge({
   }
 
   const isCompleted = Number(data.tier) === data.badgeTiers.length
-
+  const isSeasonActive = !data.metadata.season ? true : getSeasonByCode(data.metadata.season)?.isActive()
   return (
     <Box
-      sx={{ maxWidth: '100%' }}
+      sx={{ maxWidth: '100%', opacity: isSeasonActive ? 1 : 0.5, mixBlendMode: isSeasonActive ? 'none' : 'luminosity' }}
       onClick={handlePickBadge}
       className={classNames(css.badgeContainer, {
         [css.favorited]: isFavorite,
@@ -78,7 +80,7 @@ function Badge({
         />
         <Box className={css.topBar}>
           <Box className={css.topBarLeft}>
-            <SeasonChip season={data.metadata.season} style="badge" />
+            <SeasonChip season={data.metadata.season} style="active" />
           </Box>
           <Box className={css.topBarRight}>
             <Box display="flex" flexWrap="wrap" gap={1} alignItems="center">

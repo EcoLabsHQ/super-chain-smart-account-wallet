@@ -1,37 +1,34 @@
 import { SvgIcon } from '@mui/material'
 import React from 'react'
 import Link from 'next/link'
-import { AppRoutes } from '@/config/routes'
 import { useRouter } from 'next/router'
-import Season7 from '@/public/images/badges/season-7.svg'
-import Season8 from '@/public/images/badges/season-8.svg'
+import { getSeasonByCode } from '@/services/seasons'
 
-function getSeasonIcon(season: number) {
-  switch (season) {
-    case 7:
-      return Season7
-    case 8:
-      return Season8
-    default:
-      break
-  }
-}
+function SeasonChip({ season, style }: { season: number; style: 'active' | 'ending' | 'inactive' }) {
+  const isActive = style != 'inactive'
 
-function SeasonChip({ season, style }: { season: number; style: 'info' | 'badge' }) {
-  //  const isBadge = style === 'badge'
-  const link = AppRoutes.badges.season7
   const router = useRouter()
   const query = router.query.safe ? { safe: router.query.safe } : undefined
 
-  const seasonIcon = getSeasonIcon(season)
+  const seasonObject = getSeasonByCode(season)
   return (
     <Link
       onClick={(e) => e.stopPropagation()}
-      href={{ pathname: link, query }}
+      href={{ pathname: seasonObject?.link, query }}
       passHref
       style={{ visibility: !season ? 'collapse' : 'visible' }}
     >
-      <SvgIcon component={seasonIcon} inheritViewBox fontSize="inherit" sx={{ width: '24px', height: '24px' }} />
+      <SvgIcon
+        component={seasonObject?.icon}
+        inheritViewBox
+        fontSize="inherit"
+        sx={{
+          width: '24px',
+          height: '24px',
+          opacity: isActive ? 1 : 0.5,
+          mixBlendMode: isActive ? 'none' : 'luminosity',
+        }}
+      />
       {/* <Chip
         label={
           <Box display="flex" alignItems="center" gap={0.5}>

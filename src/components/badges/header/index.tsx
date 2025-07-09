@@ -5,6 +5,7 @@ import { AppRoutes } from '@/config/routes'
 import { GradientProgress } from '..'
 import RefreshTimer from '@/components/leaderboard/RefreshTimer'
 import SeasonChip from '../seasonChip'
+import { getCurrentSeason, getSeasonByCode } from '@/services/seasons'
 
 export const badgesNavItems = [
   {
@@ -14,10 +15,12 @@ export const badgesNavItems = [
   {
     label: 'Season 7',
     href: AppRoutes.badges.season7,
+    status: getSeasonByCode(7)!.status(),
   },
   {
     label: 'Season 8',
     href: AppRoutes.badges.season8,
+    status: getSeasonByCode(8)!.status(),
   },
 ]
 
@@ -39,18 +42,14 @@ function BadgesHeader({
   isLoading: boolean
 }) {
   const progress = (points / pointsToNextLevel) * 100
-
+  const currentSeason = getCurrentSeason()
   return (
     <Box p={1} sx={{ width: '100%' }}>
       <Box display="flex" alignItems="center" gap={2} pb={4}>
         <Typography variant="h2" fontWeight={700}>
           Badges
         </Typography>
-        <RefreshTimer
-          deadLine={new Date(Date.UTC(2025, 6, 16, 17, 59, 59, 999))}
-          message="Season 8 • "
-          messageAfter=" left"
-        />
+        <RefreshTimer deadLine={currentSeason.toDate} message={`${currentSeason.name} • `} messageAfter=" left" />
       </Box>
 
       <NavTabs tabs={badgesNavItems} />
@@ -77,7 +76,7 @@ function BadgesHeader({
               </Typography>
 
               {season && (
-                <SeasonChip season={season.code} style="badge" />
+                <SeasonChip season={season.code} style={season.isActive ? 'active' : 'inactive'} />
                 // <Chip
                 //   label={
                 //     <Box display="flex" alignItems="center" gap={0.5}>
