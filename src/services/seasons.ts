@@ -41,15 +41,15 @@ export const seasons = [
   createSeason(
     'Season 7',
     7,
-    new Date(Date.UTC(2025, 0, 11, 23, 59, 59, 999)),
-    new Date(Date.UTC(2025, 6, 17, 23, 59, 59, 999)),
+    new Date(Date.UTC(2025, 0, 16, 0, 0, 0, 0)),
+    new Date(Date.UTC(2025, 6, 16, 23, 59, 59, 999)),
     Season7,
     AppRoutes.badges.season7,
   ),
   createSeason(
     'Season 8',
     8,
-    new Date(Date.UTC(2025, 6, 18, 0, 0, 0, 0)),
+    new Date(Date.UTC(2025, 7, 18, 0, 0, 0, 0)),
     new Date(Date.UTC(2025, 8, 16, 17, 59, 59, 999)),
     Season8,
     AppRoutes.badges.season8,

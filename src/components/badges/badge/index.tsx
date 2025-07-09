@@ -80,7 +80,7 @@ function Badge({
         />
         <Box className={css.topBar}>
           <Box className={css.topBarLeft}>
-            <SeasonChip season={data.metadata.season} style="active" />
+            <SeasonChip season={data.metadata.season} />
           </Box>
           <Box className={css.topBarRight}>
             <Box display="flex" flexWrap="wrap" gap={1} alignItems="center">

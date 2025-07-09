@@ -78,7 +78,7 @@ function BadgesHeader({
               </Typography>
 
               {season && (
-                <SeasonChip season={season.code} style={season.isActive ? 'active' : 'inactive'} />
+                <SeasonChip season={season.code} />
                 // <Chip
                 //   label={
                 //     <Box display="flex" alignItems="center" gap={0.5}>
