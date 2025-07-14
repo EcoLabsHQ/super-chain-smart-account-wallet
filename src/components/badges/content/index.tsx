@@ -113,7 +113,21 @@ function BadgesContent({
             ))}
         </Box>
       </Grid>
-      <Drawer variant="temporary" anchor="right" onClose={() => setCurrentBadge(null)} open={!!currentBadge}>
+      <Drawer
+        variant="temporary"
+        anchor="right"
+        onClose={() => setCurrentBadge(null)}
+        open={!!currentBadge}
+        PaperProps={{
+          sx: {
+            width: 340,
+            height: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            padding: 0,
+          },
+        }}
+      >
         <BadgeInfo
           switchFavorite={({ id, account, isFavorite }: { id: number; account: Address; isFavorite: boolean }) =>
             badgesService.switchFavoriteBadge(id, account, isFavorite, setFavoriteBadgesLocalStorage)

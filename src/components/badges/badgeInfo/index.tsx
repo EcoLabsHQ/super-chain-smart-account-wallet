@@ -53,7 +53,16 @@ function BadgeInfo({
   const strategies = [new WorldIDVerificationStrategy(), new FarcasterLinkStrategy()]
 
   return (
-    <Stack justifyContent="flex-start" alignItems="center" spacing={2} className={css.drawer}>
+    <Stack
+      justifyContent="flex-start"
+      alignItems="center"
+      spacing={2}
+      sx={{
+        pt: 'var(--header-height)',
+        px: 0,
+        width: '100%',
+      }}
+    >
       <Box
         display="flex"
         width="100%"
