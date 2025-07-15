@@ -43,7 +43,7 @@ function Badge({
   const isSeasonActive = !data.metadata.season ? true : getSeasonByCode(data.metadata.season)?.isActive()
   return (
     <Box
-      sx={{ maxWidth: '100%', opacity: isSeasonActive ? 1 : 0.5, mixBlendMode: isSeasonActive ? 'none' : 'luminosity' }}
+      sx={{ maxWidth: '100%' }}
       onClick={handlePickBadge}
       className={classNames(css.badgeContainer, {
         [css.favorited]: isFavorite,
@@ -80,7 +80,7 @@ function Badge({
         />
         <Box className={css.topBar}>
           <Box className={css.topBarLeft}>
-            <SeasonChip season={data.metadata.season} />
+            <SeasonChip season={data.metadata.season} defaultActive={true} />
           </Box>
           <Box className={css.topBarRight}>
             <Box display="flex" flexWrap="wrap" gap={1} alignItems="center">

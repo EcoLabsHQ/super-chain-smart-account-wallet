@@ -4,12 +4,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { getSeasonByCode } from '@/services/seasons'
 
-function SeasonChip({ season }: { season: number }) {
+function SeasonChip({ season, defaultActive }: { season: number; defaultActive?: boolean }) {
   const router = useRouter()
   const query = router.query.safe ? { safe: router.query.safe } : undefined
 
   const seasonObject = getSeasonByCode(season)
-  const isActive = seasonObject?.isActive() ?? false
+  const isActive = defaultActive ?? seasonObject?.isActive() ?? false
   return (
     <Link
       onClick={(e) => e.stopPropagation()}
