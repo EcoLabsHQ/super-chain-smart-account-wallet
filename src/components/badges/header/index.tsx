@@ -51,7 +51,9 @@ function BadgesHeader({
         <Typography variant="h2" fontWeight={700}>
           Badges
         </Typography>
-        <RefreshTimer deadLine={currentSeason.toDate} message={`${currentSeason.name} • `} messageAfter=" left" />
+        {currentSeason && (
+          <RefreshTimer deadLine={currentSeason.toDate} message={`${currentSeason.name} • `} messageAfter=" left" />
+        )}
       </Box>
 
       <NavTabs tabs={badgesNavItems} />

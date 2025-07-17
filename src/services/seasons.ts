@@ -27,7 +27,7 @@ function createSeason(name: string, code: number, fromDate: Date, toDate: Date, 
 
 export function getCurrentSeason() {
   const now = new Date()
-  return seasons.find((season) => season.toDate > now) || seasons[seasons.length - 1]
+  return seasons.find((season) => season.fromDate < now && season.toDate > now)
 }
 export function getSeasonByCode(code: number) {
   return seasons.find((season) => season.code === code)

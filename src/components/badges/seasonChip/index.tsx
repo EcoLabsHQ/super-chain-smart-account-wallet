@@ -9,7 +9,7 @@ function SeasonChip({ season, defaultActive }: { season: number; defaultActive?:
   const query = router.query.safe ? { safe: router.query.safe } : undefined
 
   const seasonObject = getSeasonByCode(season)
-  const isActive = defaultActive ?? seasonObject?.isActive() ?? false
+  const isActive = seasonObject?.isActive() ?? false
   return (
     <Link
       onClick={(e) => e.stopPropagation()}
