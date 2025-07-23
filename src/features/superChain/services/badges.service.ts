@@ -4,6 +4,7 @@ import { BACKEND_BASE_URI } from '@/config/constants'
 import type { ResponseBadge } from '@/types/super-chain'
 import local from '@/services/local-storage/local'
 import type { Setter } from '@/services/local-storage/useLocalStorage'
+import { getSiweToken } from '@/utils/helpers'
 
 export type Perks = {
   name: string
@@ -12,7 +13,7 @@ export type Perks = {
 class BadgesService {
   httpInstance = axios.create({
     baseURL: BACKEND_BASE_URI,
-    withCredentials: true,
+    //withCredentials: true,
   })
   public switchFavoriteBadge(
     badgeId: number,
@@ -60,10 +61,18 @@ class BadgesService {
   public async attestBadges(account: Address, captchaToken: string | null): Promise<any> {
     const maxRetries: number = 1
     let attempt: number = 0
-
+    const token = getSiweToken()
     while (attempt <= maxRetries) {
       try {
-        const response = await this.httpInstance.post(`/user/${account}/badges/claim`, { captchaToken })
+        const response = await this.httpInstance.post(
+          `/user/${account}/badges/claim`,
+          { captchaToken },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
 
         if (response.status === 201) {
           return response.data

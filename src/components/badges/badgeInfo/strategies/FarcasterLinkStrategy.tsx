@@ -10,6 +10,7 @@ import { JSON_RPC_PROVIDER } from '@/features/superChain/constants'
 import { BACKEND_AUTH_URI, BACKEND_BASE_URI } from '@/config/constants'
 import axios from 'axios'
 import FailedTxnModal from '@/components/common/ErrorModal'
+import { getSiweToken } from '@/utils/helpers'
 
 class FarcasterLinkStrategy implements BadgeRenderStrategy {
   canRender(badge: ResponseBadge): boolean {
@@ -49,11 +50,19 @@ export function FarcasterVerificationComponent({ badge }: { badge: ResponseBadge
     setCurrentUser(res.displayName!)
     const httpInstance = axios.create({
       baseURL: BACKEND_BASE_URI,
-      withCredentials: true,
+      //withCredentials: true,
     })
-
+    const token = getSiweToken()
     try {
-      await httpInstance.post(`${BACKEND_BASE_URI}/farcaster/verify/${address}`, { ...res })
+      await httpInstance.post(
+        `${BACKEND_BASE_URI}/farcaster/verify/${address}`,
+        { ...res },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
       window.dispatchEvent(new CustomEvent('claim-badges'))
     } catch (e) {
       setErrorDetail(String(e))

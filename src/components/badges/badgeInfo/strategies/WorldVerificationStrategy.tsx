@@ -24,7 +24,7 @@ export function WorldIDVerificationComponent({ badge }: { badge: ResponseBadge }
   async function onSuccess(result: ISuccessResult): Promise<void> {
     const httpInstance = axios.create({
       baseURL: BACKEND_BASE_URI,
-      withCredentials: true,
+      //withCredentials: true,
     })
 
     try {

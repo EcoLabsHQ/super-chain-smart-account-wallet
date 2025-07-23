@@ -10,7 +10,7 @@ import { sepolia, optimism } from 'viem/chains'
 const pimlicoTransport = () => {
   return http(`${BACKEND_BASE_URI}/user-op-reverse-proxy`, {
     fetchOptions: {
-      credentials: 'include',
+      //credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
     },
   })

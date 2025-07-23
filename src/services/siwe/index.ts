@@ -7,6 +7,7 @@ import {
 } from '@reown/appkit-siwe'
 import { BACKEND_AUTH_URI } from '@/config/constants'
 import { AppKitNetwork } from '@reown/appkit/networks'
+import { siweSignOut } from '@/utils/helpers'
 
 export async function getSession() {
   const res = await fetch(BACKEND_AUTH_URI + '/session', {
@@ -17,6 +18,7 @@ export async function getSession() {
     credentials: 'include',
   })
   if (!res.ok) {
+    if (res.status === 401) localStorage.removeItem('siwe-jwt')
     throw new Error('Network response was not ok')
   }
 
@@ -35,24 +37,30 @@ const verifyMessage = async ({ message, signature }: SIWEVerifyMessageArgs) => {
       },
       mode: 'cors',
       body: JSON.stringify({ message, signature }),
-      credentials: 'include',
+      //credentials: 'include',
     })
 
     if (!response.ok) {
       return false
     }
 
-    const result = await response.json()
-    return result === true
+    // const result = await response.json()
+    // return result === true
+
+    const { token } = await response.json()
+    localStorage.setItem('siwe-jwt', token)
+
+    return token
   } catch (error) {
     return false
   }
 }
 
 const signOut = async (): Promise<boolean> => {
+  siweSignOut()
   const res = await fetch(BACKEND_AUTH_URI + '/signout', {
     method: 'GET',
-    credentials: 'include',
+    //credentials: 'include',
   })
   if (!res.ok) {
     throw new Error('Network response was not ok')
@@ -65,7 +73,7 @@ const signOut = async (): Promise<boolean> => {
 const getNonce = async (): Promise<string> => {
   const res = await fetch(BACKEND_AUTH_URI + '/nonce', {
     method: 'GET',
-    credentials: 'include',
+    //credentials: 'include',
   })
   if (!res.ok) {
     throw new Error('Network response was not ok')
