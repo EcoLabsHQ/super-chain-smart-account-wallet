@@ -40,14 +40,20 @@ function useCompound() {
       safeModulesVersion: '0.3.0',
     })
   }
+
+  const truncateDecimals = (value: string, decimals: number) => {
+    const [intPart, decPart = ''] = value.split('.')
+    const truncatedDec = decPart.slice(0, decimals)
+    return decPart.length ? `${intPart}.${truncatedDec}` : intPart
+  }
   const getDepositOnCompoundCallable = (supplyToken: Address, contract: Address) => {
     return {
-      callContract: async (amount: string) => {
+      callContract: async (depositAmount: string) => {
         patchFetch()
-
+        const decimals = supplyToken == '0x4200000000000000000000000000000000000006' ? 18 : 6
+        const amount = truncateDecimals(depositAmount, decimals)
         //TODO improve
-        const bigIntAmount =
-          supplyToken == '0x4200000000000000000000000000000000000006' ? parseUnits(amount, 18) : parseUnits(amount, 6)
+        const bigIntAmount = parseUnits(amount, decimals)
         const approveTx: MetaTransactionData = {
           to: supplyToken,
           value: '0',
