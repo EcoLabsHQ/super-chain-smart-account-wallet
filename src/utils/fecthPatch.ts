@@ -1,16 +1,18 @@
+import { getSiweToken } from './helpers'
+
 let fetchPatched = false
-//TODO REMOVE
+
 export function patchFetch() {
   if (!fetchPatched) {
+    const token = getSiweToken()
     const originalFetch = window.fetch
 
     window.fetch = (url, options = {}) => {
+      const headers = new Headers(options.headers || {})
+      headers.set('Authorization', `Bearer ${token}`)
       return originalFetch(url, {
         ...options,
-        // credentials:
-        //   url.toString().includes('user-op-reverse-proxy') || url.toString().includes('/world-id/verify')
-        //     ? 'include'
-        //     : undefined,
+        headers,
       })
     }
 

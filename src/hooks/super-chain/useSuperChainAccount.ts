@@ -15,8 +15,6 @@ import { ConnectedWallet } from '../wallets/useOnboard'
 import { MetaTransactionData } from '@safe-global/safe-core-sdk-types'
 import { patchFetch } from '@/utils/fecthPatch'
 
-export let fetchPatched = false
-
 function useSuperChainAccount() {
   const { smartAccountClient } = usePimlico()
   const wallet = useWallet()

@@ -21,6 +21,7 @@ function useCompound() {
   }
 
   const initializeSafeKit = async (): Promise<Safe4337Pack> => {
+    patchFetch()
     return await Safe4337Pack.init({
       provider: wallet?.provider as Eip1193Provider,
       signer: wallet?.address,
