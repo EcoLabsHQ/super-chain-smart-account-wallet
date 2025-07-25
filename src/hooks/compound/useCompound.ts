@@ -8,7 +8,7 @@ import useSafeAddress from '../useSafeAddress'
 import { COMPOUND_ABI } from '@/features/superChain/constants'
 import { patchFetch } from '@/utils/fecthPatch'
 
-const usd_tokens = ['0x94b008aa00579c1307b0ef2c499ad98a8ce58e58', '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85']
+const usd_tokens = ['0x94b008aA00579c1307B0EF2c499aD98a8ce58e58', '0x0b2C639c533813f4Aa9D7837CAf62653d097Ff85']
 
 function useCompound() {
   const wallet = useWallet()
