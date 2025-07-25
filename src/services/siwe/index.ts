@@ -15,7 +15,7 @@ export async function getSession() {
     headers: {
       'Content-Type': 'application/json',
     },
-    credentials: 'include',
+    //credentials: 'include',
   })
   if (!res.ok) {
     if (res.status === 401) localStorage.removeItem('siwe-jwt')
