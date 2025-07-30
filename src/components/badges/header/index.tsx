@@ -13,14 +13,14 @@ export const badgesNavItems = [
     href: AppRoutes.badges.allTime,
   },
   {
-    label: 'Season 7',
-    href: AppRoutes.badges.season7,
-    status: getSeasonByCode(7)!.status(),
-  },
-  {
     label: 'Season 8',
     href: AppRoutes.badges.season8,
     status: getSeasonByCode(8)!.status(),
+  },
+  {
+    label: 'Season 7',
+    href: AppRoutes.badges.season7,
+    status: getSeasonByCode(7)!.status(),
   },
 ]
 

@@ -154,10 +154,6 @@ export const leaderboardNavItems = [
     label: 'All-Time',
     href: AppRoutes.leaderboard.index,
   },
-  /* {
-    label: 'Season 7',
-    href: AppRoutes.leaderboard.index,
-  }, */
 ]
 
 export const generalSettingsNavItems = [
