@@ -49,8 +49,8 @@ export const seasons = [
   createSeason(
     'Season 8',
     8,
-    new Date(Date.UTC(2025, 7, 18, 0, 0, 0, 0)),
-    new Date(Date.UTC(2025, 8, 16, 17, 59, 59, 999)),
+    new Date(Date.UTC(2025, 6, 31, 0, 0, 0, 0)),
+    new Date(Date.UTC(2025, 11, 24, 23, 59, 59, 999)),
     Season8,
     AppRoutes.badges.season8,
   ),
