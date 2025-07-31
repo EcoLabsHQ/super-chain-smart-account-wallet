@@ -12,7 +12,6 @@ function createSeason(name: string, code: number, fromDate: Date, toDate: Date, 
     link,
     isActive: function () {
       const now = new Date()
-      console.log(`Checking if season ${this.name} is active: from ${this.fromDate} to ${this.toDate}, now is ${now}`)
       return this.fromDate <= now && this.toDate > now
     },
     status: function (): 'active' | 'inactive' | 'ending' {

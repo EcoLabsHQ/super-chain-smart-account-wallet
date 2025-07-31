@@ -59,7 +59,7 @@ const NavTabs = ({ tabs }: { tabs: NavItem[] }) => {
                     height: 8,
                     ml: 1,
                     backgroundColor:
-                      tab.status == 'active' ? '22C55E' : tab.status == 'inactive' ? '#E1E2EA' : '#FA8900',
+                      tab.status == 'active' ? '#22C55E' : tab.status == 'inactive' ? '#E1E2EA' : '#FA8900',
                     borderRadius: '50%',
                     display: 'inline-block',
                   }}
