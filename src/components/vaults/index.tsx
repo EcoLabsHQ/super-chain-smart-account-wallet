@@ -23,6 +23,7 @@ interface Vault {
   decimals: number
   image: string | null
   interest_apr: string
+  asset_price?: number
   balance?: number
   depreciated?: boolean
   min_deposit?: string
@@ -359,11 +360,13 @@ function Vaults() {
     )
   }
 
-  const totalDeposits = vaults.reduce((sum: number, vault: Vault) => sum + (Number(vault.balance) || 0), 0)
-
+  const totalDeposits = vaults.reduce(
+    (sum: number, vault: Vault) => sum + (Number(vault.balance) || 0) * (vault.asset_price || 1),
+    0,
+  )
   const totalWeightedApy = vaults.reduce((sum: number, vault: Vault) => {
     const totalApr = Number(vault.rewards_apr) + Number(vault.interest_apr)
-    return sum + (Number(vault.balance) || 0) * totalApr
+    return sum + (Number(vault.balance) || 0) * (vault.asset_price || 1) * totalApr
   }, 0)
   const averageApy = totalDeposits > 0 ? (totalWeightedApy / totalDeposits) * 100 : 0
 
