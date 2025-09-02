@@ -69,7 +69,7 @@ export { useCustomSafeApps }
 const fakeSafeApps: SafeAppData[] = [
   {
     id: 0.21472726789485663,
-    url: 'https://raffle.superchain.eco/',
+    url: 'https://miniraffle.superchain.eco/',
     name: 'SuperChain Raffle',
     description:
       'Claim free tickets in the weekly Superchain Raffle based on your Super Account level for a chance to win rewards.',
