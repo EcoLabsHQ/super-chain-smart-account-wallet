@@ -222,7 +222,7 @@ function BadgeInfo({
             </Box>
 
             <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
-              {strategy.renderDescription ? (
+              {strategy?.renderDescription ? (
                 strategy.renderDescription(currentBadge)
               ) : (
                 <>
@@ -289,7 +289,7 @@ function BadgeInfo({
               }}
               padding="12px"
             >
-              {strategy.renderBadgeTiers
+              {strategy?.renderBadgeTiers
                 ? strategy.renderBadgeTiers(currentBadge)
                 : currentBadge.badgeTiers.map((tier, index) => (
                     <Box key={index}>

@@ -36,9 +36,8 @@ interface BadgeStrategyRendererProps {
 export const getBadgeStrategy = (
   badge: ResponseBadge,
   strategies: BadgeRenderStrategy[],
-  defaultStrategy: BadgeRenderStrategy = new DefaultBadgeStrategy(),
-): BadgeRenderStrategy => {
-  return strategies.find((s) => s.canRender(badge)) || defaultStrategy
+): BadgeRenderStrategy | undefined => {
+  return strategies.find((s) => s.canRender(badge))
 }
 
 const BadgeStrategyRenderer: React.FC<BadgeStrategyRendererProps> = ({
@@ -46,7 +45,7 @@ const BadgeStrategyRenderer: React.FC<BadgeStrategyRendererProps> = ({
   strategies,
   defaultStrategy = new DefaultBadgeStrategy(),
 }) => {
-  const strategy = getBadgeStrategy(badge, strategies, defaultStrategy)
+  const strategy = getBadgeStrategy(badge, strategies) ?? defaultStrategy
   // compatibilidad: si la estrategia provee `render` la usamos, si no, null
   return <>{strategy.render ? strategy.render(badge) : null}</>
 }
