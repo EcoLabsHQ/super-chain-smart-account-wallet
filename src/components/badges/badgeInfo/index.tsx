@@ -222,16 +222,18 @@ function BadgeInfo({
             </Box>
 
             <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
-              {strategy?.renderDescription ? (
-                strategy.renderDescription(currentBadge)
-              ) : (
-                <>
-                  <Typography color="#75757A">
-                    {currentBadge?.metadata.description.replaceAll('FarCaster', 'Farcaster')}
-                  </Typography>
-                  {currentBadge.claimable && <Chip label="Claimable" />}
-                </>
-              )}
+              <>
+                {strategy?.renderDescription ? (
+                  strategy.renderDescription(currentBadge)
+                ) : (
+                  <>
+                    <Typography color="#75757A">
+                      {currentBadge?.metadata.description.replaceAll('FarCaster', 'Farcaster')}
+                    </Typography>
+                  </>
+                )}
+                {currentBadge.claimable && <Chip label="Claimable" />}
+              </>
             </Box>
             <Box
               width="100%"
