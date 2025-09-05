@@ -3,7 +3,9 @@ import type { ResponseBadge } from '@/types/super-chain'
 
 interface BadgeRenderStrategy {
   canRender: (badge: ResponseBadge) => boolean
-  render: (badge: ResponseBadge) => React.ReactNode
+  render?: (badge: ResponseBadge) => React.ReactNode
+  renderDescription?: (badge: ResponseBadge) => React.ReactNode
+  renderBadgeTiers?: (badge: ResponseBadge) => React.ReactNode
 }
 
 class DefaultBadgeStrategy implements BadgeRenderStrategy {
@@ -14,6 +16,14 @@ class DefaultBadgeStrategy implements BadgeRenderStrategy {
   render(badge: ResponseBadge): React.ReactNode {
     return null
   }
+
+  renderDescription(badge: ResponseBadge): React.ReactNode {
+    return null
+  }
+
+  renderBadgeTiers(badge: ResponseBadge): React.ReactNode {
+    return null
+  }
 }
 
 interface BadgeStrategyRendererProps {
@@ -22,13 +32,23 @@ interface BadgeStrategyRendererProps {
   defaultStrategy?: BadgeRenderStrategy
 }
 
+// Helper: devuelve la estrategia seleccionada para usar en distintas secciones
+export const getBadgeStrategy = (
+  badge: ResponseBadge,
+  strategies: BadgeRenderStrategy[],
+  defaultStrategy: BadgeRenderStrategy = new DefaultBadgeStrategy(),
+): BadgeRenderStrategy => {
+  return strategies.find((s) => s.canRender(badge)) || defaultStrategy
+}
+
 const BadgeStrategyRenderer: React.FC<BadgeStrategyRendererProps> = ({
   badge,
   strategies,
   defaultStrategy = new DefaultBadgeStrategy(),
 }) => {
-  const strategy = strategies.find((s) => s.canRender(badge)) || defaultStrategy
-  return <>{strategy.render(badge)}</>
+  const strategy = getBadgeStrategy(badge, strategies, defaultStrategy)
+  // compatibilidad: si la estrategia provee `render` la usamos, si no, null
+  return <>{strategy.render ? strategy.render(badge) : null}</>
 }
 
 export default BadgeStrategyRenderer
