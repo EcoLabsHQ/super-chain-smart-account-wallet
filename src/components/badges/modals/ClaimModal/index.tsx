@@ -8,6 +8,8 @@ import { useAppSelector } from '@/store'
 import { selectSuperChainAccount } from '@/store/superChainAccountSlice'
 import CheckCircleIcon from '@/public/images/common/check-circle.svg'
 import { GradientProgress } from '../..'
+import { getBadgeStrategy } from '@/components/badges/badgeInfo/BadgeStrategyRenderer'
+import ETHVaultStrategy from '@/components/badges/badgeInfo/strategies/ETHVaultStrategy'
 
 function ClaimModal({
   open,
@@ -39,6 +41,9 @@ function ClaimModal({
         .map((level) => {
           const badgeTier = updatedBadge.badgeTiers.find((tier: any) => Number(tier.metadata.level) === level)
           if (!badgeTier) return ''
+          const strategy = getBadgeStrategy(updatedBadge, [new ETHVaultStrategy()])
+          const customLabel = strategy?.formatTierLabel?.(updatedBadge as any, level, badgeTier)
+          if (customLabel) return customLabel
           return updatedBadge.metadata.condition.replace('{{variable}}', badgeTier.metadata.minValue)
         })
         .filter(Boolean)

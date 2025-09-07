@@ -6,12 +6,7 @@ import CheckCircleIcon from '@/public/images/common/check-circle.svg'
 import Link from 'next/link'
 import useSafeAddress from '@/hooks/useSafeAddress'
 
-type VaultTier = {
-  level: number
-  amountETH: string // ejemplo: '0.01'
-  days: number
-  label?: string
-}
+type VaultTier = { level: number; amountETH: string; days: number; label?: string }
 
 class ETHVaultStrategy implements BadgeRenderStrategy {
   private tiers: VaultTier[]
@@ -26,13 +21,25 @@ class ETHVaultStrategy implements BadgeRenderStrategy {
     ]
   }
 
-  canRender(badge: ResponseBadge): boolean {
-    const name = badge?.metadata?.name?.toLowerCase() || ''
-    return name.includes('vault') || name.includes('eth')
+  canRender(badge: any): boolean {
+    try {
+      if (badge?.badgeId !== undefined) return Number(badge.badgeId) === 26
+      const name = badge?.metadata?.name?.toLowerCase() || ''
+      const desc = badge?.metadata?.description?.toLowerCase() || ''
+      return name.includes('vault') || name.includes('eth') || desc.includes('vault')
+    } catch {
+      return false
+    }
   }
 
-  renderDescription(badge: ResponseBadge): React.ReactNode {
-    // No usar hooks directamente en la clase: devolver un componente funcional
+  formatTierLabel(badge: any, level: number, tier?: any): string | undefined {
+    const t = this.tiers.find((x) => x.level === Number(level))
+    if (t) return t.label ?? `Deposit ${t.amountETH} ETH for ${t.days} days`
+    if (tier?.metadata?.minValue) return `Deposit ${tier.metadata.minValue} ETH`
+    return undefined
+  }
+
+  renderDescription(_: ResponseBadge): React.ReactNode {
     const VaultDescription: React.FC = () => {
       const account = useSafeAddress()
       return (
@@ -44,13 +51,11 @@ class ETHVaultStrategy implements BadgeRenderStrategy {
         </Typography>
       )
     }
-
     return <VaultDescription />
   }
 
   renderBadgeTiers(badge: ResponseBadge): React.ReactNode {
-    const currentLevel = Number(badge.tier)
-
+    const currentLevel = Number(badge.tier) || 0
     return (
       <>
         {this.tiers.map((t) => (
@@ -59,7 +64,6 @@ class ETHVaultStrategy implements BadgeRenderStrategy {
               <Typography color="#4B4B4E" fontSize="12px">
                 {t.label ?? `Deposit ${t.amountETH} ETH for ${t.days} days`}
               </Typography>
-
               <SvgIcon
                 inheritViewBox
                 component={t.level <= currentLevel ? CheckCircleIcon : null}
