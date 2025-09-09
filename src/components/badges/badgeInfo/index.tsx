@@ -14,9 +14,10 @@ import CheckCircleIcon from '@/public/images/common/check-circle.svg'
 import NetworkChip from '../networkChip'
 import SeasonChip from '../seasonChip'
 import { formatXP } from '../badge'
-import BadgeStrategyRenderer from './BadgeStrategyRenderer'
+import BadgeStrategyRenderer, { getBadgeStrategy } from './BadgeStrategyRenderer'
 import { WorldIDVerificationStrategy } from './strategies/WorldVerificationStrategy'
 import { FarcasterLinkStrategy } from './strategies/FarcasterLinkStrategy'
+import ETHVaultStrategy from './strategies/ETHVaultStrategy'
 
 function BadgeInfo({
   currentBadge,
@@ -50,7 +51,8 @@ function BadgeInfo({
   if (!currentBadge) return null
 
   const isCompleted = Number(currentBadge.tier) === currentBadge.badgeTiers.length
-  const strategies = [new WorldIDVerificationStrategy(), new FarcasterLinkStrategy()]
+  const strategies = [new WorldIDVerificationStrategy(), new FarcasterLinkStrategy(), new ETHVaultStrategy()]
+  const strategy = getBadgeStrategy(currentBadge, strategies)
 
   return (
     <Stack
@@ -220,10 +222,18 @@ function BadgeInfo({
             </Box>
 
             <Box display="flex" justifyContent="center" alignItems="center" gap={1}>
-              <Typography color="#75757A">
-                {currentBadge?.metadata.description.replaceAll('FarCaster', 'Farcaster')}
-              </Typography>
-              {currentBadge.claimable && <Chip label="Claimable" />}
+              <>
+                {strategy?.renderDescription ? (
+                  strategy.renderDescription(currentBadge)
+                ) : (
+                  <>
+                    <Typography color="#75757A">
+                      {currentBadge?.metadata.description.replaceAll('FarCaster', 'Farcaster')}
+                    </Typography>
+                  </>
+                )}
+                {currentBadge.claimable && <Chip label="Claimable" />}
+              </>
             </Box>
             <Box
               width="100%"
@@ -281,28 +291,30 @@ function BadgeInfo({
               }}
               padding="12px"
             >
-              {currentBadge.badgeTiers.map((tier, index) => (
-                <Box key={index}>
-                  <Box display="flex" justifyContent="space-between" alignItems="center" paddingY="4px">
-                    <Typography color="#4B4B4E" fontSize="12px">
-                      {currentBadge.metadata.condition.replace('{{variable}}', formatXP(tier.metadata.minValue))}
-                    </Typography>
+              {strategy?.renderBadgeTiers
+                ? strategy.renderBadgeTiers(currentBadge)
+                : currentBadge.badgeTiers.map((tier, index) => (
+                    <Box key={index}>
+                      <Box display="flex" justifyContent="space-between" alignItems="center" paddingY="4px">
+                        <Typography color="#4B4B4E" fontSize="12px">
+                          {currentBadge.metadata.condition.replace('{{variable}}', formatXP(tier.metadata.minValue))}
+                        </Typography>
 
-                    <SvgIcon
-                      inheritViewBox
-                      component={tier.tier <= currentBadge.tier ? CheckCircleIcon : null}
-                      sx={{
-                        color: tier.tier <= currentBadge.tier ? '#A3E635' : 'grey',
-                        fontSize: '16px',
-                        width: '16px',
-                        height: '16px',
-                        border: tier.tier <= currentBadge.tier ? 'none' : '1px dashed #E1E2EA',
-                        borderRadius: '50%',
-                      }}
-                    />
-                  </Box>
-                </Box>
-              ))}
+                        <SvgIcon
+                          inheritViewBox
+                          component={tier.tier <= currentBadge.tier ? CheckCircleIcon : null}
+                          sx={{
+                            color: tier.tier <= currentBadge.tier ? '#A3E635' : 'grey',
+                            fontSize: '16px',
+                            width: '16px',
+                            height: '16px',
+                            border: tier.tier <= currentBadge.tier ? 'none' : '1px dashed #E1E2EA',
+                            borderRadius: '50%',
+                          }}
+                        />
+                      </Box>
+                    </Box>
+                  ))}
             </Box>
             {currentBadge.currentCount != undefined && (
               <Chip
