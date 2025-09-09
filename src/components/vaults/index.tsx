@@ -250,6 +250,7 @@ function VaultCard({
 
       <DepositModal
         open={isDepositModalOpen}
+        assetPrice={assetPrice}
         onClose={handleCloseDepositModal}
         symbol={title}
         icon={icon}
