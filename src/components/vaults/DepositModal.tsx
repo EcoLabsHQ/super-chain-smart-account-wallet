@@ -33,6 +33,7 @@ interface DepositModalProps {
   tokenAddress: Address
   supplyTokenAddress: Address
   vaultBalance: string
+  assetPrice: number
   onSuccess: (amount: string, hash: string, balance: string) => void
   onError: () => void
   minDepositAmount?: string
@@ -47,6 +48,7 @@ function DepositModal({
   tokenAddress,
   supplyTokenAddress,
   vaultBalance,
+  assetPrice,
   onSuccess,
   onError,
   minDepositAmount = '100',
@@ -192,7 +194,7 @@ function DepositModal({
               </Stack>
               <Stack direction="row" justifyContent="space-between" alignItems="center" mt={1}>
                 <Typography color="text.secondary" fontSize="14px">
-                  ${(Number(amount) || 0).toFixed(2)}
+                  ${(Number(amount) * assetPrice || 0).toFixed(2)}
                 </Typography>
                 <Typography color="text.secondary" fontSize="14px">
                   Available: {maxAmount}{' '}

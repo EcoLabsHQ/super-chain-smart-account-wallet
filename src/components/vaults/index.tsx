@@ -32,6 +32,7 @@ interface Vault {
 function VaultCard({
   title,
   value,
+  assetPrice,
   apy,
   icon,
   comet,
@@ -43,6 +44,7 @@ function VaultCard({
 }: {
   title: string
   value: number
+  assetPrice: number
   apy: number
   icon: any
   comet: string
@@ -429,6 +431,7 @@ function Vaults() {
             <VaultCard
               key={vault.comet}
               title={vault.symbol}
+              assetPrice={vault.asset_price || 1}
               value={Number(vault.balance) || 0}
               apy={(Number(vault.rewards_apr) + Number(vault.interest_apr)) * 100}
               icon={icon}
