@@ -66,31 +66,24 @@ function CampaignCard({
         p: 0,
         borderRadius: '12px',
         overflow: 'hidden',
-        boxShadow: 2,
-        backgroundColor: 'grey.50',
+        boxShadow: 1,
+        backgroundColor: 'white',
         cursor: 'pointer',
         height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
       }}
       onClick={handlePickCampaign}
     >
-      <Box
-        sx={{
-          position: 'relative',
-          background: '#eee',
-          aspectRatio: '16/9',
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
+      {/* Banner */}
+      <Box sx={{ position: 'relative', aspectRatio: '16/9', width: '100%' }}>
         <img
           src={campaign.banner}
           alt={campaign.name}
           style={{
             width: '100%',
             height: '100%',
-            objectFit: 'contain',
+            objectFit: 'cover',
             position: 'absolute',
             top: 0,
             left: 0,
@@ -100,114 +93,73 @@ function CampaignCard({
           <Box
             sx={{
               position: 'absolute',
-              top: 16,
-              right: 16,
+              top: 8,
+              right: 8,
               display: 'flex',
               alignItems: 'center',
               background: '#EBFBEE',
               border: '1px solid #39D551',
               borderRadius: '100px',
-              padding: '0px 8px',
-              boxShadow: '0 1px 4px rgba(44, 204, 64, 0.08)',
-              zIndex: 2,
-              height: '28px',
-              gap: 1,
+              px: 1,
+              py: 0.25,
+              gap: 0.5,
             }}
           >
             <Box
               sx={{
-                width: 10,
-                height: 10,
+                width: 8,
+                height: 8,
                 borderRadius: '50%',
                 background: '#39D551',
               }}
             />
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 500,
-                fontSize: 14,
-              }}
-            >
+            <Typography fontSize={12} fontWeight={500}>
               Live
             </Typography>
           </Box>
         )}
       </Box>
-      <Box sx={{ p: 2 }}>
-        <Typography variant="subtitle1" fontWeight={600} fontSize={18} fontFamily="Sora" gutterBottom>
+
+      {/* Info */}
+      <Box sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column' }}>
+        {/* Fecha */}
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+          <InsertInvitationTwoToneIcon fontSize="small" sx={{ mr: 0.5, color: 'text.secondary' }} />
+          <Typography variant="body2" color="text.secondary">
+            {formatDate(start)} → {formatDate(end)}
+          </Typography>
+        </Box>
+
+        {/* Nombre */}
+        <Typography variant="h6" fontWeight={600} fontFamily="Sora" sx={{ mb: 1 }}>
           {campaign.name}
         </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <Box
-              component="span"
-              sx={{
-                color: 'text.secondary',
-                backgroundColor: 'grey.300',
-                borderRadius: 1,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '4px',
-                width: 24,
-                height: 24,
-              }}
-            >
-              <InsertInvitationTwoToneIcon fontSize="small" />
-            </Box>
-            <Typography variant="body2" color="grey.900">
-              {formatDate(start)}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mx: 0.5 }}>
-              →
-            </Typography>
-            <Typography variant="body2" color="grey.700">
-              {formatDate(end)}
-            </Typography>
-          </Box>
-        </Box>
-        <Typography variant="body2" color="grey.800" fontSize={14} fontWeight={400} sx={{ mb: 2 }}>
+
+        {/* Descripción */}
+        <Typography variant="body2" color="text.secondary" sx={{ flexGrow: 1, mb: 2 }} noWrap>
           {campaign.description}
         </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+
+        {/* Footer con reward y chain */}
+        <Box sx={{ display: 'flex', alignItems: 'center', mt: 'auto' }}>
           <Box
             sx={{
-              padding: '0px 8px',
+              border: '1px solid #E1E2EA',
               borderRadius: '100px',
-              display: 'flex',
-              border: '1px solid #386AFF',
-              alignItems: 'center',
-              background: '#EBF0FF',
               px: 1.5,
               py: 0.5,
-              visibility: campaign.totalBoost > 0 ? 'visible' : 'hidden',
+              display: 'flex',
+              alignItems: 'center',
+              fontSize: 14,
+              fontWeight: 500,
+              color: 'text.primary',
             }}
           >
-            <OfflineBoltOutlinedIcon sx={{ color: ' #386AFF', pr: '4px' }} />
-            <Typography variant="body2" color="primary" fontWeight={500} fontSize={14}>
-              {campaign.totalBoost}% Boost
-            </Typography>
+            50K USDC
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto' }}>
-            {campaign.network.map((network: string, index: number) => (
-              <Box
-                key={`box${campaign.id + network}`}
-                sx={{
-                  ml: index === 0 ? 0 : '-10px',
-                  borderRadius: '100px',
-                  border: '1px solid #E1E2EA',
-                  width: '30px',
-                  height: '30px',
-                  pl: '2px',
-                  pt: '2px',
-                  backgroundColor: 'white',
-                  zIndex: campaign.network.length - index,
-                  position: 'relative',
-                }}
-              >
-                <NetworkChip key={`${campaign.id + network}`} network={network} style="badge" isFavorite={false} />
-              </Box>
+            {campaign.network.map((network: string) => (
+              <NetworkChip key={`${campaign.id}-${network}`} network={network} style="badge" isFavorite={false} />
             ))}
           </Box>
         </Box>
