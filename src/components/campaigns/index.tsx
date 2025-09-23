@@ -1,13 +1,18 @@
 import { BACKEND_BASE_URI } from '@/config/constants'
-import { Box, Card, Divider, Drawer, Skeleton, Stack, Typography } from '@mui/material'
+import { Box, Card, Divider, Drawer, Skeleton, Stack, SvgIcon, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import React, { useState } from 'react'
 import useSafeAddress from '@/hooks/useSafeAddress'
 import InsertInvitationTwoToneIcon from '@mui/icons-material/InsertInvitationTwoTone'
-import OfflineBoltOutlinedIcon from '@mui/icons-material/OfflineBoltOutlined'
+import OETH from '@/public/images/currencies/ethereum.svg'
+import WETH from '@/public/images/currencies/weth.svg'
+import OP from '@/public/images/currencies/optimism.svg'
+import USDC from '@/public/images/currencies/usdc.svg'
+import USDT from '@/public/images/currencies/usdt.svg'
 import NetworkChip from '../badges/networkChip'
 import CampaignInfo from './campaignInfo'
+import { tokens } from '@/config/tokens'
 export interface Campaign {
   id: string
   name: string
@@ -66,8 +71,8 @@ function CampaignCard({
         p: 0,
         borderRadius: '12px',
         overflow: 'hidden',
-        boxShadow: 1,
-        backgroundColor: 'white',
+        boxShadow: '0 6px 18px rgba(16,24,40,0.06)',
+        backgroundColor: '#ffffff', // fondo claro consistente
         cursor: 'pointer',
         height: '100%',
         display: 'flex',
@@ -76,90 +81,118 @@ function CampaignCard({
       onClick={handlePickCampaign}
     >
       {/* Banner */}
-      <Box sx={{ position: 'relative', aspectRatio: '16/9', width: '100%' }}>
+      <Box sx={{ position: 'relative', aspectRatio: '16/9', width: '100%', overflow: 'hidden' }}>
         <img
           src={campaign.banner}
           alt={campaign.name}
           style={{
             width: '100%',
             height: '100%',
-            objectFit: 'cover',
-            position: 'absolute',
-            top: 0,
-            left: 0,
+            objectFit: 'cover', // importante para cubrir el área como en el diseño
+            display: 'block',
           }}
         />
+
+        {/* Live badge */}
         {isLive && (
           <Box
             sx={{
               position: 'absolute',
-              top: 8,
-              right: 8,
+              top: 12,
+              right: 12,
               display: 'flex',
               alignItems: 'center',
               background: '#EBFBEE',
               border: '1px solid #39D551',
               borderRadius: '100px',
               px: 1,
-              py: 0.25,
+              py: '4px',
               gap: 0.5,
+              zIndex: 2,
             }}
           >
-            <Box
-              sx={{
-                width: 8,
-                height: 8,
-                borderRadius: '50%',
-                background: '#39D551',
-              }}
-            />
-            <Typography fontSize={12} fontWeight={500}>
+            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#39D551' }} />
+            <Typography fontSize={12} fontWeight={600} fontFamily="Sora">
               Live
             </Typography>
           </Box>
         )}
       </Box>
 
-      {/* Info */}
-      <Box sx={{ p: 2, flex: 1, display: 'flex', flexDirection: 'column' }}>
+      {/* Content */}
+      <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1, flex: 1 }}>
         {/* Fecha */}
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-          <InsertInvitationTwoToneIcon fontSize="small" sx={{ mr: 0.5, color: 'text.secondary' }} />
-          <Typography variant="body2" color="text.secondary">
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <InsertInvitationTwoToneIcon fontSize="small" sx={{ color: 'text.secondary' }} />
+          <Typography variant="body2" color="text.secondary" fontFamily="Sora">
             {formatDate(start)} → {formatDate(end)}
           </Typography>
         </Box>
 
-        {/* Nombre */}
-        <Typography variant="h6" fontWeight={600} fontFamily="Sora" sx={{ mb: 1 }}>
+        {/* Título */}
+        <Typography variant="h6" fontWeight={700} fontFamily="Sora" sx={{ fontSize: 18 }}>
           {campaign.name}
         </Typography>
 
-        {/* Descripción */}
-        <Typography variant="body2" color="text.secondary" sx={{ flexGrow: 1, mb: 2 }} noWrap>
+        {/* Descripción (truncate) */}
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          fontFamily="Sora"
+          sx={{
+            fontSize: 14,
+            overflow: 'hidden',
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+          }}
+        >
           {campaign.description}
         </Typography>
 
-        {/* Footer con reward y chain */}
-        <Box sx={{ display: 'flex', alignItems: 'center', mt: 'auto' }}>
+        {/* Footer: reward pill + networks */}
+        <Box sx={{ display: 'flex', alignItems: 'center', mt: 'auto', gap: 1 }}>
+          {/* REWARD pill (con icono token). Cambia la ruta del img si la tienes dinámica */}
           <Box
             sx={{
-              border: '1px solid #E1E2EA',
-              borderRadius: '100px',
+              display: 'flex', // flex en vez de inline-flex
+              alignItems: 'center', // centra verticalmente
+              gap: 1,
               px: 1.5,
-              py: 0.5,
-              display: 'flex',
-              alignItems: 'center',
-              fontSize: 14,
-              fontWeight: 500,
+              py: 0.6,
+              borderRadius: '100px',
+              border: '1px solid #E6E8F2',
+              background: '#F6F8FF',
+              fontWeight: 600,
+              fontSize: 13,
+              lineHeight: 1, // 👈 evita que el span quede desajustado
               color: 'text.primary',
             }}
           >
-            50K USDC
+            <Box component="span">50K USDC</Box>
+            <SvgIcon component={tokens['USDC'].icon} sx={{ width: 20, height: 20 }} />
           </Box>
+
+          {/* Network chips (overlap estilo) */}
           <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto' }}>
-            {campaign.network.map((network: string) => (
-              <NetworkChip key={`${campaign.id}-${network}`} network={network} style="badge" isFavorite={false} />
+            {campaign.network.map((network: string, index: number) => (
+              <Box
+                key={`${campaign.id}-${network}`}
+                sx={{
+                  ml: index === 0 ? 0 : -1.4,
+                  borderRadius: '50%',
+                  border: '1px solid #fff',
+                  width: 30,
+                  height: 30,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  bgcolor: '#fff',
+                  boxShadow: '0 1px 2px rgba(16,24,40,0.06)',
+                }}
+              >
+                <NetworkChip network={network} style="badge" isFavorite={false} />
+              </Box>
             ))}
           </Box>
         </Box>
