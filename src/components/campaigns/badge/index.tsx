@@ -1,4 +1,4 @@
-import { Card, Stack, Typography, Box, LinearProgress, Avatar } from '@mui/material'
+import { Card, Stack, Typography, Avatar } from '@mui/material'
 import GiftIcon from '@/public/images/common/gift.svg'
 import SuperchainPointIcon from '@/public/images/common/superChain.svg'
 
