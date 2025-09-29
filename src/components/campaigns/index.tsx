@@ -13,6 +13,8 @@ import USDT from '@/public/images/currencies/usdt.svg'
 import NetworkChip from '../badges/networkChip'
 import CampaignInfo from './campaignInfo'
 import { tokens } from '@/config/tokens'
+import { useRouter } from 'next/router'
+import { AppRoutes } from '@/config/routes'
 export interface Campaign {
   id: string
   name: string
@@ -56,12 +58,13 @@ function CampaignCard({
   const start = new Date(campaign.start_date)
   const end = new Date(campaign.end_date)
   const isLive = now >= start && now <= end
+  const router = useRouter()
 
   const formatDate = (date: Date) =>
     date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
 
   const handlePickCampaign = () => {
-    setCurrentCampaign(campaign)
+    router.push({ pathname: `${AppRoutes.campaigns}/${campaign.id}`, query: { safe: router.query.safe } })
   }
 
   return (
@@ -279,9 +282,9 @@ function Campaigns() {
           return <CampaignCard campaign={campaign} key={campaign.name} setCurrentCampaign={setCurrentCampaign} />
         })}
       </Box>
-      <Drawer variant="temporary" anchor="right" onClose={() => setCurrentCampaign(null)} open={!!currentCampaign}>
+      {/* <Drawer variant="temporary" anchor="right" onClose={() => setCurrentCampaign(null)} open={!!currentCampaign}>
         <CampaignInfo setCurrentCampaign={setCurrentCampaign} currentCampaign={currentCampaign} />
-      </Drawer>
+      </Drawer> */}
     </Stack>
   )
 }
