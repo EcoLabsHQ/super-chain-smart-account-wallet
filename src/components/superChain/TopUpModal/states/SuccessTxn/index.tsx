@@ -6,7 +6,7 @@ import ExplorerButton from '@/components/common/ExplorerButton'
 import { useCurrentChain } from '@/hooks/useChains'
 import { getBlockExplorerLink } from '@/utils/chains'
 import LinkIconBold from '@/public/images/sidebar/link-bold.svg'
-import { Token } from '../TopUp'
+import { Token } from '@/config/tokens'
 
 function SuccessTxn({
   hash,

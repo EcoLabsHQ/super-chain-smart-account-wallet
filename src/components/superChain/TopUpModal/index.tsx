@@ -1,7 +1,7 @@
 import { ReactElement, useState } from 'react'
 import LoadingTxn from './states/LoadingTxn'
 import SuccessTxn from './states/SuccessTxn'
-import TopUp, { Token } from './states/TopUp'
+import TopUp from './states/TopUp'
 import useSafeAddress from '@/hooks/useSafeAddress'
 import useWallet from '@/hooks/wallets/useWallet'
 import {
@@ -17,6 +17,7 @@ import {
 import { sepolia, optimism } from 'viem/chains'
 import { CHAIN_ID, JSON_RPC_PROVIDER } from '@/features/superChain/constants'
 import FailedTxnModal from '@/components/common/ErrorModal'
+import { Token } from '@/config/tokens'
 
 export enum ModalState {
   TopUp,
