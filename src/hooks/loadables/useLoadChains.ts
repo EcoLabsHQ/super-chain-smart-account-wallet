@@ -2,9 +2,10 @@ import { useEffect } from 'react'
 import { getChainsConfig, setBaseUrl, type ChainInfo } from '@safe-global/safe-gateway-typescript-sdk'
 import useAsync, { type AsyncResult } from '../useAsync'
 import { logError, Errors } from '@/services/exceptions'
+import { GATEWAY_URL_PRODUCTION } from '@/config/constants'
 
 const getConfigs = async (): Promise<ChainInfo[]> => {
-  setBaseUrl('https://safe-client.safe.global')
+  setBaseUrl(GATEWAY_URL_PRODUCTION)
   const data = await getChainsConfig()
   return data.results || []
 }
