@@ -1,11 +1,17 @@
 import { BACKEND_BASE_URI } from '@/config/constants'
-import { Box, Card, Divider, Skeleton, Stack, SvgIcon, Typography } from '@mui/material'
+import { Box, Card, Divider, Drawer, Skeleton, Stack, SvgIcon, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import React, { useState } from 'react'
 import useSafeAddress from '@/hooks/useSafeAddress'
 import InsertInvitationTwoToneIcon from '@mui/icons-material/InsertInvitationTwoTone'
+import OETH from '@/public/images/currencies/ethereum.svg'
+import WETH from '@/public/images/currencies/weth.svg'
+import OP from '@/public/images/currencies/optimism.svg'
+import USDC from '@/public/images/currencies/usdc.svg'
+import USDT from '@/public/images/currencies/usdt.svg'
 import NetworkChip from '../badges/networkChip'
+import CampaignInfo from './campaignInfo'
 import { tokens } from '@/config/tokens'
 import { useRouter } from 'next/router'
 import { AppRoutes } from '@/config/routes'
@@ -17,6 +23,7 @@ export interface Campaign {
   network: string[]
   participate_description: string
   campaign_link: string
+  myPoints: number
   boosts: Array<{
     type: string
     level?: number
@@ -36,7 +43,15 @@ export interface Campaign {
     description: string
     currentLevel: number
     maxLevel: number
+    currentPoints: number
+    maxPoints: number
   }>
+  more_info: string
+  distributed_points: number
+  can_claim: boolean
+  max_claim_date: Date
+  campaign_reward: { symbol: string, amount: string }
+  claimable_reward: { symbol: string, amount: string }
   start_date: string | Date
   end_date: string | Date
 }
