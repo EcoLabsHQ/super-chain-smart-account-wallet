@@ -2,7 +2,7 @@
 import Campaigns from '@/components/campaigns'
 import Head from 'next/head'
 import React, { useState } from 'react'
-import { Box, Typography, Stack, Divider, TextField, MenuItem, Select, Button, InputAdornment } from '@mui/material'
+import { Typography, Stack, Divider, TextField, MenuItem, Select, Button, InputAdornment } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 
 function CampaignsPage() {
@@ -23,7 +23,6 @@ function CampaignsPage() {
             <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
               Discover builder and user campaigns across the Superchain.
             </Typography>
-
           </Stack>
           <Divider style={{ marginTop: '10px', marginBottom: '16px' }} />
           {/* Header con buscador y filtro */}
@@ -71,7 +70,7 @@ function CampaignsPage() {
               displayEmpty
               size="small"
               onChange={(event) => setChain(event.target.value ?? '')}
-              renderValue={() => chain == '' ? 'Chain' : chain}
+              renderValue={() => (chain == '' ? 'Chain' : chain)}
               sx={{
                 height: 36,
                 borderRadius: '12px',
@@ -118,7 +117,6 @@ function CampaignsPage() {
               Clear All
             </Button>
           </Stack>
-
 
           {/* Listado de campañas */}
           <Campaigns chain={chain} search={search} />

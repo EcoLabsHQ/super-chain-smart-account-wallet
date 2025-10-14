@@ -1,35 +1,27 @@
-
 'use client'
 import Head from 'next/head'
 import React from 'react'
-import {
-  Button,
-  Card,
-  Dialog,
-  Divider,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Button, Card, Dialog, Divider, Stack, Typography } from '@mui/material'
 import InfoIcon from '@/public/images/common/info-light.svg'
 import CalendarIcon from '@/public/images/calendars/nov_11.svg'
 import CheckCircleIcon from '@/public/images/common/check-circle-outlined.svg'
 import SuperchainPointIcon from '@/public/images/common/superChain.svg'
 import UsdcIcon from '@/public/images/currencies/usdc.svg'
-import { ArrowBack, Launch } from '@mui/icons-material';
-import UsdIcon from "@/public/images/currencies/usdc.svg";
-import UsdOpIcon from "@/public/images/common/usdc-op.svg";
-import { useRouter } from 'next/router';
-import { AppRoutes } from '@/config/routes';
-import useSafeAddress from '@/hooks/useSafeAddress';
-import { BACKEND_BASE_URI } from '@/config/constants';
-import { Campaign, formatAmount } from '@/components/campaigns';
-import { useQuery } from '@tanstack/react-query';
-import NetworkChip from '@/components/badges/networkChip';
-import axios from 'axios';
+import { ArrowBack, Launch } from '@mui/icons-material'
+import UsdIcon from '@/public/images/currencies/usdc.svg'
+import UsdOpIcon from '@/public/images/common/usdc-op.svg'
+import { useRouter } from 'next/router'
+import { AppRoutes } from '@/config/routes'
+import useSafeAddress from '@/hooks/useSafeAddress'
+import { BACKEND_BASE_URI } from '@/config/constants'
+import { Campaign, formatAmount } from '@/components/campaigns'
+import { useQuery } from '@tanstack/react-query'
+import NetworkChip from '@/components/badges/networkChip'
+import axios from 'axios'
 
 export default function Page() {
-  const router = useRouter();
-  const [openClaimDialog, setOpenClaimDialog] = React.useState(false);
+  const router = useRouter()
+  const [openClaimDialog, setOpenClaimDialog] = React.useState(false)
   const address = useSafeAddress()
   const { data: campaign, isLoading: isLoadingCampaigns } = useQuery<Campaign>({
     queryKey: ['campaigns', address],
@@ -41,221 +33,339 @@ export default function Page() {
     enabled: !!address,
   })
   function formatDates(date: string | Date): string {
-
     const options: Intl.DateTimeFormatOptions = {
-      weekday: "long",
-      month: "long",
-      day: "numeric",
-    };
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+    }
 
-    const dateFormatted = new Date(date).toLocaleDateString("en-US", options);
+    const dateFormatted = new Date(date).toLocaleDateString('en-US', options)
     return dateFormatted
   }
-  if (campaign) return (
-    <>
-      <Head>
-        <title>Super Account - Campaigns</title>
-      </Head>
+  if (campaign)
+    return (
+      <>
+        <Head>
+          <title>Super Account - Campaigns</title>
+        </Head>
 
-      <main>
-        <Stack gap="32px" sx={{ p: 4, maxWidth: 720, mx: "auto" }}>
-          {/* Header */}
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Stack direction="row" gap="16px" alignContent="center">
-              <button onClick={() => router.push({ pathname: AppRoutes.campaigns, query: { safe: router.query.safe } })} style={{ width: '36px', height: '36px', backgroundColor: '#F1F2F5', borderRadius: '12px', color: 'black', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-                <ArrowBack sx={{ width: '16px', height: '16px' }} />
-              </button>
-              <Typography variant="h3" fontWeight={600} sx={{ transform: "translateY(3px)", display: "inline-block" }}>
-                {campaign.name}{" "}
-                <Typography sx={{ transform: "translateY(-2px)", display: "inline-block" }} component="span" variant="body2" color="#A0A0A6">
-                  Campaign
-                </Typography>
-              </Typography>
-            </Stack>
-          </Stack>
-          <Divider />
-
-          <Stack gap="8px">
-            <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
-              <Typography color="text.secondary">
-                {campaign.description}
-              </Typography>
-            </Card>
-
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(2, 1fr)",
-                gap: "8px",
-              }}
-            >
-              {/* Info Cards */}
-              <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
-                <Stack direction="row" gap="16px" alignItems="center">
-                  <div style={{ position: 'relative' }}>
-                    <div style={{ position: 'absolute', left: '-4px', top: '-4px', width: '13px', height: '13px', backgroundColor: '#39D551', borderRadius: '100%', border: '2px solid white' }}></div>
-                    <CalendarIcon style={{ width: '40px', height: '40px' }} />
-                  </div>
-                  <Stack gap="2px">
-                    <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px' }}>
-                      {formatDates(campaign.start_date)}
-                    </Typography>
-                    <Typography sx={{ fontWeight: '500', fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
-                      till {formatDates(campaign.end_date)}
-                    </Typography>
-                  </Stack>
-                </Stack>
-              </Card>
-              <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
-                <Stack direction="row" gap="16px" alignItems="center">
-                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '40px', height: '40px', border: '1px solid #E1E2EA', borderRadius: '12px' }}>
-                    {/* <OpIcon style={{ width: '20px', height: '20px' }} /> */}
-                    <NetworkChip key={`${campaign.id + campaign.network}`} network={campaign.network && campaign.network.length > 0 ? campaign.network[0] : ''} style="badge" isFavorite={false} />
-                  </div>
-                  <Stack>
-                    <Typography sx={{ fontWeight: '500', fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
-                      Network
-                    </Typography>
-                    <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px' }}>
-                      {campaign.network}
-                    </Typography>
-                  </Stack>
-                </Stack>
-              </Card>
-              <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
-                <Stack direction="row" gap="16px" alignItems="center">
-                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '40px', height: '40px', border: '1px solid #E1E2EA', borderRadius: '12px' }}>
-                    <UsdcIcon style={{ width: '20px', height: '20px' }} />
-                  </div>
-                  <Stack>
-                    <Typography sx={{ fontWeight: '500', fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
-                      Campaign Rewards
-                    </Typography>
-                    <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px' }}>
-                      {formatAmount(parseInt(campaign.campaign_reward?.amount) ?? 0)} {campaign.campaign_reward?.symbol ?? '--'}
-                    </Typography>
-                  </Stack>
-                </Stack>
-              </Card>
-              <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
-                <Stack direction="row" gap="16px" alignItems="center">
-                  <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '40px', height: '40px', border: '1px solid #E1E2EA', borderRadius: '12px' }}>
-                    <SuperchainPointIcon style={{ width: '20px', height: '20px' }} />
-                  </div>
-                  <Stack>
-                    <Typography sx={{ fontWeight: '500', fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
-                      Total points distributed
-                    </Typography>
-                    <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px' }}>
-                      {campaign.distributed_points ?? 0}
-                    </Typography>
-                  </Stack>
-                </Stack>
-              </Card>
-            </div>
-
-            {/* Badges */}
-            <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '48px' }}>
-              <Stack justifyContent="center" alignItems="center">
-                <Stack gap="8px" width="352px">
-                  <Stack alignItems="center" justifyContent="center">
-                    <Card sx={{ width: '100%', border: '1px solid #E1E2EA', borderRadius: '12px', padding: '48px', backgroundColor: 'white' }}>
-                      <Stack gap='16px' justifyContent="center" alignItems="center">
-                        <div>
-                          <Typography style={{ fontSize: '12px', fontWeight: '400', color: '#75757A', textAlign: 'center', margin: '0px' }}>This campaign has ended.</Typography>
-                          <Typography style={{ fontSize: '12px', fontWeight: '400', color: '#75757A', textAlign: 'center', margin: '0px' }}>
-                            Claim your rewards  <span style={{ fontWeight: '500', color: '#4B4B4E' }}>by December 15, 2025</span>
-                          </Typography>
-                        </div>
-                        <Stack direction="row" gap="8px" alignItems="center">
-                          <Typography sx={{ fontSize: '24px', fontWeight: '600', lineHeight: '32px' }}>
-                            {formatAmount(parseInt(campaign?.claimable_reward?.amount) ?? 0)}
-                          </Typography>
-                          <UsdIcon style={{ width: '24px', height: '24px' }} />
-                        </Stack>
-                      </Stack>
-                    </Card>
-                  </Stack>
-                  <Button sx={{ background: '#000000', borderRadius: '12px', padding: '15px', color: 'white', ":hover": { background: 'black' } }} onClick={() => setOpenClaimDialog(true)}>Claim Rewards</Button>
-                  <Stack direction="row" gap="4px" justifyContent="center" alignItems="center">
-                    <Typography variant='caption' color="#75757A">Reward Formula  </Typography>
-                    <InfoIcon style={{ width: '16px', height: '16px' }} />
-                  </Stack>
-                </Stack>
-              </Stack>
-            </Card>
-          </Stack>
-        </Stack>
-        <Dialog open={openClaimDialog} onClose={() => setOpenClaimDialog(false)} sx={{ margin: 'auto', width: '410px', overflow: 'visible' }}>
-          <Card
-            sx={{
-              padding: "20px",
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-            }}
-          >
+        <main>
+          <Stack gap="32px" sx={{ p: 4, maxWidth: 720, mx: 'auto' }}>
             {/* Header */}
             <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Typography variant="h4" fontWeight="600">
-                Claim Complete
-              </Typography>
-              <CheckCircleIcon style={{ width: '24px', height: '24px' }} />
-              {/* <CheckCircleIcon sx={{ color: "success.main" }} /> */}
+              <Stack direction="row" gap="16px" alignContent="center">
+                <button
+                  onClick={() => router.push({ pathname: AppRoutes.campaigns, query: { safe: router.query.safe } })}
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    backgroundColor: '#F1F2F5',
+                    borderRadius: '12px',
+                    color: 'black',
+                    border: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <ArrowBack sx={{ width: '16px', height: '16px' }} />
+                </button>
+                <Typography
+                  variant="h3"
+                  fontWeight={600}
+                  sx={{ transform: 'translateY(3px)', display: 'inline-block' }}
+                >
+                  {campaign.name}{' '}
+                  <Typography
+                    sx={{ transform: 'translateY(-2px)', display: 'inline-block' }}
+                    component="span"
+                    variant="body2"
+                    color="#A0A0A6"
+                  >
+                    Campaign
+                  </Typography>
+                </Typography>
+              </Stack>
             </Stack>
-            <Divider style={{ width: '345px', margin: '0 auto', transform: 'translateX(-20px)' }} />
-            <div>
-              <Typography style={{ fontSize: '12px', fontWeight: '400', color: '#75757A', margin: '0px' }} >
-                You’ve successfully claimed your rewards
-              </Typography>
-              <Typography style={{ fontSize: '12px', fontWeight: '400', color: '#75757A', margin: '0px', lineHeight: '12px' }}>
-                from the <span style={{ fontWeight: '500', color: '#4B4B4E' }}>{campaign.name} Campaign.</span>
-              </Typography>
+            <Divider />
 
-            </div>
+            <Stack gap="8px">
+              <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
+                <Typography color="text.secondary">{campaign.description}</Typography>
+              </Card>
 
-            {/* Subtitle */}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2, 1fr)',
+                  gap: '8px',
+                }}
+              >
+                {/* Info Cards */}
+                <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
+                  <Stack direction="row" gap="16px" alignItems="center">
+                    <div style={{ position: 'relative' }}>
+                      <div
+                        style={{
+                          position: 'absolute',
+                          left: '-4px',
+                          top: '-4px',
+                          width: '13px',
+                          height: '13px',
+                          backgroundColor: '#39D551',
+                          borderRadius: '100%',
+                          border: '2px solid white',
+                        }}
+                      ></div>
+                      <CalendarIcon style={{ width: '40px', height: '40px' }} />
+                    </div>
+                    <Stack gap="2px">
+                      <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px' }}>
+                        {formatDates(campaign.start_date)}
+                      </Typography>
+                      <Typography sx={{ fontWeight: '500', fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
+                        till {formatDates(campaign.end_date)}
+                      </Typography>
+                    </Stack>
+                  </Stack>
+                </Card>
+                <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
+                  <Stack direction="row" gap="16px" alignItems="center">
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '40px',
+                        height: '40px',
+                        border: '1px solid #E1E2EA',
+                        borderRadius: '12px',
+                      }}
+                    >
+                      {/* <OpIcon style={{ width: '20px', height: '20px' }} /> */}
+                      <NetworkChip
+                        key={`${campaign.id + campaign.network}`}
+                        network={campaign.network && campaign.network.length > 0 ? campaign.network[0] : ''}
+                        style="badge"
+                        isFavorite={false}
+                      />
+                    </div>
+                    <Stack>
+                      <Typography sx={{ fontWeight: '500', fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
+                        Network
+                      </Typography>
+                      <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px' }}>
+                        {campaign.network}
+                      </Typography>
+                    </Stack>
+                  </Stack>
+                </Card>
+                <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
+                  <Stack direction="row" gap="16px" alignItems="center">
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '40px',
+                        height: '40px',
+                        border: '1px solid #E1E2EA',
+                        borderRadius: '12px',
+                      }}
+                    >
+                      <UsdcIcon style={{ width: '20px', height: '20px' }} />
+                    </div>
+                    <Stack>
+                      <Typography sx={{ fontWeight: '500', fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
+                        Campaign Rewards
+                      </Typography>
+                      <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px' }}>
+                        {formatAmount(parseInt(campaign.campaign_reward?.amount) ?? 0)}{' '}
+                        {campaign.campaign_reward?.symbol ?? '--'}
+                      </Typography>
+                    </Stack>
+                  </Stack>
+                </Card>
+                <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
+                  <Stack direction="row" gap="16px" alignItems="center">
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '40px',
+                        height: '40px',
+                        border: '1px solid #E1E2EA',
+                        borderRadius: '12px',
+                      }}
+                    >
+                      <SuperchainPointIcon style={{ width: '20px', height: '20px' }} />
+                    </div>
+                    <Stack>
+                      <Typography sx={{ fontWeight: '500', fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
+                        Total points distributed
+                      </Typography>
+                      <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px' }}>
+                        {campaign.distributed_points ?? 0}
+                      </Typography>
+                    </Stack>
+                  </Stack>
+                </Card>
+              </div>
 
-            {/* Reward Box */}
-            {/* <Image src="/imgs/usd-coin.svg" alt="usd coin" width={36} height={36} /> */}
-            <Card
-              sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}
-            >
-              <Stack direction="row" alignItems="center" gap="12px">
-                <UsdOpIcon sx={{ width: '56px', height: '44px' }} />
-                <Stack gap="4px">
-                  <Typography variant="h4" fontWeight="600">
-                    {campaign.claimable_reward?.amount ?? 0}
-                  </Typography>
-                  <Typography variant="caption" color="#75757A" fontWeight={400}>
-                    ${campaign.claimable_reward?.amount ?? 0}
-                  </Typography>
+              {/* Badges */}
+              <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '48px' }}>
+                <Stack justifyContent="center" alignItems="center">
+                  <Stack gap="8px" width="352px">
+                    <Stack alignItems="center" justifyContent="center">
+                      <Card
+                        sx={{
+                          width: '100%',
+                          border: '1px solid #E1E2EA',
+                          borderRadius: '12px',
+                          padding: '48px',
+                          backgroundColor: 'white',
+                        }}
+                      >
+                        <Stack gap="16px" justifyContent="center" alignItems="center">
+                          <div>
+                            <Typography
+                              style={{
+                                fontSize: '12px',
+                                fontWeight: '400',
+                                color: '#75757A',
+                                textAlign: 'center',
+                                margin: '0px',
+                              }}
+                            >
+                              This campaign has ended.
+                            </Typography>
+                            <Typography
+                              style={{
+                                fontSize: '12px',
+                                fontWeight: '400',
+                                color: '#75757A',
+                                textAlign: 'center',
+                                margin: '0px',
+                              }}
+                            >
+                              Claim your rewards{' '}
+                              <span style={{ fontWeight: '500', color: '#4B4B4E' }}>by December 15, 2025</span>
+                            </Typography>
+                          </div>
+                          <Stack direction="row" gap="8px" alignItems="center">
+                            <Typography sx={{ fontSize: '24px', fontWeight: '600', lineHeight: '32px' }}>
+                              {formatAmount(parseInt(campaign?.claimable_reward?.amount) ?? 0)}
+                            </Typography>
+                            <UsdIcon style={{ width: '24px', height: '24px' }} />
+                          </Stack>
+                        </Stack>
+                      </Card>
+                    </Stack>
+                    <Button
+                      sx={{
+                        background: '#000000',
+                        borderRadius: '12px',
+                        padding: '15px',
+                        color: 'white',
+                        ':hover': { background: 'black' },
+                      }}
+                      onClick={() => setOpenClaimDialog(true)}
+                    >
+                      Claim Rewards
+                    </Button>
+                    <Stack direction="row" gap="4px" justifyContent="center" alignItems="center">
+                      <Typography variant="caption" color="#75757A">
+                        Reward Formula{' '}
+                      </Typography>
+                      <InfoIcon style={{ width: '16px', height: '16px' }} />
+                    </Stack>
+                  </Stack>
                 </Stack>
+              </Card>
+            </Stack>
+          </Stack>
+          <Dialog
+            open={openClaimDialog}
+            onClose={() => setOpenClaimDialog(false)}
+            sx={{ margin: 'auto', width: '410px', overflow: 'visible' }}
+          >
+            <Card
+              sx={{
+                padding: '20px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 2,
+              }}
+            >
+              {/* Header */}
+              <Stack direction="row" justifyContent="space-between" alignItems="center">
+                <Typography variant="h4" fontWeight="600">
+                  Claim Complete
+                </Typography>
+                <CheckCircleIcon style={{ width: '24px', height: '24px' }} />
+                {/* <CheckCircleIcon sx={{ color: "success.main" }} /> */}
+              </Stack>
+              <Divider style={{ width: '345px', margin: '0 auto', transform: 'translateX(-20px)' }} />
+              <div>
+                <Typography style={{ fontSize: '12px', fontWeight: '400', color: '#75757A', margin: '0px' }}>
+                  You’ve successfully claimed your rewards
+                </Typography>
+                <Typography
+                  style={{ fontSize: '12px', fontWeight: '400', color: '#75757A', margin: '0px', lineHeight: '12px' }}
+                >
+                  from the <span style={{ fontWeight: '500', color: '#4B4B4E' }}>{campaign.name} Campaign.</span>
+                </Typography>
+              </div>
+
+              {/* Subtitle */}
+
+              {/* Reward Box */}
+              {/* <Image src="/imgs/usd-coin.svg" alt="usd coin" width={36} height={36} /> */}
+              <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
+                <Stack direction="row" alignItems="center" gap="12px">
+                  <UsdOpIcon sx={{ width: '56px', height: '44px' }} />
+                  <Stack gap="4px">
+                    <Typography variant="h4" fontWeight="600">
+                      {campaign.claimable_reward?.amount ?? 0}
+                    </Typography>
+                    <Typography variant="caption" color="#75757A" fontWeight={400}>
+                      ${campaign.claimable_reward?.amount ?? 0}
+                    </Typography>
+                  </Stack>
+                </Stack>
+              </Card>
+              <Divider style={{ width: '345px', margin: '0 auto', transform: 'translateX(-20px)' }} />
+              <Stack gap="8px">
+                <Button
+                  sx={{
+                    background: '#000000',
+                    borderRadius: '12px',
+                    padding: '15px',
+                    ':hover': { background: 'black' },
+                  }}
+                >
+                  <Typography variant="body2" fontWeight={600} color="white">
+                    Earn 8% APR on Rewards
+                  </Typography>
+                </Button>
+                <Button sx={{ background: '#F1F2F5', borderRadius: '12px', padding: '15px' }}>
+                  <Typography variant="body2" fontWeight={600} color="black">
+                    Back to Campaigns
+                  </Typography>
+                </Button>
+              </Stack>
+
+              <Stack direction="row" gap="4px" justifyContent="center" alignItems="center">
+                <Typography variant="caption" color="#75757A">
+                  View on Explorer
+                </Typography>
+                <Launch sx={{ width: '16px', height: '16px' }} />
               </Stack>
             </Card>
-            <Divider style={{ width: '345px', margin: '0 auto', transform: 'translateX(-20px)' }} />
-            <Stack gap="8px">
-
-              <Button sx={{ background: '#000000', borderRadius: '12px', padding: '15px', ":hover": { background: 'black' } }}>
-                <Typography variant="body2" fontWeight={600} color="white">
-                  Earn 8% APR on Rewards
-                </Typography>
-              </Button>
-              <Button sx={{ background: '#F1F2F5', borderRadius: '12px', padding: '15px', }}>
-                <Typography variant="body2" fontWeight={600} color="black">
-                  Back to Campaigns
-                </Typography>
-              </Button>
-            </Stack>
-
-            <Stack direction="row" gap="4px" justifyContent="center" alignItems="center">
-              <Typography variant='caption' color="#75757A">View on Explorer</Typography>
-              <Launch sx={{ width: '16px', height: '16px' }} />
-            </Stack>
-          </Card>
-
-        </Dialog>
-      </main >
-    </>
-  )
+          </Dialog>
+        </main>
+      </>
+    )
 }

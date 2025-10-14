@@ -4,11 +4,12 @@ import InsertInvitationTwoToneIcon from '@mui/icons-material/InsertInvitationTwo
 import CloseIcon from '@mui/icons-material/Close'
 import React from 'react'
 import css from './styles.module.css'
-import { Campaign } from '..'
+
 import NetworkChip from '@/components/badges/networkChip'
 import Image from 'next/image'
 import router from 'next/router'
 import { AppRoutes } from '@/config/routes'
+import { Campaign } from '@/components/campaigns'
 
 function CampaignInfo({
   currentCampaign,

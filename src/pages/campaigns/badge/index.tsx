@@ -1,5 +1,4 @@
-import { Card, Stack, Typography, Box, LinearProgress, Avatar, Skeleton } from "@mui/material";
-import GiftIcon from '@/public/images/common/gift.svg'
+import { Card, Stack, Typography, Avatar } from '@mui/material'
 import SuperchainPointIcon from '@/public/images/common/superChain.svg'
 type Props = {
   badge: {
@@ -18,9 +17,9 @@ export default function CampaignBadge({ badge }: Props) {
     <Card
       variant="outlined"
       sx={{
-        borderRadius: "12px",
-        border: "1px solid #E1E2EA",
-        padding: "16px"
+        borderRadius: '12px',
+        border: '1px solid #E1E2EA',
+        padding: '16px',
       }}
     >
       <Stack direction="row" alignItems="center" gap="16px">
@@ -32,7 +31,7 @@ export default function CampaignBadge({ badge }: Props) {
         />
 
         <Stack width="100%">
-          <Stack direction="row" alignItems="center" justifyContent="space-between" >
+          <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Stack direction="row" alignItems="center" gap="8px">
               <Typography variant="body1" fontWeight={600}>
                 {badge.badgeName}
@@ -40,7 +39,16 @@ export default function CampaignBadge({ badge }: Props) {
               {/* <GiftIcon style={{ width: '20px', height: '20px' }} /> */}
             </Stack>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', border: '1px solid #E1E2EA', borderRadius: '100px', padding: '4px 6px 4px 6px' }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
+                border: '1px solid #E1E2EA',
+                borderRadius: '100px',
+                padding: '4px 6px 4px 6px',
+              }}
+            >
               <Stack direction="row" alignItems="center">
                 <Typography variant="caption" fontWeight="600" sx={{ color: 'black' }}>
                   {badge.currentPoints ?? 0}
@@ -58,11 +66,19 @@ export default function CampaignBadge({ badge }: Props) {
 
           <Stack direction="row" alignItems="center" gap="6px" mt="8px">
             {Array.from({ length: badge.maxLevel }).map((_, i) => (
-              <span key={i} style={{ flex: 1, height: '6px', backgroundColor: badge.currentLevel >= i + 1 ? '#39D551' : '#EBECF1', borderRadius: '100px' }}></span>
+              <span
+                key={i}
+                style={{
+                  flex: 1,
+                  height: '6px',
+                  backgroundColor: badge.currentLevel >= i + 1 ? '#39D551' : '#EBECF1',
+                  borderRadius: '100px',
+                }}
+              ></span>
             ))}
           </Stack>
         </Stack>
       </Stack>
-    </Card >
-  );
+    </Card>
+  )
 }
