@@ -4,8 +4,8 @@ import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import React, { useState } from 'react'
 import useSafeAddress from '@/hooks/useSafeAddress'
-import ArrowRightIcon from "@/public/images/common/arrow_right_alt.svg"
-import CalendarIcon from "@/public/images/common/calendar-gray.svg"
+import ArrowRightIcon from '@/public/images/common/arrow_right_alt.svg'
+import CalendarIcon from '@/public/images/common/calendar-gray.svg'
 import NetworkChip from '../badges/networkChip'
 import CampaignInfo from './campaignInfo'
 import { tokens } from '@/config/tokens'
@@ -38,8 +38,8 @@ export interface Campaign {
   distributed_points: number
   can_claim: boolean
   max_claim_date: Date
-  campaign_reward: { symbol: string, amount: string }
-  claimable_reward: { symbol: string, amount: string }
+  campaign_reward: { symbol: string; amount: string }
+  claimable_reward: { symbol: string; amount: string }
   start_date: string | Date
   end_date: string | Date
 }
@@ -58,11 +58,11 @@ export interface CampaignBadge {
   maxPoints: number
 }
 export const formatAmount = (amount?: number) => {
-  if (!amount) return 0;
+  if (!amount) return 0
   if (amount >= 1000) {
-    return `${Math.round(amount / 1000)}k`;
+    return `${Math.round(amount / 1000)}k`
   }
-  return amount;
+  return amount
 }
 
 function CampaignCard({
@@ -167,7 +167,7 @@ function CampaignCard({
           sx={{
             fontSize: 14,
             fontWeight: 400,
-            color: '#75757A'
+            color: '#75757A',
           }}
         >
           {campaign.description}
@@ -176,9 +176,21 @@ function CampaignCard({
         {/* Footer: reward pill + networks */}
         <Box sx={{ display: 'flex', alignItems: 'center', mt: 'auto', gap: 1 }}>
           {/* REWARD pill (con icono token). Cambia la ruta del img si la tienes dinámica */}
-          <Stack alignItems="center" direction="row" gap="4px" style={{ border: '1px solid #E1E2EA', borderRadius: '100px', padding: '4px', paddingLeft: '10px', paddingRight: '4px' }}>
+          <Stack
+            alignItems="center"
+            direction="row"
+            gap="4px"
+            style={{
+              border: '1px solid #E1E2EA',
+              borderRadius: '100px',
+              padding: '4px',
+              paddingLeft: '10px',
+              paddingRight: '4px',
+            }}
+          >
             <Typography variant="caption" fontWeight={600} color="black">
-              {formatAmount(parseInt(campaign?.campaign_reward?.amount) ?? 0)} {campaign?.claimable_reward?.symbol ?? '--'}
+              {formatAmount(parseInt(campaign?.campaign_reward?.amount) ?? 0)}{' '}
+              {campaign?.claimable_reward?.symbol ?? '--'}
             </Typography>
             <SvgIcon component={tokens['USDC'].icon} sx={{ width: 18, height: 18, transform: 'translateY(1px)' }} />
           </Stack>
@@ -211,7 +223,7 @@ function CampaignCard({
   )
 }
 
-function Campaigns({ chain, search }: { chain: string, search: string }) {
+function Campaigns({ chain, search }: { chain: string; search: string }) {
   const address = useSafeAddress()
   const [currentCampaign, setCurrentCampaign] = useState<Campaign | null>(null)
   const { data: campaigns, isLoading: isLoadingCampaigns } = useQuery<Campaign[]>({
@@ -229,7 +241,10 @@ function Campaigns({ chain, search }: { chain: string, search: string }) {
     }
     const searchValue = search.toUpperCase()
     let searchFilter = false
-    if (search != '' && (campaign.name.toUpperCase().includes(searchValue) || campaign.description.toUpperCase().includes(searchValue))) {
+    if (
+      search != '' &&
+      (campaign.name.toUpperCase().includes(searchValue) || campaign.description.toUpperCase().includes(searchValue))
+    ) {
       searchFilter = true
     }
     let chainFilter = false
@@ -296,9 +311,11 @@ function Campaigns({ chain, search }: { chain: string, search: string }) {
           },
         }}
       >
-        {campaigns.filter((campaign) => filterCampaign(campaign)).map((campaign) => {
-          return <CampaignCard campaign={campaign} key={campaign.name} setCurrentCampaign={setCurrentCampaign} />
-        })}
+        {campaigns
+          .filter((campaign) => filterCampaign(campaign))
+          .map((campaign) => {
+            return <CampaignCard campaign={campaign} key={campaign.name} setCurrentCampaign={setCurrentCampaign} />
+          })}
       </Box>
       {/* <Drawer variant="temporary" anchor="right" onClose={() => setCurrentCampaign(null)} open={!!currentCampaign}>
         <CampaignInfo setCurrentCampaign={setCurrentCampaign} currentCampaign={currentCampaign} />
