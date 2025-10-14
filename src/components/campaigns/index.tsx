@@ -293,34 +293,36 @@ function Campaigns({ chain, search }: { chain: string; search: string }) {
     )
   }
 
-  return (
-    <Stack gap={2} sx={{ width: '100%' }}>
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-          gap: '16px',
-          width: '100%',
-          gridAutoRows: '1fr',
-          '& > *': {
+  if (campaigns.length > 0) {
+    return (
+      <Stack gap={2} sx={{ width: '100%' }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gap: '16px',
             width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            height: '100%',
-          },
-        }}
-      >
-        {campaigns
-          .filter((campaign) => filterCampaign(campaign))
-          .map((campaign) => {
-            return <CampaignCard campaign={campaign} key={campaign.name} setCurrentCampaign={setCurrentCampaign} />
-          })}
-      </Box>
-      {/* <Drawer variant="temporary" anchor="right" onClose={() => setCurrentCampaign(null)} open={!!currentCampaign}>
+            gridAutoRows: '1fr',
+            '& > *': {
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+            },
+          }}
+        >
+          {campaigns
+            .filter((campaign) => filterCampaign(campaign))
+            .map((campaign) => {
+              return <CampaignCard campaign={campaign} key={campaign.name} setCurrentCampaign={setCurrentCampaign} />
+            })}
+        </Box>
+        {/* <Drawer variant="temporary" anchor="right" onClose={() => setCurrentCampaign(null)} open={!!currentCampaign}>
         <CampaignInfo setCurrentCampaign={setCurrentCampaign} currentCampaign={currentCampaign} />
       </Drawer> */}
-    </Stack>
-  )
+      </Stack>
+    )
+  }
 }
 
 export default Campaigns
