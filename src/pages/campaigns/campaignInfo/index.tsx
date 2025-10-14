@@ -330,7 +330,7 @@ function CampaignInfo({
               const currentLevel = typeof badge.currentLevel === 'number' ? badge.currentLevel : 0
               const maxLevel = typeof badge.maxLevel === 'number' ? badge.maxLevel : 0
               return (
-                <Box key={badge.badgeName} display="flex" alignItems="center" gap={2}>
+                <Box key={badge?.badgeName ?? '0'} display="flex" alignItems="center" gap={2}>
                   <Link onClick={handleBadgeClick} sx={{ cursor: 'pointer' }}>
                     <Box
                       width={58}
@@ -377,7 +377,7 @@ function CampaignInfo({
                   </Link>
                   <Box flex={1}>
                     <Box display="flex" alignItems="center" gap={1}>
-                      <Typography fontWeight={600}>{badge.badgeName}</Typography>
+                      <Typography fontWeight={600}>{badge?.badgeName ?? ''}</Typography>
                     </Box>
                     <Typography fontSize={12} color="text.secondary">
                       {badge.description}

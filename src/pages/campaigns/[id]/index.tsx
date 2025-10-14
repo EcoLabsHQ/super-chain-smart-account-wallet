@@ -278,7 +278,9 @@ export default function Page() {
 
                   <Stack spacing={3}>
                     {campaign.campaign_badges &&
-                      campaign.campaign_badges.map((badge) => <CampaignBadge key={badge.badgeName} badge={badge} />)}
+                      campaign.campaign_badges.map((badge) => (
+                        <CampaignBadge key={badge?.badgeName ?? '0'} badge={badge} />
+                      ))}
                   </Stack>
                 </Stack>
               </Card>

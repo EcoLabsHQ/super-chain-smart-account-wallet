@@ -13,6 +13,72 @@ type Props = {
 }
 
 export default function CampaignBadge({ badge }: Props) {
+  if (!badge) {
+    return (
+      <Card
+        variant="outlined"
+        sx={{
+          borderRadius: '12px',
+          border: '1px solid #E1E2EA',
+          padding: '16px',
+        }}
+      >
+        <Stack direction="row" alignItems="center" gap="16px">
+          {/* Icono principal */}
+          <Avatar
+            src="/images/soneium.png" // tu ícono aquí
+            sx={{ width: 60, height: 60 }}
+            variant="rounded"
+          />
+
+          <Stack width="100%">
+            <Stack direction="row" alignItems="center" justifyContent="space-between">
+              <Stack direction="row" alignItems="center" gap="8px">
+                <Typography variant="body1" fontWeight={600}></Typography>
+                {/* <GiftIcon style={{ width: '20px', height: '20px' }} /> */}
+              </Stack>
+
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  border: '1px solid #E1E2EA',
+                  borderRadius: '100px',
+                  padding: '4px 6px 4px 6px',
+                }}
+              >
+                <Stack direction="row" alignItems="center">
+                  <Typography variant="caption" fontWeight="600" sx={{ color: 'black' }}>
+                    {0}
+                  </Typography>
+                  <Typography variant="caption" fontWeight="600" sx={{ color: '#75757A' }}>
+                    /{0}
+                  </Typography>
+                </Stack>
+                <SuperchainPointIcon style={{ width: '16px', height: '16px' }} />
+              </div>
+            </Stack>
+            <Typography variant="body2" style={{ color: '#75757A' }}></Typography>
+
+            <Stack direction="row" alignItems="center" gap="6px" mt="8px">
+              {Array.from({ length: 0 }).map((_, i) => (
+                <span
+                  key={i}
+                  style={{
+                    flex: 1,
+                    height: '6px',
+                    backgroundColor: 0 >= i + 1 ? '#39D551' : '#EBECF1',
+                    borderRadius: '100px',
+                  }}
+                ></span>
+              ))}
+            </Stack>
+          </Stack>
+        </Stack>
+      </Card>
+    )
+  }
   return (
     <Card
       variant="outlined"
@@ -34,7 +100,7 @@ export default function CampaignBadge({ badge }: Props) {
           <Stack direction="row" alignItems="center" justifyContent="space-between">
             <Stack direction="row" alignItems="center" gap="8px">
               <Typography variant="body1" fontWeight={600}>
-                {badge.badgeName}
+                {badge?.badgeName ?? ''}
               </Typography>
               {/* <GiftIcon style={{ width: '20px', height: '20px' }} /> */}
             </Stack>
@@ -51,10 +117,10 @@ export default function CampaignBadge({ badge }: Props) {
             >
               <Stack direction="row" alignItems="center">
                 <Typography variant="caption" fontWeight="600" sx={{ color: 'black' }}>
-                  {badge.currentPoints ?? 0}
+                  {badge?.currentPoints ?? 0}
                 </Typography>
                 <Typography variant="caption" fontWeight="600" sx={{ color: '#75757A' }}>
-                  /{badge.maxPoints ?? 0}
+                  /{badge?.maxPoints ?? 0}
                 </Typography>
               </Stack>
               <SuperchainPointIcon style={{ width: '16px', height: '16px' }} />
