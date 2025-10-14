@@ -4,12 +4,8 @@ import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import React, { useState } from 'react'
 import useSafeAddress from '@/hooks/useSafeAddress'
-import InsertInvitationTwoToneIcon from '@mui/icons-material/InsertInvitationTwoTone'
-import OETH from '@/public/images/currencies/ethereum.svg'
-import WETH from '@/public/images/currencies/weth.svg'
-import OP from '@/public/images/currencies/optimism.svg'
-import USDC from '@/public/images/currencies/usdc.svg'
-import USDT from '@/public/images/currencies/usdt.svg'
+import ArrowRightIcon from "@/public/images/common/arrow_right_alt.svg"
+import CalendarIcon from "@/public/images/common/calendar-gray.svg"
 import NetworkChip from '../badges/networkChip'
 import CampaignInfo from './campaignInfo'
 import { tokens } from '@/config/tokens'
@@ -37,15 +33,7 @@ export interface Campaign {
     applies: boolean
   }>
   totalBoost: number
-  campaign_badges: Array<{
-    type: string
-    badgeName: string
-    description: string
-    currentLevel: number
-    maxLevel: number
-    currentPoints: number
-    maxPoints: number
-  }>
+  campaign_badges: Array<CampaignBadge>
   more_info: string
   distributed_points: number
   can_claim: boolean
@@ -54,6 +42,27 @@ export interface Campaign {
   claimable_reward: { symbol: string, amount: string }
   start_date: string | Date
   end_date: string | Date
+}
+
+export interface CampaignBadge {
+  type: string
+  badgeName: string
+  description: string
+  currentLevel: number
+  maxLevel: number
+  image: string
+  tokenBadge?: boolean
+  season?: number
+  completed?: boolean
+  currentPoints: number
+  maxPoints: number
+}
+export const formatAmount = (amount?: number) => {
+  if (!amount) return 0;
+  if (amount >= 1000) {
+    return `${Math.round(amount / 1000)}k`;
+  }
+  return amount;
 }
 
 function CampaignCard({
@@ -83,8 +92,8 @@ function CampaignCard({
         p: 0,
         borderRadius: '12px',
         overflow: 'hidden',
-        boxShadow: '0 6px 18px rgba(16,24,40,0.06)',
         backgroundColor: '#ffffff', // fondo claro consistente
+        border: '1px solid #E1E2EA',
         cursor: 'pointer',
         height: '100%',
         display: 'flex',
@@ -132,19 +141,23 @@ function CampaignCard({
       </Box>
 
       {/* Content */}
-      <Box sx={{ p: 2, display: 'flex', flexDirection: 'column', gap: 1, flex: 1 }}>
+      <Stack padding="16px" gap="16px">
         {/* Fecha */}
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <InsertInvitationTwoToneIcon fontSize="small" sx={{ color: 'text.secondary' }} />
-          <Typography variant="body2" color="text.secondary" fontFamily="Sora">
-            {formatDate(start)} → {formatDate(end)}
-          </Typography>
-        </Box>
 
         {/* Título */}
-        <Typography variant="h6" fontWeight={700} fontFamily="Sora" sx={{ fontSize: 18 }}>
+        <Typography variant="h6" fontWeight={500} sx={{ fontSize: 18 }}>
           {campaign.name}
         </Typography>
+        <Stack direction="row" gap="6px" alignItems="center">
+          <CalendarIcon style={{ width: '20px', heigth: '20px' }} />
+          <Typography variant="body2" color="#4B4B4E" fontWeight={500}>
+            {formatDate(start)}
+          </Typography>
+          <ArrowRightIcon style={{ width: '16px', heigth: '16px' }} />
+          <Typography variant="body2" color="#A0A0A6" fontWeight={500}>
+            {formatDate(end)}
+          </Typography>
+        </Stack>
 
         {/* Descripción (truncate) */}
         <Typography
@@ -153,10 +166,8 @@ function CampaignCard({
           fontFamily="Sora"
           sx={{
             fontSize: 14,
-            overflow: 'hidden',
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
+            fontWeight: 400,
+            color: '#75757A'
           }}
         >
           {campaign.description}
@@ -165,25 +176,12 @@ function CampaignCard({
         {/* Footer: reward pill + networks */}
         <Box sx={{ display: 'flex', alignItems: 'center', mt: 'auto', gap: 1 }}>
           {/* REWARD pill (con icono token). Cambia la ruta del img si la tienes dinámica */}
-          <Box
-            sx={{
-              display: 'flex', // flex en vez de inline-flex
-              alignItems: 'center', // centra verticalmente
-              gap: 1,
-              px: 1.5,
-              py: 0.6,
-              borderRadius: '100px',
-              border: '1px solid #E6E8F2',
-              background: '#F6F8FF',
-              fontWeight: 600,
-              fontSize: 13,
-              lineHeight: 1, // 👈 evita que el span quede desajustado
-              color: 'text.primary',
-            }}
-          >
-            <Box component="span">50K USDC</Box>
-            <SvgIcon component={tokens['USDC'].icon} sx={{ width: 20, height: 20 }} />
-          </Box>
+          <Stack alignItems="center" direction="row" gap="4px" style={{ border: '1px solid #E1E2EA', borderRadius: '100px', padding: '4px', paddingLeft: '10px', paddingRight: '4px' }}>
+            <Typography variant="caption" fontWeight={600} color="black">
+              {formatAmount(parseInt(campaign?.campaign_reward?.amount) ?? 0)} {campaign?.claimable_reward?.symbol ?? '--'}
+            </Typography>
+            <SvgIcon component={tokens['USDC'].icon} sx={{ width: 18, height: 18, transform: 'translateY(1px)' }} />
+          </Stack>
 
           {/* Network chips (overlap estilo) */}
           <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto' }}>
@@ -203,17 +201,17 @@ function CampaignCard({
                   boxShadow: '0 1px 2px rgba(16,24,40,0.06)',
                 }}
               >
-                <NetworkChip network={network} style="badge" isFavorite={false} />
+                <NetworkChip network={network} style="badge" isFavorite={false} width={20} height={20} />
               </Box>
             ))}
           </Box>
         </Box>
-      </Box>
+      </Stack>
     </Card>
   )
 }
 
-function Campaigns() {
+function Campaigns({ chain, search }: { chain: string, search: string }) {
   const address = useSafeAddress()
   const [currentCampaign, setCurrentCampaign] = useState<Campaign | null>(null)
   const { data: campaigns, isLoading: isLoadingCampaigns } = useQuery<Campaign[]>({
@@ -225,12 +223,27 @@ function Campaigns() {
     refetchInterval: 10000,
     enabled: !!address,
   })
+  const filterCampaign = (campaign: Campaign) => {
+    if (chain == '' && search == '') {
+      return true
+    }
+    const searchValue = search.toUpperCase()
+    let searchFilter = false
+    if (search != '' && (campaign.name.toUpperCase().includes(searchValue) || campaign.description.toUpperCase().includes(searchValue))) {
+      searchFilter = true
+    }
+    let chainFilter = false
+    campaign.network.forEach((network) => {
+      console.log('net: ', network)
+      chainFilter = network == chain ? true : chainFilter
+    })
+    return chainFilter || searchFilter
+  }
 
   if (isLoadingCampaigns || !campaigns) {
     return (
-      <Stack gap={2} p={1} sx={{ width: '100%' }}>
+      <Stack gap={2} sx={{ width: '100%' }}>
         <Skeleton variant="text" width={200} height={40} />
-        <Divider />
         <Box
           sx={{
             display: 'grid',
@@ -267,11 +280,7 @@ function Campaigns() {
   }
 
   return (
-    <Stack gap={2} p={1} sx={{ width: '100%' }}>
-      <Typography variant="h4" fontWeight={700} fontFamily="Sora" fontSize={24} gutterBottom>
-        Campaigns
-      </Typography>
-      <Divider />
+    <Stack gap={2} sx={{ width: '100%' }}>
       <Box
         sx={{
           display: 'grid',
@@ -287,7 +296,7 @@ function Campaigns() {
           },
         }}
       >
-        {campaigns.map((campaign) => {
+        {campaigns.filter((campaign) => filterCampaign(campaign)).map((campaign) => {
           return <CampaignCard campaign={campaign} key={campaign.name} setCurrentCampaign={setCurrentCampaign} />
         })}
       </Box>

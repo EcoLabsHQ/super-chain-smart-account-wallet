@@ -1,10 +1,13 @@
+'use client'
 import Campaigns from '@/components/campaigns'
 import Head from 'next/head'
-import React from 'react'
+import React, { useState } from 'react'
 import { Box, Typography, Stack, Divider, TextField, MenuItem, Select, Button, InputAdornment } from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search'
 
 function CampaignsPage() {
+  const [chain, setChain] = useState('')
+  const [search, setSearch] = useState('')
   return (
     <>
       <Head>
@@ -12,19 +15,24 @@ function CampaignsPage() {
       </Head>
 
       <main>
-        <Box sx={{ p: 3, maxWidth: '1200px', mx: 'auto' }}>
-          <Typography variant="h4" fontWeight={700} fontFamily="Sora" fontSize={28} gutterBottom>
-            Campaigns
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-            Discover builder and user campaigns across the Superchain.
-          </Typography>
+        <Stack sx={{ padding: '32px 24px 32px 24px', maxWidth: '900px', mx: 'auto' }}>
+          <Stack gap="8px">
+            <Typography variant="h4" fontWeight={700} fontFamily="Sora" fontSize={28}>
+              Campaigns
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+              Discover builder and user campaigns across the Superchain.
+            </Typography>
 
+          </Stack>
+          <Divider style={{ marginTop: '10px', marginBottom: '16px' }} />
           {/* Header con buscador y filtro */}
           <Stack direction="row" alignItems="center" gap={2} sx={{ mb: 3 }}>
             {/* Search */}
             <TextField
+              value={search}
               placeholder="Search"
+              onChange={(event) => setSearch(event.target.value)}
               variant="outlined"
               size="small"
               InputProps={{
@@ -59,10 +67,11 @@ function CampaignsPage() {
 
             {/* Chain Select */}
             <Select
-              value=""
+              value={chain}
               displayEmpty
               size="small"
-              renderValue={() => 'Chain'}
+              onChange={(event) => setChain(event.target.value ?? '')}
+              renderValue={() => chain == '' ? 'Chain' : chain}
               sx={{
                 height: 36,
                 borderRadius: '12px',
@@ -77,7 +86,8 @@ function CampaignsPage() {
                 },
               }}
             >
-              <MenuItem value="op">Optimism</MenuItem>
+              <MenuItem value="lisk">Lisk</MenuItem>
+              <MenuItem value="optimism">Optimism</MenuItem>
               <MenuItem value="base">Base</MenuItem>
               <MenuItem value="arb">Arbitrum</MenuItem>
             </Select>
@@ -86,6 +96,10 @@ function CampaignsPage() {
             <Button
               variant="text"
               disableRipple
+              onClick={() => {
+                setSearch('')
+                setChain('')
+              }}
               sx={{
                 height: 36,
                 borderRadius: '12px',
@@ -105,11 +119,10 @@ function CampaignsPage() {
             </Button>
           </Stack>
 
-          <Divider sx={{ mb: 3 }} />
 
           {/* Listado de campañas */}
-          <Campaigns />
-        </Box>
+          <Campaigns chain={chain} search={search} />
+        </Stack>
       </main>
     </>
   )

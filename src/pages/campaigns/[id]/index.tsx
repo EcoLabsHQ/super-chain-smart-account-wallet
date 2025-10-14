@@ -24,7 +24,7 @@ import { useQuery } from '@tanstack/react-query';
 import useSafeAddress from '@/hooks/useSafeAddress';
 import axios from 'axios';
 import { BACKEND_BASE_URI } from '@/config/constants';
-import { Campaign } from '@/components/campaigns';
+import { Campaign, formatAmount } from '@/components/campaigns';
 import NetworkChip from '@/components/badges/networkChip';
 
 export default function Page() {
@@ -124,7 +124,7 @@ export default function Page() {
                 <Stack direction="row" gap="16px" alignItems="center">
                   <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '40px', height: '40px', border: '1px solid #E1E2EA', borderRadius: '12px' }}>
                     {/* <OpIcon style={{ width: '20px', height: '20px' }} /> */}
-                    <NetworkChip key={`${campaign.id + campaign.network}`} network={campaign.network[0] ?? ''} style="badge" isFavorite={false} />
+                    <NetworkChip key={`${campaign.id + campaign.network}`} network={campaign.network && campaign.network.length > 0 ? campaign.network[0] : ''} style="badge" isFavorite={false} />
                   </div>
                   <Stack>
                     <Typography sx={{ fontWeight: '500', fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
@@ -146,7 +146,7 @@ export default function Page() {
                       Campaign Rewards
                     </Typography>
                     <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px' }}>
-                      {campaign.campaign_reward?.amount ?? '0'} {campaign.campaign_reward?.symbol ?? '--'}
+                      {formatAmount(parseInt(campaign.campaign_reward?.amount) ?? 0)} {campaign.campaign_reward?.symbol ?? '--'}
                     </Typography>
                   </Stack>
                 </Stack>
