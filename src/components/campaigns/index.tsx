@@ -19,6 +19,7 @@ export interface Campaign {
   participate_description: string
   campaign_link: string
   myPoints: number
+  my_points: { id: number; points: number }[]
   boosts: Array<{
     type: string
     level?: number
@@ -44,6 +45,7 @@ export interface Campaign {
 }
 
 export interface CampaignBadge {
+  id: string
   type: string
   badgeName: string
   description: string
@@ -189,9 +191,12 @@ function CampaignCard({
           >
             <Typography variant="caption" fontWeight={600} color="black">
               {formatAmount(parseInt(campaign?.campaign_reward?.amount) ?? 0)}{' '}
-              {campaign?.claimable_reward?.symbol ?? '--'}
+              {campaign?.campaign_reward?.symbol ?? '--'}
             </Typography>
-            <SvgIcon component={tokens['USDC'].icon} sx={{ width: 18, height: 18, transform: 'translateY(1px)' }} />
+            <SvgIcon
+              component={tokens[campaign?.campaign_reward?.symbol ?? 'USDC'].icon}
+              sx={{ width: 18, height: 18, transform: 'translateY(1px)' }}
+            />
           </Stack>
 
           {/* Network chips (overlap estilo) */}

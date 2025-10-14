@@ -106,6 +106,8 @@ export default function Page() {
                 </Button>
                 <Button
                   variant="text"
+                  href={campaign.campaign_link}
+                  target="_blank"
                   sx={{
                     width: '118px',
                     height: '36px',
@@ -187,10 +189,19 @@ export default function Page() {
                       />
                     </div>
                     <Stack>
-                      <Typography sx={{ fontWeight: '500', fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
+                      <Typography
+                        sx={{
+                          fontWeight: '500',
+                          fontSize: '12px',
+                          lineHeight: '16px',
+                          color: '#75757A',
+                        }}
+                      >
                         Network
                       </Typography>
-                      <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px' }}>
+                      <Typography
+                        sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px', textTransform: 'capitalize' }}
+                      >
                         {campaign.network}
                       </Typography>
                     </Stack>
@@ -279,7 +290,7 @@ export default function Page() {
                   <Stack spacing={3}>
                     {campaign.campaign_badges &&
                       campaign.campaign_badges.map((badge) => (
-                        <CampaignBadge key={badge?.badgeName ?? '0'} badge={badge} />
+                        <CampaignBadge key={badge?.badgeName ?? '0'} badge={badge} my_points={campaign.my_points} />
                       ))}
                   </Stack>
                 </Stack>

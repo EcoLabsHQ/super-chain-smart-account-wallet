@@ -6,9 +6,10 @@ import { type CampaignBadge } from '..'
 import SeasonChip from '@/components/badges/seasonChip'
 type Props = {
   badge: CampaignBadge
+  my_points: { id: number; points: number }[]
 }
 
-export default function CampaignBadge({ badge }: Props) {
+export default function CampaignBadge({ badge, my_points }: Props) {
   return (
     <div style={{ position: 'relative' }}>
       <div style={{ zIndex: '10', position: 'absolute', top: '-4px', left: '-4px' }}>
@@ -54,7 +55,7 @@ export default function CampaignBadge({ badge }: Props) {
               >
                 <Stack direction="row" alignItems="center">
                   <Typography variant="caption" fontWeight="600" sx={{ color: 'black' }}>
-                    {badge.currentPoints ?? 0}
+                    {my_points.find((x) => x.id.toString() == badge.id)?.points ?? 0}
                   </Typography>
                   <Typography variant="caption" fontWeight="600" sx={{ color: '#75757A' }}>
                     /{badge.maxPoints ?? 0}
