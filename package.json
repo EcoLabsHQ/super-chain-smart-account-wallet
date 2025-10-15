@@ -115,9 +115,11 @@
     "react-dropzone": "^14.2.3",
     "react-gtm-module": "^2.0.11",
     "react-hook-form": "7.41.1",
+    "react-markdown": "^10.1.0",
     "react-papaparse": "^4.0.2",
     "react-redux": "^8.0.5",
     "react-turnstile": "^1.1.4",
+    "remark-gfm": "^4.0.1",
     "semver": "^7.5.2",
     "siwe": "^2.3.2",
     "viem": "^2.9.26"

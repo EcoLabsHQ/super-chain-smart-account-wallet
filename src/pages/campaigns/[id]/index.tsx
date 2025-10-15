@@ -16,6 +16,8 @@ import axios from 'axios'
 import { BACKEND_BASE_URI } from '@/config/constants'
 import { Campaign, formatAmount } from '@/components/campaigns'
 import NetworkChip from '@/components/badges/networkChip'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 export default function Page() {
   const router = useRouter()
@@ -347,9 +349,38 @@ export default function Page() {
                 </button>
               </Stack>
               <Divider style={{ width: '720px', margin: '0 auto', transform: 'translateX(-24px)' }} />
-              <Typography variant="h5" fontWeight={400} color="#4B4B4E">
-                {campaign.more_info ?? '--'}
-              </Typography>
+
+              <div
+                // estilos básicos para MD
+                style={{ color: '#4B4B4E' }}
+              >
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  // Si necesitas soportar HTML dentro del MD, descomenta:
+                  // rehypePlugins={[rehypeRaw, rehypeSanitize]}
+                  components={{
+                    h1: (props) => <Typography variant="h4" fontWeight={700} gutterBottom {...props} />,
+                    h2: (props) => <Typography variant="h5" fontWeight={700} gutterBottom {...props} />,
+                    h3: (props) => <Typography variant="h6" fontWeight={700} gutterBottom {...props} />,
+                    p: (props) => <Typography variant="body1" sx={{ mb: 2 }} {...props} />,
+                    li: (props) => <Typography component="li" variant="body1" sx={{ ml: 2 }} {...props} />,
+                    a: (props) => <a {...props} target="_blank" rel="noopener noreferrer" />,
+                    strong: (props) => <strong {...props} />,
+                    code: ({ inline, ...props }) =>
+                      inline ? (
+                        <code style={{ padding: '0 4px', borderRadius: 6, background: '#F5F5F7' }} {...props} />
+                      ) : (
+                        <pre style={{ padding: 12, borderRadius: 12, background: '#F5F5F7', overflowX: 'auto' }}>
+                          <code {...props} />
+                        </pre>
+                      ),
+                    ul: (props) => <ul style={{ paddingLeft: 20, marginBottom: 16 }} {...props} />,
+                    ol: (props) => <ol style={{ paddingLeft: 20, marginBottom: 16 }} {...props} />,
+                  }}
+                >
+                  {campaign.more_info ?? '--'}
+                </ReactMarkdown>
+              </div>
             </Card>
           </Dialog>
         </main>
