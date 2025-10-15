@@ -6,10 +6,7 @@ import InfoIcon from '@/public/images/common/info-light.svg'
 import CalendarIcon from '@/public/images/calendars/nov_11.svg'
 import CheckCircleIcon from '@/public/images/common/check-circle-outlined.svg'
 import SuperchainPointIcon from '@/public/images/common/superChain.svg'
-import UsdcIcon from '@/public/images/currencies/usdc.svg'
 import { ArrowBack, Launch } from '@mui/icons-material'
-import UsdIcon from '@/public/images/currencies/usdc.svg'
-import UsdOpIcon from '@/public/images/common/usdc-op.svg'
 import { useRouter } from 'next/router'
 import { AppRoutes } from '@/config/routes'
 import useSafeAddress from '@/hooks/useSafeAddress'
@@ -17,7 +14,24 @@ import { BACKEND_BASE_URI } from '@/config/constants'
 import { Campaign, formatAmount } from '@/components/campaigns'
 import { useQuery } from '@tanstack/react-query'
 import NetworkChip from '@/components/badges/networkChip'
+import Image from 'next/image'
 import axios from 'axios'
+
+const getTokenIcon = (symbol: string) => {
+  const usdc = '/images/currencies/usdc.svg'
+  const usdt = '/images/currencies/usdt.svg'
+  const weth = '/images/currencies/weth.svg'
+  switch (symbol) {
+    case 'USDC':
+      return usdc
+    case 'USDT':
+      return usdt
+    case 'WETH':
+      return weth
+    default:
+      return usdc
+  }
+}
 
 export default function Page() {
   const router = useRouter()
@@ -132,31 +146,47 @@ export default function Page() {
                 </Card>
                 <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
                   <Stack direction="row" gap="16px" alignItems="center">
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        width: '40px',
-                        height: '40px',
-                        border: '1px solid #E1E2EA',
-                        borderRadius: '12px',
-                      }}
+                    <Stack
+                      style={{ width: `${40 + 28 * (campaign.network.length - 1)}px` }}
+                      direction="row"
+                      alignItems="center"
                     >
-                      {/* <OpIcon style={{ width: '20px', height: '20px' }} /> */}
-                      <NetworkChip
-                        key={`${campaign.id + campaign.network}`}
-                        network={campaign.network && campaign.network.length > 0 ? campaign.network[0] : ''}
-                        style="badge"
-                        isFavorite={false}
-                      />
-                    </div>
+                      {campaign.network.map((network, index) => (
+                        <div
+                          key={`${campaign.id + network}`}
+                          style={{
+                            zIndex: `${(campaign.network.length + 1 - index) * 10}`,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '40px',
+                            minWidth: '40px',
+                            height: '40px',
+                            border: '1px solid #E1E2EA',
+                            backgroundColor: 'white',
+                            borderRadius: '12px',
+                            transform: `translateX(${-index * 12}px)`,
+                          }}
+                        >
+                          <NetworkChip network={network} style="badge" isFavorite={false} />
+                        </div>
+                      ))}
+                    </Stack>
                     <Stack>
-                      <Typography sx={{ fontWeight: '500', fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
+                      <Typography
+                        sx={{
+                          fontWeight: '500',
+                          fontSize: '12px',
+                          lineHeight: '16px',
+                          color: '#75757A',
+                        }}
+                      >
                         Network
                       </Typography>
-                      <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px' }}>
-                        {campaign.network}
+                      <Typography
+                        sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px', textTransform: 'capitalize' }}
+                      >
+                        {campaign.network.length == 1 ? campaign.network : `${campaign.network.length} Chains`}
                       </Typography>
                     </Stack>
                   </Stack>
@@ -174,15 +204,19 @@ export default function Page() {
                         borderRadius: '12px',
                       }}
                     >
-                      <UsdcIcon style={{ width: '20px', height: '20px' }} />
+                      <Image
+                        src={getTokenIcon(campaign.campaign_reward?.symbol)}
+                        alt={`${campaign.campaign_reward?.symbol}-icon`}
+                        width={20}
+                        height={20}
+                      />
                     </div>
                     <Stack>
                       <Typography sx={{ fontWeight: '500', fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
                         Campaign Rewards
                       </Typography>
                       <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px' }}>
-                        {formatAmount(parseInt(campaign.campaign_reward?.amount) ?? 0)}{' '}
-                        {campaign.campaign_reward?.symbol ?? '--'}
+                        {formatAmount(campaign.campaign_reward?.amount ?? 0)} {campaign.campaign_reward?.symbol ?? '--'}
                       </Typography>
                     </Stack>
                   </Stack>
@@ -207,7 +241,7 @@ export default function Page() {
                         Total points distributed
                       </Typography>
                       <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px' }}>
-                        {campaign.distributed_points ?? 0}
+                        {formatAmount(campaign.claimable_reward?.amount ?? 0)}
                       </Typography>
                     </Stack>
                   </Stack>
@@ -256,9 +290,14 @@ export default function Page() {
                           </div>
                           <Stack direction="row" gap="8px" alignItems="center">
                             <Typography sx={{ fontSize: '24px', fontWeight: '600', lineHeight: '32px' }}>
-                              {formatAmount(parseInt(campaign?.claimable_reward?.amount) ?? 0)}
+                              {formatAmount(campaign?.claimable_reward?.amount ?? 0)}
                             </Typography>
-                            <UsdIcon style={{ width: '24px', height: '24px' }} />
+                            <Image
+                              src={getTokenIcon(campaign.claimable_reward?.symbol)}
+                              alt={`${campaign.campaign_reward?.symbol}-icon`}
+                              width={24}
+                              height={24}
+                            />
                           </Stack>
                         </Stack>
                       </Card>
@@ -325,7 +364,24 @@ export default function Page() {
               {/* <Image src="/imgs/usd-coin.svg" alt="usd coin" width={36} height={36} /> */}
               <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
                 <Stack direction="row" alignItems="center" gap="12px">
-                  <UsdOpIcon sx={{ width: '56px', height: '44px' }} />
+                  <div style={{ position: 'relative' }}>
+                    <Image
+                      src={getTokenIcon(campaign.campaign_reward?.symbol)}
+                      alt={`${campaign.campaign_reward?.symbol}-icon`}
+                      width={44}
+                      height={44}
+                    />
+                    <div style={{ position: 'absolute', right: '-6px', bottom: '3px' }}>
+                      <NetworkChip
+                        key={`${campaign.id + campaign.network}`}
+                        network={campaign.network && campaign.network.length > 0 ? campaign.network[0] : ''}
+                        style="badge"
+                        width={16}
+                        height={16}
+                        isFavorite={false}
+                      />
+                    </div>
+                  </div>
                   <Stack gap="4px">
                     <Typography variant="h4" fontWeight="600">
                       {campaign.claimable_reward?.amount ?? 0}

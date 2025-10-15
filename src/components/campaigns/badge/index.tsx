@@ -20,6 +20,7 @@ export default function CampaignBadge({ badge, my_points }: Props) {
         sx={{
           position: 'relative',
           borderRadius: '12px',
+          backgroundColor: 'white',
           border: '1px solid #E1E2EA',
           padding: '16px',
           overflow: 'auto',
@@ -27,11 +28,13 @@ export default function CampaignBadge({ badge, my_points }: Props) {
       >
         <Stack direction="row" alignItems="center" gap="16px">
           {/* Icono principal */}
-          <div style={{ position: 'relative' }}>
+          <div style={{ position: 'relative', border: '1px solid #E1E2EA', borderRadius: '12px' }}>
             <Avatar src={badge.image} sx={{ width: 60, height: 60 }} variant="rounded" />
-            <CheckCircleIcon
-              style={{ position: 'absolute', right: '-5px', bottom: '-5px', width: '16px', height: '16px' }}
-            />
+            {badge.completed && (
+              <CheckCircleIcon
+                style={{ position: 'absolute', right: '-5px', bottom: '-5px', width: '16px', height: '16px' }}
+              />
+            )}
           </div>
 
           <Stack width="100%">

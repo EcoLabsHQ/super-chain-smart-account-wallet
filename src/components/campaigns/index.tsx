@@ -38,8 +38,8 @@ export interface Campaign {
   distributed_points: number
   can_claim: boolean
   max_claim_date: Date
-  campaign_reward: { symbol: string; amount: string }
-  claimable_reward: { symbol: string; amount: string }
+  campaign_reward: { symbol: string; amount: number }
+  claimable_reward: { symbol: string; amount: number }
   start_date: string | Date
   end_date: string | Date
 }
@@ -58,12 +58,24 @@ export interface CampaignBadge {
   currentPoints: number
   maxPoints: number
 }
-export const formatAmount = (amount?: number) => {
-  if (!amount) return 0
-  if (amount >= 1000) {
-    return `${Math.round(amount / 1000)}k`
+export const formatAmount = (amount?: number): string => {
+  // si amount es null o undefined, devolvemos "0"
+  if (amount == null) return '0'
+
+  // para cifras < 1000 devolvemos el número tal cual (como string)
+  if (amount < 1000) return String(amount)
+
+  // convertimos a 'k'
+  const valueK = amount / 1000
+  // redondeo a 1 decimal (ej: 1.55 -> 1.6)
+  const rounded = Math.round(valueK * 10) / 10
+
+  // si el resultado es entero (ej 2.0) mostramos "2k", sino "1.6k"
+  if (Number.isInteger(rounded)) {
+    return `${rounded.toFixed(0)}k`
+  } else {
+    return `${rounded.toFixed(1)}k`
   }
-  return amount
 }
 
 function CampaignCard({
@@ -190,8 +202,7 @@ function CampaignCard({
             }}
           >
             <Typography variant="caption" fontWeight={600} color="black">
-              {formatAmount(parseInt(campaign?.campaign_reward?.amount) ?? 0)}{' '}
-              {campaign?.campaign_reward?.symbol ?? '--'}
+              {formatAmount(campaign?.campaign_reward?.amount ?? 0)} {campaign?.campaign_reward?.symbol ?? '--'}
             </Typography>
             <SvgIcon
               component={tokens[campaign?.campaign_reward?.symbol ?? 'USDC'].icon}
