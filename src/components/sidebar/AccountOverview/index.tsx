@@ -49,17 +49,17 @@ function AccountOverview({ open, onClose }: { open: boolean; onClose: () => void
 
   return (
     <ModalDialog
-      maxWidth="xs"
+      // sx={{ width: '568px', margin: 'auto' }}
       open={open}
       hideChainIndicator
       dialogTitle={
-        <Typography fontSize={24} fontWeight={600}>
-          Account overview
+        <Typography fontSize={24} fontWeight={600} sx={{ paddingTop: '12px', paddingBottom: '12px' }}>
+          My Profile
         </Typography>
       }
       onClose={onClose}
     >
-      <DialogContent>
+      <DialogContent sx={{ paddingBottom: '12px' }}>
         <Box display="flex" paddingTop="24px">
           <Box
             width={120}
@@ -72,7 +72,7 @@ function AccountOverview({ open, onClose }: { open: boolean; onClose: () => void
             <NounsAvatar seed={nounSeed} />
           </Box>
           <Box display="flex" flexDirection="column" justifyContent="flex-start" alignItems="flex-start">
-            <Box display="flex" flexDirection="row" gap={2}>
+            <Box display="flex" flexDirection="row" gap={1}>
               <Box
                 display="flex"
                 gap="4px"
@@ -95,13 +95,13 @@ function AccountOverview({ open, onClose }: { open: boolean; onClose: () => void
                 justifyContent="center"
                 alignItems="center"
                 height="34px"
-                bgcolor="gray"
+                bgcolor="#A0A0A6"
                 borderRadius="100px"
                 padding="12px"
                 minWidth="76px"
               >
                 <Typography color="white" fontWeight={500} fontSize="14px">
-                  Rank: <span style={{ fontWeight: 600 }}>{rank}</span>
+                  Rank: <span style={{ fontWeight: 600 }}>{rank ?? 0}</span>
                 </Typography>
               </Box>
             </Box>
@@ -124,7 +124,7 @@ function AccountOverview({ open, onClose }: { open: boolean; onClose: () => void
                 {truncateName(superChainSmartAccount.data.superChainID.split('.superchain')[0], 12)}
                 <span style={{ color: 'var(--color-secondary-main)' }}>.superchain</span>
               </Typography>
-              <Box>
+              <Box marginTop="12px">
                 <Typography fontSize={14} fontWeight={500} color="var(--color-text-secondary)">
                   SC points:{' '}
                   <span
@@ -151,8 +151,7 @@ function AccountOverview({ open, onClose }: { open: boolean; onClose: () => void
         </Box>
       </DialogContent>
       <Divider />
-
-      <DialogContent>
+      <DialogContent sx={{ paddingBottom: '20px' }}>
         <Typography fontWeight={600} fontSize={20} variant="body1">
           My Badges ({user?.badges?.length ?? 0})
         </Typography>
