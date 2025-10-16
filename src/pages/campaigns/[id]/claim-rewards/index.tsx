@@ -1,9 +1,8 @@
 'use client'
 import Head from 'next/head'
 import React from 'react'
-import { Button, Card, Dialog, Divider, Stack, Typography } from '@mui/material'
+import { Button, Card, Dialog, Divider, Skeleton, Stack, Typography } from '@mui/material'
 import InfoIcon from '@/public/images/common/info-light.svg'
-import CalendarIcon from '@/public/images/calendars/nov_11.svg'
 import CheckCircleIcon from '@/public/images/common/check-circle-outlined.svg'
 import SuperchainPointIcon from '@/public/images/common/superChain.svg'
 import { ArrowBack, Launch } from '@mui/icons-material'
@@ -32,12 +31,23 @@ const getTokenIcon = (symbol: string) => {
       return usdc
   }
 }
+function getCalendarValues(date: string | Date): { day: number; month: string } {
+  const d = new Date(date)
+
+  // Extrae el día del mes (número)
+  const day = d.getDate()
+
+  // Extrae las 3 letras del mes en mayúscula
+  const month = d.toLocaleString('en-US', { month: 'short' }).toUpperCase()
+
+  return { day, month }
+}
 
 export default function Page() {
   const router = useRouter()
   const [openClaimDialog, setOpenClaimDialog] = React.useState(false)
   const address = useSafeAddress()
-  const { data: campaign, isLoading: isLoadingCampaigns } = useQuery<Campaign>({
+  const { data: campaign, isLoading: isLoadingCampaigns } = useQuery<Campaign | undefined>({
     queryKey: ['campaigns', address],
     queryFn: async () => {
       const response = await axios.get(`${BACKEND_BASE_URI}/campaigns/${address}`)
@@ -56,6 +66,93 @@ export default function Page() {
     const dateFormatted = new Date(date).toLocaleDateString('en-US', options)
     return dateFormatted
   }
+  if (!campaign || isLoadingCampaigns)
+    return (
+      <>
+        <Head>
+          <title>Super Account - Campaigns</title>
+        </Head>
+        <main>
+          <Stack gap="32px" sx={{ p: 4, maxWidth: 720, mx: 'auto' }}>
+            {/* Header */}
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <Stack direction="row" gap="16px" alignItems="center">
+                <Skeleton variant="circular" width={36} height={36} />
+                <Stack>
+                  <Skeleton variant="text" width={180} height={28} />
+                  <Skeleton variant="text" width={100} height={20} />
+                </Stack>
+              </Stack>
+            </Stack>
+
+            <Divider />
+
+            <Stack gap="8px">
+              {/* Description */}
+              <Card sx={{ borderRadius: '12px', padding: '16px' }}>
+                <Skeleton variant="text" width="90%" height={24} />
+                <Skeleton variant="text" width="95%" height={24} />
+                <Skeleton variant="text" width="80%" height={24} />
+              </Card>
+
+              {/* Info cards grid */}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2, 1fr)',
+                  gap: '8px',
+                }}
+              >
+                {Array.from({ length: 4 }).map((_, i) => (
+                  <Card key={i} sx={{ borderRadius: '12px', padding: '16px' }}>
+                    <Stack direction="row" gap="16px" alignItems="center">
+                      <Skeleton variant="rounded" width={40} height={40} />
+                      <Stack>
+                        <Skeleton variant="text" width={120} height={16} />
+                        <Skeleton variant="text" width={80} height={16} />
+                      </Stack>
+                    </Stack>
+                  </Card>
+                ))}
+              </div>
+
+              {/* Rewards / badges section */}
+              <Card sx={{ borderRadius: '12px', padding: '48px' }}>
+                <Stack justifyContent="center" alignItems="center">
+                  <Stack gap="8px" width="352px">
+                    <Card
+                      sx={{
+                        width: '100%',
+                        borderRadius: '12px',
+                        padding: '48px',
+                        backgroundColor: 'white',
+                      }}
+                    >
+                      <Stack gap="16px" justifyContent="center" alignItems="center">
+                        <Skeleton variant="text" width={220} height={20} />
+                        <Skeleton variant="text" width={180} height={20} />
+                        <Stack direction="row" gap="8px" alignItems="center">
+                          <Skeleton variant="text" width={80} height={32} />
+                          <Skeleton variant="circular" width={24} height={24} />
+                        </Stack>
+                      </Stack>
+                    </Card>
+
+                    <Skeleton variant="rounded" width="100%" height={50} />
+                    <Skeleton variant="text" width={140} height={16} sx={{ mx: 'auto' }} />
+                  </Stack>
+                </Stack>
+              </Card>
+            </Stack>
+          </Stack>
+        </main>
+      </>
+    )
+
+  const now = new Date()
+  const { day, month } = getCalendarValues(campaign.start_date)
+  const isLive = now >= campaign.start_date && now <= campaign.end_date
+
   if (campaign)
     return (
       <>
@@ -120,25 +217,59 @@ export default function Page() {
                 <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
                   <Stack direction="row" gap="16px" alignItems="center">
                     <div style={{ position: 'relative' }}>
-                      <div
-                        style={{
-                          position: 'absolute',
-                          left: '-4px',
-                          top: '-4px',
-                          width: '13px',
-                          height: '13px',
-                          backgroundColor: '#39D551',
-                          borderRadius: '100%',
-                          border: '2px solid white',
-                        }}
-                      ></div>
-                      <CalendarIcon style={{ width: '40px', height: '40px' }} />
+                      {isLive && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            left: '-4px',
+                            top: '-4px',
+                            width: '13px',
+                            height: '13px',
+                            backgroundColor: '#39D551',
+                            borderRadius: '100%',
+                            border: '2px solid white',
+                          }}
+                        />
+                      )}
+
+                      <div>
+                        <Stack
+                          alignItems="center"
+                          justifyContent="center"
+                          style={{
+                            width: '40px',
+                            height: '16px',
+                            borderTopLeftRadius: '12px',
+                            borderTopRightRadius: '12px',
+                            background: '#E1E2EA',
+                          }}
+                        >
+                          <Typography fontSize="8px" fontWeight={600} style={{ transform: 'translateY(1px)' }}>
+                            {month}
+                          </Typography>
+                        </Stack>
+                        <Stack
+                          alignItems="center"
+                          justifyContent="center"
+                          style={{
+                            width: '40px',
+                            height: '24px',
+                            borderRadius: '0px 0px 12px 12px',
+                            border: '1px solid #E1E2EA',
+                            background: 'white',
+                          }}
+                        >
+                          <Typography variant="h5" fontWeight={600}>
+                            {day}
+                          </Typography>
+                        </Stack>
+                      </div>
                     </div>
                     <Stack gap="2px">
-                      <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px' }}>
+                      <Typography sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px' }}>
                         {formatDates(campaign.start_date)}
                       </Typography>
-                      <Typography sx={{ fontWeight: '500', fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
+                      <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
                         till {formatDates(campaign.end_date)}
                       </Typography>
                     </Stack>

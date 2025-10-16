@@ -3,7 +3,6 @@ import Head from 'next/head'
 import React, { useState } from 'react'
 import { Button, Card, Dialog, Divider, Skeleton, Stack, SvgIcon, Typography } from '@mui/material'
 import InfoIcon from '@/public/images/notifications/info.svg'
-import CalendarIcon from '@/public/images/calendars/nov_11.svg'
 import SuperchainPointIcon from '@/public/images/common/superChain.svg'
 import { ArrowBack, Launch, Close } from '@mui/icons-material'
 import CampaignBadge from '@/components/campaigns/badge'
@@ -34,6 +33,18 @@ export default function Page() {
       return (data as Campaign[]).find((c) => c.id === campaignId)
     },
   })
+
+  function getCalendarValues(date: string | Date): { day: number; month: string } {
+    const d = new Date(date)
+
+    // Extrae el día del mes (número)
+    const day = d.getDate()
+
+    // Extrae las 3 letras del mes en mayúscula
+    const month = d.toLocaleString('en-US', { month: 'short' }).toUpperCase()
+
+    return { day, month }
+  }
 
   function formatDates(date: string | Date): string {
     const options: Intl.DateTimeFormatOptions = { weekday: 'long', month: 'long', day: 'numeric' }
@@ -117,6 +128,9 @@ export default function Page() {
   const rewardSymbol = campaign.campaign_reward?.symbol ?? 'USDC'
   const rewardIcon = (tokens as any)?.[rewardSymbol]?.icon ?? (tokens as any)?.USDC?.icon
   const rewardAmount = formatAmount(campaign.campaign_reward?.amount ?? 0)
+  const { day, month } = getCalendarValues(campaign.start_date)
+  const now = new Date()
+  const isLive = now >= campaign.start_date && now <= campaign.end_date
 
   return (
     <>
@@ -214,19 +228,53 @@ export default function Page() {
               <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
                 <Stack direction="row" gap="16px" alignItems="center">
                   <div style={{ position: 'relative' }}>
-                    <div
-                      style={{
-                        position: 'absolute',
-                        left: '-4px',
-                        top: '-4px',
-                        width: '13px',
-                        height: '13px',
-                        backgroundColor: '#39D551',
-                        borderRadius: '100%',
-                        border: '2px solid white',
-                      }}
-                    />
-                    <CalendarIcon style={{ width: '40px', height: '40px' }} />
+                    {isLive && (
+                      <div
+                        style={{
+                          position: 'absolute',
+                          left: '-4px',
+                          top: '-4px',
+                          width: '13px',
+                          height: '13px',
+                          backgroundColor: '#39D551',
+                          borderRadius: '100%',
+                          border: '2px solid white',
+                        }}
+                      />
+                    )}
+
+                    <div>
+                      <Stack
+                        alignItems="center"
+                        justifyContent="center"
+                        style={{
+                          width: '40px',
+                          height: '16px',
+                          borderTopLeftRadius: '12px',
+                          borderTopRightRadius: '12px',
+                          background: '#E1E2EA',
+                        }}
+                      >
+                        <Typography fontSize="8px" fontWeight={600} style={{ transform: 'translateY(1px)' }}>
+                          {month}
+                        </Typography>
+                      </Stack>
+                      <Stack
+                        alignItems="center"
+                        justifyContent="center"
+                        style={{
+                          width: '40px',
+                          height: '24px',
+                          borderRadius: '0px 0px 12px 12px',
+                          border: '1px solid #E1E2EA',
+                          background: 'white',
+                        }}
+                      >
+                        <Typography variant="h5" fontWeight={600}>
+                          {day}
+                        </Typography>
+                      </Stack>
+                    </div>
                   </div>
                   <Stack gap="2px">
                     <Typography sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px' }}>
@@ -242,7 +290,11 @@ export default function Page() {
               {/* Networks (con guardas) */}
               <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
                 <Stack direction="row" gap="16px" alignItems="center">
-                  <Stack style={{ width: `${avatarStripWidth}px` }} direction="row" alignItems="center">
+                  <Stack
+                    style={{ width: `${avatarStripWidth}px`, position: 'relative', zIndex: 0 }}
+                    direction="row"
+                    alignItems="center"
+                  >
                     {networks.map((network, index) => (
                       <div
                         key={`${campaign.id}-${network}-${index}`}
@@ -255,7 +307,7 @@ export default function Page() {
                           minWidth: '40px',
                           height: '40px',
                           border: '1px solid #E1E2EA',
-                          backgroundColor: 'white',
+                          background: '#FFFFFF',
                           borderRadius: '12px',
                           transform: `translateX(${-index * 12}px)`,
                         }}
@@ -278,7 +330,7 @@ export default function Page() {
               </Card>
 
               {/* Rewards (con fallback de tokens) */}
-              <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
+              <Card sx={{ border: '1px solid #E1E2EA', background: 'white', borderRadius: '12px', padding: '16px' }}>
                 <Stack direction="row" gap="16px" alignItems="center">
                   <div
                     style={{
@@ -287,9 +339,9 @@ export default function Page() {
                       alignItems: 'center',
                       width: '40px',
                       height: '40px',
+                      background: '#FFFFFF',
                       border: '1px solid #E1E2EA',
                       borderRadius: '12px',
-                      backgroundColor: 'white',
                     }}
                   >
                     {rewardIcon && (
@@ -321,6 +373,7 @@ export default function Page() {
                       width: '40px',
                       height: '40px',
                       border: '1px solid #E1E2EA',
+                      background: '#FFFFFF',
                       borderRadius: '12px',
                     }}
                   >

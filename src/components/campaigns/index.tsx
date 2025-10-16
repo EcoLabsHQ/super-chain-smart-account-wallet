@@ -78,6 +78,11 @@ export const formatAmount = (amount?: number): string => {
   }
 }
 
+function truncateText(text: string, maxLength: number): string {
+  if (text.length <= maxLength) return text
+  return text.slice(0, maxLength - 3) + '...'
+}
+
 function CampaignCard({
   campaign,
   setCurrentCampaign,
@@ -183,12 +188,10 @@ function CampaignCard({
             color: '#75757A',
           }}
         >
-          {campaign.description}
+          {truncateText(campaign.description, 100)}
         </Typography>
 
-        {/* Footer: reward pill + networks */}
         <Box sx={{ display: 'flex', alignItems: 'center', mt: 'auto', gap: 1 }}>
-          {/* REWARD pill (con icono token). Cambia la ruta del img si la tienes dinámica */}
           <Stack
             alignItems="center"
             direction="row"
