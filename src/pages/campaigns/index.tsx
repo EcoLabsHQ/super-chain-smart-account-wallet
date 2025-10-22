@@ -26,7 +26,7 @@ function CampaignsPage() {
           </Stack>
           <Divider style={{ marginTop: '10px', marginBottom: '16px' }} />
           {/* Header con buscador y filtro */}
-          <Stack direction="row" alignItems="center" gap={2} sx={{ mb: 3 }}>
+          <Stack direction="row" alignItems="center" gap="8px" sx={{ mb: 3 }}>
             {/* Search */}
             <TextField
               value={search}

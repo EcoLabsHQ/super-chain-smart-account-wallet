@@ -177,13 +177,12 @@ export default function Page() {
                 onClick={() => setOpenInfo(true)}
                 variant="text"
                 sx={{
-                  width: '118px',
                   height: '36px',
                   backgroundColor: '#F1F2F5',
                   borderRadius: '12px',
                   color: 'black',
                   ':hover': { backgroundColor: '#F1F2F5' },
-                  padding: '15px 10px 15px 8px',
+                  padding: '15px 10px 15px 12px',
                 }}
               >
                 <Typography variant="body2" fontWeight={600}>
@@ -394,6 +393,7 @@ export default function Page() {
             {/* Badges */}
             <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '48px' }}>
               <Stack gap="16px">
+
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
                   <Typography variant="body1" fontWeight="500">
                     Campaign Badges
@@ -418,7 +418,7 @@ export default function Page() {
                   </div>
                 </Stack>
 
-                <Stack spacing={3}>
+                <Stack gap="12px">
                   {(campaign.campaign_badges ?? []).map((badge, idx) => (
                     <CampaignBadge
                       key={badge?.badgeName ?? `badge-${idx}`}

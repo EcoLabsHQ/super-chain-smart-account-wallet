@@ -159,7 +159,7 @@ function CampaignCard({
       </Box>
 
       {/* Content */}
-      <Stack padding="16px" gap="16px">
+      <Stack padding="16px" gap="12px">
         {/* Fecha */}
 
         {/* Título */}
@@ -191,7 +191,7 @@ function CampaignCard({
           {truncateText(campaign.description, 100)}
         </Typography>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', mt: 'auto', gap: 1 }}>
+        <Box sx={{ marginTop: '4px', display: 'flex', alignItems: 'center', gap: 1 }}>
           <Stack
             alignItems="center"
             direction="row"
