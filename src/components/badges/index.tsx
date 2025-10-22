@@ -1,6 +1,5 @@
-import { Grid, LinearProgress, styled } from '@mui/material'
+import { Grid, LinearProgress, Stack, styled, Typography } from '@mui/material'
 import React, { useMemo, useState } from 'react'
-import BadgesHeader from './header'
 import BadgesActions from './actions'
 import BadgesContent from './content'
 import type { ResponseBadge } from '@/types/super-chain'
@@ -108,21 +107,15 @@ function Badges({
     return filtered
   }, [data?.currentBadges, searchTerm, selectedNetworks, selectedCampaign])
   return (
-    <Grid p={1} spacing={2} container>
-      <BadgesHeader
-        level={Number(superChainAccount.level)}
-        points={Number(superChainAccount.points)}
-        pointsToNextLevel={Number(superChainAccount.pointsToNextLevel ?? superChainAccount.points)}
-        totalBadges={currentPageBadges?.reduce((acc, badge) => acc + badge.badgeTiers.length, 0) ?? 0}
-        season={season}
-        completeBadges={
-          currentPageBadges?.reduce((acc, badge) => {
-            acc += Number(badge.tier)
-            return acc
-          }, 0) ?? 0
-        }
-        isLoading={isLoading || isSuperChainLoading}
-      />
+    <Grid spacing={2} container>
+      <Stack gap="8px">
+        <Typography variant="h3" fontWeight={600}>
+          Badges
+        </Typography>
+        <Typography variant="body2" fontWeight={400} color="#4B4B4E">
+          Earn badges to gain SC points and unlock rewards.
+        </Typography>
+      </Stack>
       <BadgesActions
         captchaToken={captchaToken}
         setNetworks={setSelectedNetworks}

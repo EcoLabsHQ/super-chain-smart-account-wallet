@@ -4,7 +4,17 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { getSeasonByCode } from '@/services/seasons'
 
-function SeasonChip({ season, defaultActive }: { season: number; defaultActive?: boolean }) {
+function SeasonChip({
+  season,
+  defaultActive,
+  width,
+  height,
+}: {
+  season: number
+  defaultActive?: boolean
+  width?: string
+  height?: string
+}) {
   const router = useRouter()
   const query = router.query.safe ? { safe: router.query.safe } : undefined
 
@@ -22,8 +32,8 @@ function SeasonChip({ season, defaultActive }: { season: number; defaultActive?:
         inheritViewBox
         fontSize="inherit"
         sx={{
-          width: '24px',
-          height: '24px',
+          width: width ?? '24px',
+          height: height ?? '24px',
           opacity: isActive ? 1 : 0.5,
           mixBlendMode: isActive ? 'none' : 'luminosity',
         }}

@@ -6,10 +6,14 @@ import { type CampaignBadge } from '..'
 import SeasonChip from '@/components/badges/seasonChip'
 type Props = {
   badge: CampaignBadge
-  my_points: { id: number; points: number }[]
+  my_points?: { id: number; points: number }[]
 }
 
 export default function CampaignBadge({ badge, my_points }: Props) {
+  const truncateText = (text: string, maxLength: number) => {
+    if (text.length <= maxLength) return text
+    return text.slice(0, maxLength) + '...'
+  }
   return (
     <div style={{ position: 'relative' }}>
       <div style={{ zIndex: '10', position: 'absolute', top: '-4px', left: '-4px' }}>
@@ -46,29 +50,31 @@ export default function CampaignBadge({ badge, my_points }: Props) {
                 {badge.tokenBadge && <GiftIcon style={{ width: '20px', height: '20px' }} />}
               </Stack>
 
-              <div
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  border: '1px solid #E1E2EA',
-                  borderRadius: '100px',
-                  padding: '4px 6px 4px 6px',
-                }}
-              >
-                <Stack direction="row" alignItems="center">
-                  <Typography variant="caption" fontWeight="600" sx={{ color: 'black' }}>
-                    {my_points.find((x) => x.id.toString() == badge.id)?.points ?? 0}
-                  </Typography>
-                  <Typography variant="caption" fontWeight="600" sx={{ color: '#75757A' }}>
-                    /{badge.maxPoints ?? 0}
-                  </Typography>
-                </Stack>
-                <SuperchainPointIcon style={{ width: '16px', height: '16px' }} />
-              </div>
+              {my_points && (
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    border: '1px solid #E1E2EA',
+                    borderRadius: '100px',
+                    padding: '4px 6px 4px 6px',
+                  }}
+                >
+                  <Stack direction="row" alignItems="center">
+                    <Typography variant="caption" fontWeight="600" sx={{ color: 'black' }}>
+                      {my_points.find((x) => x.id.toString() == badge.id)?.points ?? 0}
+                    </Typography>
+                    <Typography variant="caption" fontWeight="600" sx={{ color: '#75757A' }}>
+                      /{badge.maxPoints ?? 0}
+                    </Typography>
+                  </Stack>
+                  <SuperchainPointIcon style={{ width: '16px', height: '16px' }} />
+                </div>
+              )}
             </Stack>
             <Typography variant="body2" style={{ color: '#75757A' }}>
-              {badge.description}
+              {truncateText(badge.description, 40)}
             </Typography>
 
             <Stack direction="row" alignItems="center" gap="6px" mt="8px">
