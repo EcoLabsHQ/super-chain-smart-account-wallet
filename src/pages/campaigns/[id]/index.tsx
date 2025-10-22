@@ -393,7 +393,6 @@ export default function Page() {
             {/* Badges */}
             <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '48px' }}>
               <Stack gap="16px">
-
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
                   <Typography variant="body1" fontWeight="500">
                     Campaign Badges
