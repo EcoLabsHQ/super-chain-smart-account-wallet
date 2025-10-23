@@ -1,5 +1,5 @@
 import { BACKEND_BASE_URI } from '@/config/constants'
-import { Box, Card, Skeleton, Stack, SvgIcon, Typography } from '@mui/material'
+import { Box, Button, Card, Skeleton, Stack, SvgIcon, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import React, { useState } from 'react'
@@ -10,6 +10,7 @@ import NetworkChip from '../badges/networkChip'
 import { tokens } from '@/config/tokens'
 import { useRouter } from 'next/router'
 import { AppRoutes } from '@/config/routes'
+import Image from 'next/image'
 export interface Campaign {
   id: string
   name: string
@@ -38,8 +39,8 @@ export interface Campaign {
   distributed_points: number
   can_claim: boolean
   max_claim_date: Date
-  campaign_reward: { symbol: string; amount: number }
-  claimable_reward: { symbol: string; amount: number }
+  campaign_reward: { symbol: string; amount: number; decimals: number }
+  claimable_reward: { symbol: string; amount: string; decimals: number }
   start_date: string | Date
   end_date: string | Date
 }
@@ -58,6 +59,15 @@ export interface CampaignBadge {
   currentPoints: number
   maxPoints: number
 }
+
+// utils (arriba del componente o en un helper)
+const formatClaimBy = (value?: string | Date) => {
+  if (!value) return '--'
+  const d = value instanceof Date ? value : new Date(value)
+  if (Number.isNaN(d.getTime())) return '--'
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
 export const formatAmount = (amount?: number): string => {
   // si amount es null o undefined, devolvemos "0"
   if (amount == null) return '0'
@@ -100,6 +110,13 @@ function CampaignCard({
     date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
 
   const handlePickCampaign = () => {
+    if (campaign.can_claim) {
+      router.push({
+        pathname: `${AppRoutes.campaigns}/${campaign.id}/claim-rewards`,
+        query: { safe: router.query.safe },
+      })
+      return
+    }
     router.push({ pathname: `${AppRoutes.campaigns}/${campaign.id}`, query: { safe: router.query.safe } })
   }
 
@@ -191,50 +208,93 @@ function CampaignCard({
           {truncateText(campaign.description, 100)}
         </Typography>
 
-        <Box sx={{ marginTop: '4px', display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Stack
-            alignItems="center"
-            direction="row"
-            gap="4px"
-            style={{
-              border: '1px solid #E1E2EA',
-              borderRadius: '100px',
-              padding: '4px',
-              paddingLeft: '10px',
-              paddingRight: '4px',
-            }}
-          >
-            <Typography variant="caption" fontWeight={600} color="black">
-              {formatAmount(campaign?.campaign_reward?.amount ?? 0)} {campaign?.campaign_reward?.symbol ?? '--'}
-            </Typography>
-            <SvgIcon
-              component={tokens[campaign?.campaign_reward?.symbol ?? 'USDC'].icon}
-              sx={{ width: 18, height: 18, transform: 'translateY(1px)' }}
-            />
-          </Stack>
-
-          {/* Network chips (overlap estilo) */}
-          <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto' }}>
-            {campaign.network.map((network: string, index: number) => (
-              <Box
-                key={`${campaign.id}-${network}`}
+        <Box sx={{ mt: '4px', display: 'flex', alignItems: 'center', gap: 1 }}>
+          {campaign.can_claim && (
+            <>
+              <Button
+                variant="contained"
+                endIcon={<Image src="/images/diamond_shine.svg" alt="Claim" width={16} height={16} />}
                 sx={{
-                  ml: index === 0 ? 0 : -1.4,
-                  borderRadius: '50%',
-                  border: '1px solid #fff',
-                  width: 30,
-                  height: 30,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  bgcolor: '#fff',
-                  boxShadow: '0 1px 2px rgba(16,24,40,0.06)',
+                  borderRadius: '100px',
+                  background: '#000',
+                  textTransform: 'none',
+                  fontWeight: 600,
+                  fontSize: '14px',
+                  lineHeight: '20px',
+                  fontFamily: 'DM Sans',
+                  height: '48px',
+                  px: '24px',
+                  boxShadow: 'none',
+                  '&:hover': { background: '#000', boxShadow: 'none' },
                 }}
               >
-                <NetworkChip network={network} style="badge" isFavorite={false} width={20} height={20} />
+                Claim Rewards
+              </Button>
+
+              {/* Empuja el label a la derecha */}
+              <Typography
+                sx={{
+                  ml: 'auto',
+                  color: '#75757A', // var(--Foundation-Grey-grey-800)
+                  fontFamily: 'DM Sans',
+                  fontSize: '12px',
+                  fontStyle: 'normal',
+                  fontWeight: 500,
+                  lineHeight: '16px',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {`Claim by ${formatClaimBy(campaign.max_claim_date)}`}
+              </Typography>
+            </>
+          )}
+          {campaign.can_claim && campaign.end_date < new Date() && (
+            <Box sx={{ marginTop: '4px', display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Stack
+                alignItems="center"
+                direction="row"
+                gap="4px"
+                style={{
+                  border: '1px solid #E1E2EA',
+                  borderRadius: '100px',
+                  padding: '4px',
+                  paddingLeft: '10px',
+                  paddingRight: '4px',
+                }}
+              >
+                <Typography variant="caption" fontWeight={600} color="black">
+                  {formatAmount(campaign?.campaign_reward?.amount ?? 0)} {campaign?.campaign_reward?.symbol ?? '--'}
+                </Typography>
+                <SvgIcon
+                  component={tokens[campaign?.campaign_reward?.symbol ?? 'USDC'].icon}
+                  sx={{ width: 18, height: 18, transform: 'translateY(1px)' }}
+                />
+              </Stack>
+
+              {/* Network chips (overlap estilo) */}
+              <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto' }}>
+                {campaign.network.map((network: string, index: number) => (
+                  <Box
+                    key={`${campaign.id}-${network}`}
+                    sx={{
+                      ml: index === 0 ? 0 : -1.4,
+                      borderRadius: '50%',
+                      border: '1px solid #fff',
+                      width: 30,
+                      height: 30,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      bgcolor: '#fff',
+                      boxShadow: '0 1px 2px rgba(16,24,40,0.06)',
+                    }}
+                  >
+                    <NetworkChip network={network} style="badge" isFavorite={false} width={20} height={20} />
+                  </Box>
+                ))}
               </Box>
-            ))}
-          </Box>
+            </Box>
+          )}
         </Box>
       </Stack>
     </Card>
