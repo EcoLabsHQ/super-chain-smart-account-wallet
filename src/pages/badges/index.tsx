@@ -1,34 +1,95 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search'
 import { Box, Button, Divider, InputAdornment, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
-import { useQuery } from '@tanstack/react-query'
-import { ResponseBadge } from '@/types/super-chain'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import useSafeInfo from '@/hooks/useSafeInfo'
 import LoadIcon from '@/public/images/common/load.svg'
 import badgesService from '@/features/superChain/services/badges.service'
 import CampaignBadge from '@/components/campaigns/badge'
 import { useRouter } from 'next/router'
 import { AppRoutes } from '@/config/routes'
+import { BadgeWithPrize } from '@/types/badges'
+import ClaimModal from '@/components/badges/modals/ClaimModal'
+import { ClaimData } from '@/components/badges/actions'
+import { Address } from 'viem'
+import { ResponseBadge, SuperChainAccount } from '@/types/super-chain'
+import Turnstile from 'react-turnstile'
+import LoadingModal from '@/components/common/LoadingModal'
 
 const Home: NextPage = () => {
   const router = useRouter()
   const [token, setToken] = useState<string | null>(null)
+  const [openClaimDialog, setOpenClaimDialog] = useState<boolean>(false)
   const [chain, setChain] = useState('')
   const [season, setSeason] = useState<undefined | string>()
   const [campaign, setCampaign] = useState('')
   const [search, setSearch] = useState('')
+  const [claimData, setClaimData] = useState<ClaimData | null>(null)
   const { safeAddress, safeLoaded } = useSafeInfo()
+  const queryClient = useQueryClient()
   const { data, isLoading, error } = useQuery<{
-    currentBadges: ResponseBadge[]
+    currentBadges: BadgeWithPrize[]
   }>({
     queryKey: ['badges', safeAddress, safeLoaded],
-    queryFn: async () => await badgesService.getBadges((safeAddress as `0x${string}`) ?? []),
+    queryFn: async () => await badgesService.getBadgesWithPrizes((safeAddress as `0x${string}`) ?? []),
     refetchInterval: 10000,
     enabled: !!safeLoaded,
   })
-  const filterBadges = (badges: ResponseBadge[]): ResponseBadge[] => {
+  const { mutate, isPending, isError } = useMutation({
+    mutationFn: async () => {
+      return await badgesService.attestBadges(safeAddress as Address, token)
+    },
+    onError: (error) => {
+      console.error(error)
+    },
+    onSuccess: (data) => {
+      queryClient.cancelQueries({ queryKey: ['superChainAccount', safeAddress] })
+      queryClient.cancelQueries({ queryKey: ['badges', safeAddress, safeLoaded] })
+      queryClient.setQueryData(['superChainAccount', safeAddress], (old: SuperChainAccount) => {
+        return {
+          ...old,
+          points: data.points,
+        }
+      })
+      queryClient.setQueryData(['badges', safeAddress, safeLoaded], (old: { currentBadges: ResponseBadge[] }) => {
+        const badgeUpdates = old.currentBadges.map((badge) => {
+          const update = data.badgeUpdates.find((update: ResponseBadge) => update.badgeId === badge.badgeId)
+          if (update) {
+            return {
+              ...badge,
+              level: update.level,
+              points: update.points,
+              claimable: false,
+            }
+          }
+          return badge
+        })
+        return {
+          currentBadges: [...old.currentBadges, ...badgeUpdates],
+        }
+      })
+      queryClient.refetchQueries({ queryKey: ['superChainAccount', safeAddress] })
+      setClaimData(data)
+      setOpenClaimDialog(true)
+    },
+  })
+  useEffect(() => {
+    const handler = (event: Event) => {
+      const customEvent = event as CustomEvent
+      const data = customEvent.detail
+      mutate()
+    }
+
+    window.addEventListener('claim-badges', handler)
+
+    return () => {
+      window.removeEventListener('claim-badges', handler)
+    }
+  }, [mutate])
+
+  const filterBadges = (badges: BadgeWithPrize[]): BadgeWithPrize[] => {
     let filtered = badges
     if (search) {
       filtered = filtered.filter(
@@ -54,7 +115,7 @@ const Home: NextPage = () => {
 
     return filtered
   }
-  const filteredBadges = useMemo<ResponseBadge[]>(
+  const filteredBadges = useMemo<BadgeWithPrize[]>(
     () => filterBadges(data?.currentBadges ?? []),
     [data?.currentBadges, search, chain, season, campaign],
   )
@@ -106,172 +167,199 @@ const Home: NextPage = () => {
           </Stack>
           <Stack gap="16px">
             <Divider />
-            <Stack direction="row" alignItems="center" gap="8px">
-              {/* Search */}
-              <TextField
-                value={search}
-                placeholder="Search"
-                onChange={(event) => setSearch(event.target.value)}
-                variant="outlined"
-                size="small"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon sx={{ fontSize: 18 }} />
-                    </InputAdornment>
-                  ),
-                }}
-                sx={{
-                  width: 238,
-                  height: 36,
-                  borderRadius: '12px',
-                  backgroundColor: '#F1F2F5',
-                  '& .MuiOutlinedInput-root': {
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <Stack direction="row" alignItems="center" gap="8px">
+                {/* Search */}
+                <TextField
+                  value={search}
+                  placeholder="Search"
+                  onChange={(event) => setSearch(event.target.value)}
+                  variant="outlined"
+                  size="small"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon sx={{ fontSize: 18 }} />
+                      </InputAdornment>
+                    ),
+                  }}
+                  sx={{
+                    width: 238,
+                    height: 36,
+                    borderRadius: '12px',
+                    backgroundColor: '#F1F2F5',
+                    '& .MuiOutlinedInput-root': {
+                      fontFamily: 'DM Sans',
+                      fontSize: 14,
+                      fontWeight: 600,
+                      letterSpacing: '0.14px',
+                      lineHeight: '16px',
+                      padding: '0 8px',
+                      '& fieldset': {
+                        border: 'none',
+                      },
+                      '& input::placeholder': {
+                        color: '#000',
+                        opacity: 1,
+                      },
+                    },
+                  }}
+                />
+
+                {/* Chain Select */}
+                <Select
+                  value={chain}
+                  displayEmpty
+                  size="small"
+                  onChange={(event) => setChain(event.target.value ?? '')}
+                  renderValue={() => (chain == '' ? 'Chain' : chain)}
+                  sx={{
+                    height: 36,
+                    borderRadius: '12px',
+                    backgroundColor: '#F1F2F5',
                     fontFamily: 'DM Sans',
                     fontSize: 14,
                     fontWeight: 600,
                     letterSpacing: '0.14px',
-                    lineHeight: '16px',
                     padding: '0 8px',
-                    '& fieldset': {
+                    '& .MuiOutlinedInput-notchedOutline': {
                       border: 'none',
                     },
-                    '& input::placeholder': {
-                      color: '#000',
-                      opacity: 1,
+                  }}
+                >
+                  <MenuItem value="Ink">Ink</MenuItem>
+                  <MenuItem value="lisk">Lisk</MenuItem>
+                  <MenuItem value="Soneium">Soneium</MenuItem>
+                  <MenuItem value="Base">Base</MenuItem>
+                  <MenuItem value="Optimism">Optimisim</MenuItem>
+                  <MenuItem value="Mode">Mode</MenuItem>
+                  <MenuItem value="Unichain">Unichain</MenuItem>
+                  <MenuItem value="arb">Arbitrum</MenuItem>
+                </Select>
+                <Select
+                  value={season}
+                  displayEmpty
+                  size="small"
+                  onChange={(event) => setSeason(event.target.value ?? undefined)}
+                  renderValue={() => (season == undefined ? 'Season' : season)}
+                  sx={{
+                    height: 36,
+                    borderRadius: '12px',
+                    backgroundColor: '#F1F2F5',
+                    fontFamily: 'DM Sans',
+                    fontSize: 14,
+                    fontWeight: 600,
+                    letterSpacing: '0.14px',
+                    padding: '0 8px',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      border: 'none',
                     },
-                  },
-                }}
-              />
+                  }}
+                >
+                  <MenuItem value={undefined}>All time</MenuItem>
+                  <MenuItem value={7}>7</MenuItem>
+                  <MenuItem value={8}>8</MenuItem>
+                </Select>
+                <Select
+                  value={chain}
+                  displayEmpty
+                  size="small"
+                  onChange={(event) => setCampaign(event.target.value ?? '')}
+                  renderValue={() => (campaign == '' ? 'Campaign' : campaign)}
+                  sx={{
+                    height: 36,
+                    borderRadius: '12px',
+                    backgroundColor: '#F1F2F5',
+                    fontFamily: 'DM Sans',
+                    fontSize: 14,
+                    fontWeight: 600,
+                    letterSpacing: '0.14px',
+                    padding: '0 8px',
+                    '& .MuiOutlinedInput-notchedOutline': {
+                      border: 'none',
+                    },
+                  }}
+                >
+                  <MenuItem>All</MenuItem>
+                  <MenuItem value="SuperStacks">SuperStacks</MenuItem>
+                  <MenuItem value="Lisk Surge">Lisk Surge</MenuItem>
+                </Select>
 
-              {/* Chain Select */}
-              <Select
-                value={chain}
-                displayEmpty
-                size="small"
-                onChange={(event) => setChain(event.target.value ?? '')}
-                renderValue={() => (chain == '' ? 'Chain' : chain)}
-                sx={{
-                  height: 36,
-                  borderRadius: '12px',
-                  backgroundColor: '#F1F2F5',
-                  fontFamily: 'DM Sans',
-                  fontSize: 14,
-                  fontWeight: 600,
-                  letterSpacing: '0.14px',
-                  padding: '0 8px',
-                  '& .MuiOutlinedInput-notchedOutline': {
-                    border: 'none',
-                  },
-                }}
-              >
-                <MenuItem value="Ink">Ink</MenuItem>
-                <MenuItem value="lisk">Lisk</MenuItem>
-                <MenuItem value="Soneium">Soneium</MenuItem>
-                <MenuItem value="Base">Base</MenuItem>
-                <MenuItem value="Optimism">Optimisim</MenuItem>
-                <MenuItem value="Mode">Mode</MenuItem>
-                <MenuItem value="Unichain">Unichain</MenuItem>
-                <MenuItem value="arb">Arbitrum</MenuItem>
-              </Select>
-              <Select
-                value={season}
-                displayEmpty
-                size="small"
-                onChange={(event) => setSeason(event.target.value ?? undefined)}
-                renderValue={() => (season == undefined ? 'Season' : season)}
-                sx={{
-                  height: 36,
-                  borderRadius: '12px',
-                  backgroundColor: '#F1F2F5',
-                  fontFamily: 'DM Sans',
-                  fontSize: 14,
-                  fontWeight: 600,
-                  letterSpacing: '0.14px',
-                  padding: '0 8px',
-                  '& .MuiOutlinedInput-notchedOutline': {
-                    border: 'none',
-                  },
-                }}
-              >
-                <MenuItem value={undefined}>All time</MenuItem>
-                <MenuItem value={7}>7</MenuItem>
-                <MenuItem value={8}>8</MenuItem>
-              </Select>
-              <Select
-                value={chain}
-                displayEmpty
-                size="small"
-                onChange={(event) => setCampaign(event.target.value ?? '')}
-                renderValue={() => (campaign == '' ? 'Campaign' : campaign)}
-                sx={{
-                  height: 36,
-                  borderRadius: '12px',
-                  backgroundColor: '#F1F2F5',
-                  fontFamily: 'DM Sans',
-                  fontSize: 14,
-                  fontWeight: 600,
-                  letterSpacing: '0.14px',
-                  padding: '0 8px',
-                  '& .MuiOutlinedInput-notchedOutline': {
-                    border: 'none',
-                  },
-                }}
-              >
-                <MenuItem>All</MenuItem>
-                <MenuItem value="SuperStacks">SuperStacks</MenuItem>
-                <MenuItem value="Lisk Surge">Lisk Surge</MenuItem>
-              </Select>
-
-              {/* Clear All */}
-              <Button
-                variant="text"
-                disableRipple
-                onClick={() => {
-                  setSearch('')
-                  setChain('')
-                  setSeason(undefined)
-                  setCampaign('')
-                }}
-                sx={{
-                  height: 36,
-                  borderRadius: '12px',
-                  padding: '0 4px',
-                  fontFamily: 'DM Sans',
-                  fontSize: 14,
-                  fontWeight: 600,
-                  letterSpacing: '0.14px',
-                  textTransform: 'none',
-                  color: '#000',
-                  '&:hover': {
-                    backgroundColor: 'transparent',
-                  },
-                }}
-              >
-                Clear All
-              </Button>
-              <Button
-                component="a"
-                // href={campaign.campaign_link}
-                target="_blank"
-                rel="noreferrer"
-                variant="text"
-                sx={{
-                  height: '36px',
-                  backgroundColor: 'black',
-                  borderRadius: '12px',
-                  color: 'white',
-                  ':hover': { backgroundColor: 'black' },
-                  padding: '15px 10px 15px 8px',
-                }}
-              >
-                <Stack direction="row" alignItems="center" gap="4px">
-                  <LoadIcon style={{ width: '16px', heigth: '16px' }} />
-                  <Typography variant="body2" fontWeight={600}>
-                    Claim Badges
-                  </Typography>
-                </Stack>
-              </Button>
+                {/* Clear All */}
+                <Button
+                  variant="text"
+                  disableRipple
+                  onClick={() => {
+                    setSearch('')
+                    setChain('')
+                    setSeason(undefined)
+                    setCampaign('')
+                  }}
+                  sx={{
+                    height: 36,
+                    borderRadius: '12px',
+                    padding: '0 4px',
+                    fontFamily: 'DM Sans',
+                    fontSize: 14,
+                    fontWeight: 600,
+                    letterSpacing: '0.14px',
+                    textTransform: 'none',
+                    color: '#000',
+                    '&:hover': {
+                      backgroundColor: 'transparent',
+                    },
+                  }}
+                >
+                  Clear All
+                </Button>
+              </Stack>
+              <Stack direction="row" alignItems="center" gap="4px">
+                <Button
+                  component="a"
+                  onClick={() => mutate()}
+                  disabled={!data.currentBadges.some((badge) => badge.claimable)}
+                  target="_blank"
+                  rel="noreferrer"
+                  variant="text"
+                  sx={{
+                    height: '36px',
+                    backgroundColor: 'black',
+                    borderRadius: '12px',
+                    color: 'white',
+                    ':hover': { backgroundColor: 'black' },
+                    '&.Mui-disabled': {
+                      backgroundColor: '#EBECF1',
+                      color: '#A0A0A6',
+                    },
+                    padding: '15px 10px 15px 8px',
+                  }}
+                >
+                  <Stack direction="row" alignItems="center" gap="4px">
+                    <Box
+                      sx={{
+                        width: 16,
+                        height: 16,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        // definimos la animación aquí
+                        '@keyframes spin': {
+                          '0%': { transform: 'rotate(0deg)' },
+                          '100%': { transform: 'rotate(360deg)' },
+                        },
+                        animation: isPending ? 'spin 1s linear infinite' : 'none',
+                        // opcional: suavizar el giro
+                        transformOrigin: 'center',
+                      }}
+                    >
+                      <LoadIcon sx={{ width: '100%', height: '100%' }} />
+                    </Box>
+                    <Typography variant="body2" fontWeight={600} color="white">
+                      Claim badges
+                    </Typography>
+                  </Stack>
+                </Button>
+              </Stack>
             </Stack>
           </Stack>
 
@@ -295,11 +383,11 @@ const Home: NextPage = () => {
                     badgeName: badge.metadata.name,
                     currentPoints: 0,
                     maxPoints: 0,
-                    currentLevel: parseInt(badge.tier) > 0 ? parseInt(badge.tier) : 0,
+                    currentLevel: badge.tier,
                     maxLevel: badge.badgeTiers.length,
                     description: badge.metadata.description,
                     season: badge.metadata.season,
-                    image: badge.metadata.image,
+                    image: badge.metadata.image?.replace('/Badge.svg', `/T${badge.tier}.svg`) ?? '',
                     type: '',
                   }}
                 />
@@ -307,6 +395,14 @@ const Home: NextPage = () => {
             ))}
           </Box>
         </Stack>
+        <LoadingModal open={isPending} title="Claiming badges" />
+        <ClaimModal
+          onLevelUp={() => setOpenClaimDialog(false)}
+          open={openClaimDialog}
+          onClose={() => setOpenClaimDialog(false)}
+          data={claimData}
+        ></ClaimModal>
+        <Turnstile onSuccess={(token) => setToken(token)} sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!} />
         {/* <Badges captchaToken={token} />
         <Turnstile onSuccess={handleToken} sitekey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!} /> */}
       </main>

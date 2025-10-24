@@ -1,28 +1,55 @@
 import NetworkChip from '@/components/badges/networkChip'
+import DotIcon from '@/public/images/common/dot_soft_gray.svg'
 import badgesService from '@/features/superChain/services/badges.service'
 import useSafeInfo from '@/hooks/useSafeInfo'
-import { ResponseBadge } from '@/types/super-chain'
-import { ArrowBack, Launch } from '@mui/icons-material'
-import { Button, Card, Divider, Skeleton, Stack, Typography } from '@mui/material'
+import { ArrowBack, Close, Launch } from '@mui/icons-material'
+import { Button, Card, Dialog, Divider, Skeleton, Stack, SvgIcon, Typography } from '@mui/material'
+import GiftIcon from '@/public/images/common/gift.svg'
 import InfoIcon from '@/public/images/common/info-soft-gray.svg'
 import InfoBlackIcon from '@/public/images/common/info-black.svg'
 import BadgesClaimedIcon from '@/public/images/common/badges-claimed.svg'
 import { useQuery } from '@tanstack/react-query'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 import { formatAmount } from '@/components/campaigns'
 import BadgeTierCard from '@/components/badges/tier'
 import SeasonChip from '@/components/badges/seasonChip'
+import { AppRoutes } from '@/config/routes'
+import { BadgeWithPrize } from '@/types/badges'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+import { tokens } from '@/config/tokens'
+import { BadgeRenderStrategy } from '@/components/badges/badgeInfo/BadgeStrategyRenderer'
+import { WorldIDVerificationStrategy } from '@/components/badges/badgeInfo/strategies/WorldVerificationStrategy'
+import { FarcasterLinkStrategy } from '@/components/badges/badgeInfo/strategies/FarcasterLinkStrategy'
+import ETHVaultStrategy from '@/components/badges/badgeInfo/strategies/ETHVaultStrategy'
+
+export const getBadgeStrategy = (
+  badgeOrClaim: any,
+  strategies: BadgeRenderStrategy[],
+): BadgeRenderStrategy | undefined => {
+  return strategies.find((s) => {
+    try {
+      return s.canRender(badgeOrClaim)
+    } catch (err) {
+      // si la estrategia falla al evaluar, no la consideramos
+      return false
+    }
+  })
+}
+
+const strategies = [new WorldIDVerificationStrategy(), new FarcasterLinkStrategy(), new ETHVaultStrategy()]
 
 export default function BadgePage() {
   const router = useRouter()
+  const [openInfo, setOpenInfo] = useState<boolean>(false)
   const { safeAddress, safeLoaded } = useSafeInfo()
   const { data, isLoading, error } = useQuery<{
-    currentBadges: ResponseBadge[]
+    currentBadges: BadgeWithPrize[]
   }>({
     queryKey: ['badges', safeAddress, safeLoaded],
-    queryFn: async () => await badgesService.getBadges((safeAddress as `0x${string}`) ?? []),
+    queryFn: async () => await badgesService.getBadgesWithPrizes((safeAddress as `0x${string}`) ?? []),
     refetchInterval: 10000,
     enabled: !!safeLoaded,
   })
@@ -60,6 +87,8 @@ export default function BadgePage() {
     )
   const currentBadge = data?.currentBadges.find((badge) => badge.badgeId == router.query.id)
   const avatarStripWidth = Math.max(40, 40 + 24 * Math.max((currentBadge?.metadata.chains.length ?? 0) - 1, 0))
+  const rewardIcon = (tokens as any)?.[currentBadge?.tokenBadge?.symbol ?? '']?.icon ?? (tokens as any)?.USDC?.icon
+  const strategy = getBadgeStrategy(currentBadge, strategies)
 
   return (
     <>
@@ -74,7 +103,9 @@ export default function BadgePage() {
             <Stack direction="row" justifyContent="space-between" alignItems="center">
               <Stack direction="row" gap="16px" alignContent="center">
                 <button
-                  // onClick={() => router.push({ pathname: AppRoutes.campaigns, query: { safe: router.query.safe } })}
+                  onClick={() =>
+                    router.push({ pathname: AppRoutes.badges.allTime, query: { safe: router.query.safe } })
+                  }
                   style={{
                     width: '36px',
                     height: '36px',
@@ -105,48 +136,53 @@ export default function BadgePage() {
                 </Stack>
               </Stack>
               <Stack direction="row" gap="8px">
-                <Button
-                  component="a"
-                  target="_blank"
-                  rel="noreferrer"
-                  variant="text"
-                  sx={{
-                    width: '118px',
-                    height: '36px',
-                    backgroundColor: '#F1F2F5',
-                    borderRadius: '12px',
-                    color: 'black',
-                    ':hover': { backgroundColor: '#F1F2F5' },
-                    padding: '15px 10px 15px 8px',
-                  }}
-                >
-                  <Typography variant="body2" fontWeight={600}>
-                    Get Started
-                  </Typography>
-                  <InfoBlackIcon
-                    style={{ width: '16px', heigth: '16px', transform: 'translateY(-1px)', marginLeft: '4px' }}
-                  />
-                </Button>
-                <Button
-                  component="a"
-                  target="_blank"
-                  rel="noreferrer"
-                  variant="text"
-                  sx={{
-                    width: '118px',
-                    height: '36px',
-                    backgroundColor: 'black',
-                    borderRadius: '12px',
-                    color: 'white',
-                    ':hover': { backgroundColor: 'black' },
-                    padding: '15px 10px 15px 8px',
-                  }}
-                >
-                  <Typography variant="body2" fontWeight={600}>
-                    Get Started
-                  </Typography>
-                  <Launch sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
-                </Button>
+                {currentBadge.moreInfo && (
+                  <Button
+                    onClick={() => setOpenInfo(true)}
+                    variant="text"
+                    sx={{
+                      width: '118px',
+                      height: '36px',
+                      backgroundColor: '#F1F2F5',
+                      borderRadius: '12px',
+                      color: 'black',
+                      ':hover': { backgroundColor: '#F1F2F5' },
+                      padding: '15px 10px 15px 8px',
+                    }}
+                  >
+                    <Typography variant="body2" fontWeight={600}>
+                      Learn More
+                    </Typography>
+                    <InfoBlackIcon
+                      style={{ width: '16px', heigth: '16px', transform: 'translateY(-1px)', marginLeft: '4px' }}
+                    />
+                  </Button>
+                )}
+                {strategy?.renderDescription
+                  ? strategy.renderDescription(currentBadge as any)
+                  : currentBadge.action_description && (
+                      <Button
+                        component="a"
+                        href={currentBadge.action_link}
+                        target="_blank"
+                        rel="noreferrer"
+                        variant="text"
+                        sx={{
+                          width: '118px',
+                          height: '36px',
+                          backgroundColor: 'black',
+                          borderRadius: '12px',
+                          color: 'white',
+                          ':hover': { backgroundColor: 'black' },
+                          padding: '15px 10px 15px 8px',
+                        }}
+                      >
+                        <Typography variant="body2" fontWeight={600}>
+                          {currentBadge.action_description}
+                        </Typography>
+                        <Launch sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
+                      </Button>
+                    )}
               </Stack>
             </Stack>
             <Divider />
@@ -245,7 +281,7 @@ export default function BadgePage() {
                       <Typography
                         sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px', textTransform: 'capitalize' }}
                       >
-                        {formatAmount(0)}
+                        {formatAmount(currentBadge.totalClaimed ?? 0)}
                       </Typography>
                     </Stack>
                   </Stack>
@@ -268,7 +304,7 @@ export default function BadgePage() {
                           {currentBadge.currentCount}
                         </Typography>
                         <Typography variant="body2" fontWeight={500} color="#75757A">
-                          XP
+                          {currentBadge.countUnit && currentBadge.countUnit != '' ? currentBadge.countUnit : '--'}
                         </Typography>
                       </Stack>
                     </Stack>
@@ -277,12 +313,78 @@ export default function BadgePage() {
                     sx={{ flex: 1, border: '1px solid #E1E2EA', borderRadius: '12px', padding: '12px 16px 12px 16px' }}
                   >
                     <Stack gap="12px">
-                      {currentBadge.badgeTiers.map((tier) => (
-                        <Stack gap="12px" key={tier.tier}>
+                      {currentBadge.badgeTiers.slice(0, -1).map((tier, index) => (
+                        <Stack gap="12px" key={index}>
                           <BadgeTierCard tier={tier} currentBadge={currentBadge} />
-                          <Divider />
+                          {index < currentBadge.badgeTiers.length - 1 && <Divider />}
                         </Stack>
                       ))}
+                    </Stack>
+                  </Card>
+                  <Card
+                    sx={{ flex: 1, border: '1px solid #E1E2EA', borderRadius: '12px', padding: '12px 16px 12px 16px' }}
+                  >
+                    <Stack gap="12px">
+                      <BadgeTierCard
+                        tier={currentBadge.badgeTiers[currentBadge.badgeTiers.length - 1]}
+                        currentBadge={currentBadge}
+                      />
+                      {currentBadge.tokenBadge?.amount && (
+                        <Stack
+                          direction="row"
+                          alignItems="center"
+                          justifyContent="space-between"
+                          padding="8px 12px 8px 12px"
+                          style={{ height: '64px', border: '1px solid #1FC1BF' }}
+                          sx={{
+                            width: '100%',
+                            background: 'linear-gradient(180deg, #E7F8F8 0%, #F6FEFD 100%)',
+                            borderRadius: '12px',
+                          }}
+                        >
+                          <Stack direction="row" alignItems="center" gap="16px" width="100%">
+                            <Stack
+                              justifyContent="center"
+                              alignItems="center"
+                              style={{
+                                width: '40px',
+                                height: '40px',
+                                position: 'relative',
+                                border: '1px solid #1FC1BF',
+                                background: 'white',
+                                borderRadius: '12px',
+                              }}
+                            >
+                              <GiftIcon style={{ width: '24px', height: '24px' }} />
+                            </Stack>
+                            <Stack flex={1}>
+                              <Stack justifyContent="space-between" alignItems="center" direction="row">
+                                <Typography variant="h5" fontWeight={500}>
+                                  Exclusive Bonus
+                                </Typography>
+                                <Stack direction="row" alignItems="center" justifyContent="center">
+                                  <Typography variant="h5" fontWeight={600}>
+                                    {currentBadge.tokenBadge?.amount}
+                                  </Typography>
+                                  {rewardIcon && (
+                                    <SvgIcon
+                                      component={rewardIcon}
+                                      sx={{ width: 20, height: 20, marginTop: '2px', marginLeft: '3px' }}
+                                    />
+                                  )}
+                                </Stack>
+                              </Stack>
+                              <Stack direction="row">
+                                <Typography variant="caption" fontWeight={500} color="#75757A">
+                                  Limited to first 100 users who reach Tier MAX
+                                </Typography>
+                                <DotIcon style={{ width: '16px', heigth: '16px' }} />
+                                <Typography variant="caption" fontWeight={500} color="#75757A"></Typography>
+                              </Stack>
+                            </Stack>
+                          </Stack>
+                        </Stack>
+                      )}
                     </Stack>
                   </Card>
                 </Stack>
@@ -290,6 +392,97 @@ export default function BadgePage() {
             </Stack>
           </Stack>
         )}
+        <Dialog
+          open={openInfo}
+          onClose={() => setOpenInfo(false)}
+          sx={{ margin: 'auto', width: '720px', overflow: 'visible' }}
+        >
+          <Card sx={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            {/* Header */}
+            <Stack direction="row" justifyContent="space-between" alignItems="center">
+              <Typography variant="h3" fontWeight={600} sx={{ transform: 'translateY(0px)', display: 'inline-block' }}>
+                {currentBadge?.metadata.name}{' '}
+                <Typography
+                  sx={{ transform: 'translateY(-2px)', display: 'inline-block' }}
+                  component="span"
+                  variant="body2"
+                  color="#A0A0A6"
+                >
+                  Badge Details
+                </Typography>
+              </Typography>
+              <button
+                onClick={() => setOpenInfo(false)}
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  backgroundColor: '#F1F2F5',
+                  borderRadius: '12px',
+                  color: 'black',
+                  border: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                }}
+              >
+                <Close sx={{ width: '16px', height: '16px' }} />
+              </button>
+            </Stack>
+            <Divider style={{ width: '720px', margin: '0 auto', transform: 'translateX(-24px)' }} />
+            <div style={{ color: '#4B4B4E' }}>
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  h1: ({ children }) => (
+                    <Typography component="h1" variant="h4" fontWeight={700} gutterBottom>
+                      {children}
+                    </Typography>
+                  ),
+                  h2: ({ children }) => (
+                    <Typography component="h2" variant="h5" fontWeight={700} gutterBottom>
+                      {children}
+                    </Typography>
+                  ),
+                  h3: ({ children }) => (
+                    <Typography component="h3" variant="h6" fontWeight={700} gutterBottom>
+                      {children}
+                    </Typography>
+                  ),
+                  p: ({ children }) => (
+                    <Typography component="p" variant="body1" sx={{ mb: 2 }}>
+                      {children}
+                    </Typography>
+                  ),
+                  li: ({ children }) => (
+                    <Typography component="li" variant="body1" sx={{ ml: 2 }}>
+                      {children}
+                    </Typography>
+                  ),
+                  code: (props: any) => {
+                    const { inline, className, children, ...rest } = props
+                    return inline ? (
+                      <code style={{ padding: '0 4px', borderRadius: 6, background: '#F5F5F7' }} {...rest}>
+                        {children}
+                      </code>
+                    ) : (
+                      <pre
+                        style={{ padding: 12, borderRadius: 12, background: '#F5F5F7', overflowX: 'auto' }}
+                        {...rest}
+                      >
+                        <code className={className}>{children}</code>
+                      </pre>
+                    )
+                  },
+                  ul: ({ children }) => <ul style={{ paddingLeft: 20, marginBottom: 16 }}>{children}</ul>,
+                  ol: ({ children }) => <ol style={{ paddingLeft: 20, marginBottom: 16 }}>{children}</ol>,
+                }}
+              >
+                {currentBadge?.moreInfo ?? '--'}
+              </ReactMarkdown>
+            </div>
+          </Card>
+        </Dialog>
       </main>
     </>
   )

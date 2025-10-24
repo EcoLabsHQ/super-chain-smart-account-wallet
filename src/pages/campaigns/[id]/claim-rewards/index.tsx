@@ -371,7 +371,7 @@ export default function Page() {
                       Total points distributed
                     </Typography>
                     <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px' }}>
-                      {formatAmount(Number(campaign.claimable_reward?.amount) ?? 0)}
+                      {formatAmount(campaign.distributed_points ?? 0)}
                     </Typography>
                   </Stack>
                 </Stack>
