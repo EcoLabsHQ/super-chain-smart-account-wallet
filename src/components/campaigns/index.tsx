@@ -221,14 +221,16 @@ function CampaignCard({
                   fontWeight: 600,
                   fontSize: '14px',
                   lineHeight: '20px',
+                  height: '28px',
                   fontFamily: 'DM Sans',
-                  height: '48px',
-                  px: '24px',
+                  px: '50px',
                   boxShadow: 'none',
                   '&:hover': { background: '#000', boxShadow: 'none' },
                 }}
               >
-                Claim Rewards
+                <Typography variant="caption" fontWeight={600}>
+                  Claim Rewards
+                </Typography>
               </Button>
 
               {/* Empuja el label a la derecha */}
