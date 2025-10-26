@@ -161,7 +161,7 @@ export default function BadgePage() {
                   </Button>
                 )}
                 {strategy?.renderDescription ? (
-                  <div>HOla</div>
+                  <div></div>
                 ) : (
                   currentBadge.action_description && (
                     <Button
