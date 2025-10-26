@@ -5,6 +5,7 @@ import type { ResponseBadge } from '@/types/super-chain'
 import local from '@/services/local-storage/local'
 import type { Setter } from '@/services/local-storage/useLocalStorage'
 import { getSiweToken } from '@/utils/helpers'
+import { BadgeWithPrize } from '@/types/badges'
 
 export type Perks = {
   name: string
@@ -44,6 +45,14 @@ class BadgesService {
     return JSON.parse(favoriteBadges)
       .filter((id: string) => id.endsWith(safe))
       .map((id: string) => id.replace(safe, ''))
+  }
+  public async getBadgesWithPrizes(account?: Address): Promise<{
+    currentBadges: BadgeWithPrize[]
+  }> {
+    const response = await this.httpInstance.get<{
+      currentBadges: BadgeWithPrize[]
+    }>(`/user/${account}/badges`)
+    return response.data
   }
   public async getBadges(account?: Address): Promise<{
     currentBadges: ResponseBadge[]

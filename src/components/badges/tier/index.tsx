@@ -1,14 +1,16 @@
-import { BadgeTier, ResponseBadge } from '@/types/super-chain'
 import { Avatar, Stack, Typography } from '@mui/material'
 import CheckCircleIcon from '@/public/images/common/check-circle-white.svg'
+import PadLockIcon from '@/public/images/common/padlock.svg'
 import SuperchainPointIcon from '@/public/images/common/superChain.svg'
 import DotIcon from '@/public/images/common/dot_soft_gray.svg'
 import React from 'react'
 import { formatAmount } from '@/components/campaigns'
+import { BadgeTierDto, BadgeWithPrize } from '@/types/badges'
+import { formatXP } from '../badge'
 
 type Props = {
-  tier: BadgeTier
-  currentBadge: ResponseBadge
+  tier: BadgeTierDto
+  currentBadge: BadgeWithPrize
 }
 function formatPercentage(num: number): string {
   if (Number.isInteger(num)) {
@@ -23,14 +25,29 @@ function formatPercentage(num: number): string {
 }
 
 export default function BadgeTierCard({ tier, currentBadge }: Props) {
-  const completed = parseInt(tier.tier) <= parseInt(currentBadge.tier)
+  const completed = parseInt(tier.tier) <= currentBadge.tier
+  const statistics = currentBadge.statistics?.find((stat) => stat.tier === parseInt(tier.tier))
   return (
-    <Stack direction="row" alignItems="end" justifyContent="space-between" padding="12px 8px 12px 8px">
+    <Stack
+      direction="row"
+      alignItems="end"
+      justifyContent="space-between"
+      padding="12px 8px 12px 8px"
+      style={{ opacity: completed ? 1 : 0.4, filter: completed ? '' : 'grayscale(100%)' }}
+    >
       <Stack direction="row" alignItems="center" gap="16px">
         <div style={{ position: 'relative', border: '1px solid #E1E2EA', borderRadius: '12px' }}>
-          <Avatar src="" sx={{ width: 40, height: 40 }} variant="rounded" />
-          {completed && (
+          <Avatar
+            src={currentBadge.metadata.image?.replace('/Badge.svg', `/T${tier.tier}.svg`)}
+            sx={{ width: 40, height: 40 }}
+            variant="rounded"
+          />
+          {completed ? (
             <CheckCircleIcon
+              style={{ position: 'absolute', right: '-5px', bottom: '-5px', width: '16px', height: '16px' }}
+            />
+          ) : (
+            <PadLockIcon
               style={{ position: 'absolute', right: '-5px', bottom: '-5px', width: '16px', height: '16px' }}
             />
           )}
@@ -42,11 +59,13 @@ export default function BadgeTierCard({ tier, currentBadge }: Props) {
             </Typography>
             <DotIcon style={{ width: '16px', heigth: '16px' }} />
             <Typography variant="caption" fontWeight={500} color="#75757A">
-              {`${formatAmount(10800)} (${formatPercentage(84)}%) Users Completed`}
+              {`${formatAmount(statistics?.totalClaimed ?? 0)} (${formatPercentage(
+                statistics?.percentage ?? 0,
+              )}%) Users Completed`}
             </Typography>
           </Stack>
           <Typography variant="h5" fontWeight={500}>
-            Unlock at 100K XP during SuperStacks
+            {currentBadge.metadata.condition.replace('{{variable}}', formatXP(tier.metadata.minValue))}
           </Typography>
         </Stack>
       </Stack>

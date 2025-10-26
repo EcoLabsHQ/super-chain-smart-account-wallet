@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, SvgIcon, Typography } from '@mui/material'
+import { Box, Button, Dialog, Stack, SvgIcon, Typography } from '@mui/material'
 import React from 'react'
 import Shiny from '@/public/images/common/shiny-animation.svg'
 import SuperChainPoints from '@/public/images/common/superChain.svg'
@@ -51,83 +51,70 @@ function ClaimModal({
   }
 
   return (
-    <Dialog
-      className={css.claimModal}
-      open={open}
-      onClose={onClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box
-        display="flex"
-        flexDirection="column"
-        gap="24px"
-        padding="36px 24px 36px 24px"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Box gap="12px" display="flex" flexDirection="column" justifyContent="center" alignItems="center" width="100%">
-          <Typography id="modal-modal-title" fontSize={24} fontWeight={600} component="h2">
-            Claim success
-          </Typography>
-          <Box
-            width="100%"
-            border={1}
-            borderRadius="12px"
-            borderColor="#CDCED5"
-            sx={{ borderStyle: 'dashed', backgroundColor: 'transparent' }}
-            padding="12px"
-          >
-            <Box sx={{ maxHeight: '200px', overflowY: 'auto' }}>
-              {claimData.claimedBadges?.slice(0, 6).map((tx, index) => (
-                <Box key={index}>
-                  <Box display="flex" justifyContent="space-between" alignItems="center" paddingY="6px">
-                    <Typography color="#4B4B4E" fontSize="12px" fontWeight={500}>
-                      {tx}
-                    </Typography>
-                    <SvgIcon
-                      inheritViewBox
-                      component={CheckCircleIcon}
-                      sx={{
-                        color: '#39D551',
-                        fontSize: '16px',
-                        width: '16px',
-                        height: '16px',
-                        borderRadius: '50%',
-                      }}
-                    />
-                  </Box>
+    <Dialog className={css.claimModal} open={open} onClose={onClose}>
+      <Box display="flex" flexDirection="column" gap="24px" padding="24px" justifyContent="center" alignItems="center">
+        <Typography id="modal-modal-title" fontSize={24} fontWeight={600} component="h2">
+          Claim success
+        </Typography>
+        <Box
+          width="100%"
+          border={1}
+          borderRadius="12px"
+          borderColor="#CDCED5"
+          sx={{ borderStyle: 'dashed', backgroundColor: 'transparent' }}
+          padding="12px"
+        >
+          <Box sx={{ maxHeight: '200px', overflowY: 'auto' }}>
+            {claimData.claimedBadges?.slice(0, 6).map((tx, index) => (
+              <Box key={index}>
+                <Box display="flex" justifyContent="space-between" alignItems="center" paddingY="6px">
+                  <Typography color="#4B4B4E" fontSize="12px" fontWeight={500}>
+                    {tx}
+                  </Typography>
+                  <SvgIcon
+                    inheritViewBox
+                    component={CheckCircleIcon}
+                    sx={{
+                      color: '#39D551',
+                      fontSize: '16px',
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '50%',
+                    }}
+                  />
                 </Box>
-              ))}
-            </Box>
+              </Box>
+            ))}
           </Box>
         </Box>
 
         <Box display="flex" justifyContent="space-between" alignItems="center" paddingLeft="12px" fontSize="16px">
-          <Typography color="#75757A" fontWeight={500} fontSize="18px" pr={1}>
+          <Typography color="#75757A" fontWeight={400} fontSize="14px" pr={1}>
             You have received:
           </Typography>
           <Box
-            sx={{ display: 'flex', alignItems: 'center', gap: 1 }}
+            sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}
             border={1}
             borderRadius="100px"
             borderColor="#E1E2EA"
             paddingX="8px"
           >
-            <Typography fontSize="16px" fontWeight={600} p="4px 2px">
+            <Typography fontSize="12px" fontWeight={600} p="4px 2px">
               {data?.totalPoints ?? 0}
             </Typography>
-            <SvgIcon component={SuperChainPoints} inheritViewBox fontSize="inherit" />
+            <SuperChainPoints style={{ width: '16px', height: '16px' }} />
           </Box>
         </Box>
         <Box flex={1} width="100%">
           <GradientProgress variant="determinate" value={progress} />
           {!data?.isLevelUp && (
             <>
-              <Typography variant="body2" align="center" mt={1} color="#75757A">
-                {Number(superChainAccount.points)} / {Number(superChainAccount.pointsToNextLevel)} Superchain Points to
-                level {Number(superChainAccount.level)}
-              </Typography>
+              <Stack justifyContent="center">
+                <Typography variant="caption" textAlign="center" fontWeight={500} mt="6px" mx="auto" color="#75757A">
+                  {Number(superChainAccount.points)} / {Number(superChainAccount.pointsToNextLevel)} Superchain Points
+                  to level {Number(superChainAccount.level)}
+                </Typography>
+              </Stack>
               <Button
                 onClick={onClose}
                 variant="contained"
