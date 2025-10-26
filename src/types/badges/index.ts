@@ -11,6 +11,10 @@ export type BadgeTierDto = {
   tier: string
   uri: string
   metadata: BadgeTierMetadataDto
+  rewards?: {
+    amount: string
+    symbol: string
+  }
 }
 
 export type BadgeMetadataDto = {

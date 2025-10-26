@@ -261,7 +261,7 @@ const Home: NextPage = () => {
                   <MenuItem value={8}>8</MenuItem>
                 </Select>
                 <Select
-                  value={chain}
+                  value={campaign}
                   displayEmpty
                   size="small"
                   onChange={(event) => setCampaign(event.target.value ?? '')}

@@ -16,6 +16,7 @@ export type SuperChainAccount = {
 }
 export type Badge = GetUserBadgesQuery['accountBadges'][number]
 export type ResponseBadge = { tier: string; points: string } & Badge['badge'] & {
+    claimedBadges?: number
     claimableTier: number | null
     claimable: boolean
     campaigns: string[]
@@ -28,6 +29,7 @@ export type BadgeTierMetadata = {
   level: number
   minValue: number
   points: number
+  image?: string
 }
 
 export type BadgeMetadata = {

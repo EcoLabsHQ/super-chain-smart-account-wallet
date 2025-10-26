@@ -89,6 +89,8 @@ export default function BadgePage() {
   const avatarStripWidth = Math.max(40, 40 + 24 * Math.max((currentBadge?.metadata.chains.length ?? 0) - 1, 0))
   const rewardIcon = (tokens as any)?.[currentBadge?.tokenBadge?.symbol ?? '']?.icon ?? (tokens as any)?.USDC?.icon
   const strategy = getBadgeStrategy(currentBadge, strategies)
+  console.log('Current Badge:', currentBadge)
+  console.log('Strategy:', strategy?.renderDescription ?? 'None')
 
   return (
     <>
@@ -158,31 +160,33 @@ export default function BadgePage() {
                     />
                   </Button>
                 )}
-                {strategy?.renderDescription
-                  ? strategy.renderDescription(currentBadge as any)
-                  : currentBadge.action_description && (
-                      <Button
-                        component="a"
-                        href={currentBadge.action_link}
-                        target="_blank"
-                        rel="noreferrer"
-                        variant="text"
-                        sx={{
-                          width: '118px',
-                          height: '36px',
-                          backgroundColor: 'black',
-                          borderRadius: '12px',
-                          color: 'white',
-                          ':hover': { backgroundColor: 'black' },
-                          padding: '15px 10px 15px 8px',
-                        }}
-                      >
-                        <Typography variant="body2" fontWeight={600}>
-                          {currentBadge.action_description}
-                        </Typography>
-                        <Launch sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
-                      </Button>
-                    )}
+                {strategy?.renderDescription ? (
+                  <div>HOla</div>
+                ) : (
+                  currentBadge.action_description && (
+                    <Button
+                      component="a"
+                      href={currentBadge.action_link}
+                      target="_blank"
+                      rel="noreferrer"
+                      variant="text"
+                      sx={{
+                        width: '118px',
+                        height: '36px',
+                        backgroundColor: 'black',
+                        borderRadius: '12px',
+                        color: 'white',
+                        ':hover': { backgroundColor: 'black' },
+                        padding: '15px 10px 15px 8px',
+                      }}
+                    >
+                      <Typography variant="body2" fontWeight={600}>
+                        {currentBadge.action_description}
+                      </Typography>
+                      <Launch sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
+                    </Button>
+                  )
+                )}
               </Stack>
             </Stack>
             <Divider />
@@ -314,7 +318,7 @@ export default function BadgePage() {
                   >
                     <Stack gap="12px">
                       {currentBadge.badgeTiers.slice(0, -1).map((tier, index) => (
-                        <Stack gap="12px" key={index}>
+                        <Stack key={index} gap="12px">
                           <BadgeTierCard tier={tier} currentBadge={currentBadge} />
                           {index < currentBadge.badgeTiers.length - 1 && <Divider />}
                         </Stack>
@@ -369,7 +373,7 @@ export default function BadgePage() {
                                   {rewardIcon && (
                                     <SvgIcon
                                       component={rewardIcon}
-                                      sx={{ width: 20, height: 20, marginTop: '2px', marginLeft: '3px' }}
+                                      sx={{ width: 24, height: 24, marginTop: '2px', marginLeft: '4px' }}
                                     />
                                   )}
                                 </Stack>
@@ -379,7 +383,9 @@ export default function BadgePage() {
                                   Limited to first 100 users who reach Tier MAX
                                 </Typography>
                                 <DotIcon style={{ width: '16px', heigth: '16px' }} />
-                                <Typography variant="caption" fontWeight={500} color="#75757A"></Typography>
+                                <Typography variant="caption" fontWeight={500} color="#75757A">
+                                  {currentBadge.totalClaimed}/100 Claimed
+                                </Typography>
                               </Stack>
                             </Stack>
                           </Stack>
