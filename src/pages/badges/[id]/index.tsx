@@ -384,7 +384,7 @@ export default function BadgePage() {
                                 </Typography>
                                 <DotIcon style={{ width: '16px', heigth: '16px' }} />
                                 <Typography variant="caption" fontWeight={500} color="#75757A">
-                                  {currentBadge.totalClaimed}/100 Claimed
+                                  {currentBadge.totalClaimed}/{currentBadge.tokenBadge.maxClaims ?? 0}
                                 </Typography>
                               </Stack>
                             </Stack>
