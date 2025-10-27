@@ -11,11 +11,17 @@ import { AppRoutes } from '@/config/routes'
 import useSafeAddress from '@/hooks/useSafeAddress'
 import { BACKEND_BASE_URI } from '@/config/constants'
 import { Campaign, formatAmount } from '@/components/campaigns'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import NetworkChip from '@/components/badges/networkChip'
 import Image from 'next/image'
 import axios from 'axios'
-import { formatUnits } from 'viem'
+import { Address, createWalletClient, custom, formatUnits, getContract } from 'viem'
+import { optimism } from 'viem/chains'
+import useWallet from '@/hooks/wallets/useWallet'
+import { EthereumProvider } from 'permissionless/utils/toOwner'
+import { publicClient } from '@/services/pimlico'
+import { AIRDROP_ABI, AIRDROP_ADDRESS } from '@/constants/contracts'
+import { checkAirdropEligibility } from '@/services/airdrop'
 
 const getTokenIcon = (symbol: string) => {
   const usdc = '/images/currencies/usdc.svg'
@@ -46,7 +52,10 @@ function getCalendarValues(date: string | Date): { day: number; month: string } 
 
 export default function Page() {
   const router = useRouter()
+  const safeAddress = useSafeAddress()
   const [openClaimDialog, setOpenClaimDialog] = React.useState(false)
+  const [claimTransactionLink, setClaimTransactionLink] = React.useState('')
+  const wallet = useWallet()
   const address = useSafeAddress()
   const campaignId = router.query.id as string | undefined
 
@@ -60,6 +69,54 @@ export default function Page() {
     },
   })
 
+  const {
+    data: airdropData,
+    isLoading: isCheckLoading,
+    refetch: refetchAirdrop,
+  } = useQuery({
+    queryKey: ['check-airdrop', safeAddress],
+    queryFn: () => checkAirdropEligibility(safeAddress),
+    enabled: !!safeAddress,
+  })
+  const erc20Token = (airdropData?.token ?? '0x471EcE3750Da237f93B8E339c536989b8978a438') as Address
+
+  const { mutate, isPending, isError } = useMutation({
+    mutationFn: async () => {
+      const walletClient = createWalletClient({
+        chain: optimism,
+        transport: custom(wallet?.provider as EthereumProvider),
+        account: wallet?.address as Address,
+      })
+      const airdropContract = getContract({
+        address: AIRDROP_ADDRESS,
+        abi: AIRDROP_ABI,
+        client: {
+          public: publicClient,
+          wallet: walletClient,
+        },
+      })
+      const hash = await airdropContract.write.claimERC20([
+        erc20Token,
+        safeAddress as Address,
+        airdropData?.value,
+        airdropData?.proofs,
+      ])
+      publicClient.waitForTransactionReceipt({ hash })
+      console.log('Airdrop claim tx hash:', hash)
+      return await axios.post(`${BACKEND_BASE_URI}/airdrop/${router.query.safe}`, {
+        airdropId: campaignId,
+        txHash: hash,
+      })
+    },
+    onError: (error) => {
+      console.error(error)
+    },
+    onSuccess: (data: any) => {
+      setOpenClaimDialog(true)
+      setClaimTransactionLink(data.recipient)
+    },
+  })
+
   function formatDates(date: string | Date): string {
     const options: Intl.DateTimeFormatOptions = {
       weekday: 'long',
@@ -69,6 +126,9 @@ export default function Page() {
 
     const dateFormatted = new Date(date).toLocaleDateString('en-US', options)
     return dateFormatted
+  }
+  const handleClaimRewards = () => {
+    setOpenClaimDialog(true)
   }
   if (!campaign || isLoading)
     return (
@@ -443,9 +503,9 @@ export default function Page() {
                       color: 'white',
                       ':hover': { background: 'black' },
                     }}
-                    onClick={() => setOpenClaimDialog(true)}
+                    onClick={() => mutate()}
                   >
-                    Claim Rewards
+                    {isPending ? 'Claiming Rewards...' : isError ? 'Error! Try Again' : 'Claim Rewards'}
                   </Button>
                   <Stack direction="row" gap="4px" justifyContent="center" alignItems="center">
                     <Typography variant="caption" color="#75757A">
@@ -528,6 +588,7 @@ export default function Page() {
             <Divider style={{ width: '345px', margin: '0 auto', transform: 'translateX(-20px)' }} />
             <Stack gap="8px">
               <Button
+                onClick={() => router.push({ pathname: AppRoutes.vaults.index, query: { safe: router.query.safe } })}
                 sx={{
                   background: '#000000',
                   borderRadius: '12px',
@@ -539,19 +600,24 @@ export default function Page() {
                   Earn 8% APR on Rewards
                 </Typography>
               </Button>
-              <Button sx={{ background: '#F1F2F5', borderRadius: '12px', padding: '15px' }}>
+              <Button
+                onClick={() => router.push({ pathname: AppRoutes.campaigns, query: { safe: router.query.safe } })}
+                sx={{ background: '#F1F2F5', borderRadius: '12px', padding: '15px' }}
+              >
                 <Typography variant="body2" fontWeight={600} color="black">
                   Back to Campaigns
                 </Typography>
               </Button>
             </Stack>
 
-            <Stack direction="row" gap="4px" justifyContent="center" alignItems="center">
-              <Typography variant="caption" color="#75757A">
-                View on Explorer
-              </Typography>
-              <Launch sx={{ width: '16px', height: '16px' }} />
-            </Stack>
+            <Button href={claimTransactionLink} target="_blank" sx={{ '&:hover': { background: 'transparent' } }}>
+              <Stack direction="row" gap="4px" justifyContent="center" alignItems="center">
+                <Typography variant="caption" color="#75757A">
+                  View on Explorer
+                </Typography>
+                <Launch sx={{ width: '16px', height: '16px' }} />
+              </Stack>
+            </Button>
           </Card>
         </Dialog>
       </main>

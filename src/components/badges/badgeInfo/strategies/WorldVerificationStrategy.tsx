@@ -1,11 +1,12 @@
 import type { ResponseBadge } from '@/types/super-chain'
 import type { BadgeRenderStrategy } from '../BadgeStrategyRenderer'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import axios from 'axios'
 import { IDKitWidget, ISuccessResult, VerificationLevel } from '@worldcoin/idkit'
 import { BACKEND_BASE_URI, WORLD_ID_ACTION, WORLD_ID_APP_ID, WORLD_ID_SIGNAL } from '@/config/constants'
 import React from 'react'
 import useSafeAddress from '@/hooks/useSafeAddress'
+import QrCodeIcon from '@/public/images/common/qr_code.svg'
 
 class WorldIDVerificationStrategy implements BadgeRenderStrategy {
   canRender(badge: ResponseBadge): boolean {
@@ -50,9 +51,12 @@ export function WorldIDVerificationComponent({ badge }: { badge: ResponseBadge }
               color="primary"
               onClick={open}
               disabled={Number(badge.tier) > 0}
-              sx={{ borderRadius: '100px', textTransform: 'none', fontWeight: 600, padding: '8px 24px', mt: 2, mb: 2 }}
+              sx={{ borderRadius: '12px', padding: '8px 10px 8px 10px' }}
             >
-              Verify
+              <QrCodeIcon style={{ width: '16px', height: '16px', marginRight: '4px' }} />
+              <Typography variant="body2" fontWeight={600}>
+                Verify Now
+              </Typography>
             </Button>
           )
         }}
