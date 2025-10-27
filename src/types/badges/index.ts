@@ -57,5 +57,6 @@ export type BadgeWithPrize = {
   tokenBadge?: {
     symbol: string
     amount: string
+    maxClaims?: string
   }
 }
