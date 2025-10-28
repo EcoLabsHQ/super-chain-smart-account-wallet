@@ -40,10 +40,10 @@ export interface Campaign {
   distributed_points: number
   can_claim: boolean
   max_claim_date: Date
-  campaign_reward: { symbol: string; amount: number; decimals: number, token: string }
-  claimable_reward: { symbol: string; amount: string; decimals: number, token: string }
+  campaign_reward: { symbol: string; amount: number; decimals: number; token: string }
+  claimable_reward: { symbol: string; amount: string; decimals: number; token: string }
   start_date: string | Date
-  end_date: string | Date,
+  end_date: string | Date
   airdrop_condition_id: number
 }
 
@@ -121,7 +121,6 @@ function CampaignCard({
     }
     router.push({ pathname: `${AppRoutes.campaigns}/${campaign.id}`, query: { safe: router.query.safe } })
   }
-
 
   return (
     <Card
