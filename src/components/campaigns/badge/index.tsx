@@ -22,7 +22,7 @@ export default function CampaignBadge({ badge, my_points }: Props) {
   }
   return (
     <div style={{ position: 'relative' }}>
-      <div style={{ zIndex: '10', position: 'absolute', top: '-4px', left: '-4px' }}>
+      <div style={{ zIndex: '2', position: 'absolute', top: '-4px', left: '-4px' }}>
         <SeasonChip season={badge?.season ?? 0} />
       </div>
       <Card
