@@ -101,9 +101,8 @@ export default function Page() {
         BigInt(airdropData?.value ?? 0),
         1, //TODO: this is the condition_ID, IDK if we need to get it from the backend or not
         airdropData?.proofs,
-        
       ])
-     await publicClient.waitForTransactionReceipt({ hash })
+      await publicClient.waitForTransactionReceipt({ hash })
       console.log('Airdrop claim tx hash:', hash)
       return await axios.post(`${BACKEND_BASE_URI}/airdrop/${router.query.safe}`, {
         airdropId: campaignId,
