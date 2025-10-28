@@ -98,10 +98,12 @@ export default function Page() {
       const hash = await airdropContract.write.claimERC20([
         erc20Token,
         safeAddress as Address,
-        airdropData?.value,
+        BigInt(airdropData?.value ?? 0),
+        1, //TODO: this is the condition_ID, IDK if we need to get it from the backend or not
         airdropData?.proofs,
+        
       ])
-      publicClient.waitForTransactionReceipt({ hash })
+     await publicClient.waitForTransactionReceipt({ hash })
       console.log('Airdrop claim tx hash:', hash)
       return await axios.post(`${BACKEND_BASE_URI}/airdrop/${router.query.safe}`, {
         airdropId: campaignId,
