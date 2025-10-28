@@ -12,6 +12,7 @@ import { useRouter } from 'next/router'
 import { AppRoutes } from '@/config/routes'
 import Image from 'next/image'
 export interface Campaign {
+  claimed: boolean
   id: string
   name: string
   description: string
@@ -39,8 +40,8 @@ export interface Campaign {
   distributed_points: number
   can_claim: boolean
   max_claim_date: Date
-  campaign_reward: { symbol: string; amount: number; decimals: number,token: string }
-  claimable_reward: { symbol: string; amount: string; decimals: number,token: string }
+  campaign_reward: { symbol: string; amount: number; decimals: number, token: string }
+  claimable_reward: { symbol: string; amount: string; decimals: number, token: string }
   start_date: string | Date
   end_date: string | Date,
   airdrop_condition_id: number
@@ -111,7 +112,7 @@ function CampaignCard({
     date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
 
   const handlePickCampaign = () => {
-    if (campaign.can_claim) {
+    if (campaign.can_claim && !campaign.claimed) {
       router.push({
         pathname: `${AppRoutes.campaigns}/${campaign.id}/claim-rewards`,
         query: { safe: router.query.safe },
@@ -120,6 +121,7 @@ function CampaignCard({
     }
     router.push({ pathname: `${AppRoutes.campaigns}/${campaign.id}`, query: { safe: router.query.safe } })
   }
+
 
   return (
     <Card
@@ -210,7 +212,7 @@ function CampaignCard({
         </Typography>
 
         <Box sx={{ mt: '4px', display: 'flex', alignItems: 'center', gap: 1 }}>
-          {campaign.can_claim && (
+          {campaign.can_claim && !campaign.claimed && (
             <>
               <Button
                 variant="contained"
@@ -251,7 +253,7 @@ function CampaignCard({
               </Typography>
             </>
           )}
-          {campaign.can_claim && campaign.end_date < new Date() && (
+          {campaign.can_claim && campaign.claimed && (
             <Box sx={{ marginTop: '4px', display: 'flex', alignItems: 'center', gap: 1 }}>
               <Stack
                 alignItems="center"
