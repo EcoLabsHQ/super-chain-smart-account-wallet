@@ -106,6 +106,7 @@ function CampaignCard({
   const start = new Date(campaign.start_date)
   const end = new Date(campaign.end_date)
   const isLive = now >= start && now <= end
+  const isEnded = now > end
   const router = useRouter()
 
   const formatDate = (date: Date) =>
@@ -146,12 +147,13 @@ function CampaignCard({
           style={{
             width: '100%',
             height: '100%',
-            objectFit: 'cover', // importante para cubrir el área como en el diseño
+            objectFit: 'cover',
             display: 'block',
+            filter: isEnded ? 'grayscale(100%) brightness(0.9)' : 'none',
+            transition: 'filter 0.3s ease-in-out',
           }}
         />
 
-        {/* Live badge */}
         {isLive && (
           <Box
             sx={{
@@ -159,19 +161,69 @@ function CampaignCard({
               top: 12,
               right: 12,
               display: 'flex',
+              height: 28,
+              padding: '0 8px',
+              justifyContent: 'center',
               alignItems: 'center',
-              background: '#EBFBEE',
-              border: '1px solid #39D551',
               borderRadius: '100px',
-              px: 1,
-              py: '4px',
+              border: '1px solid var(--Foundation-Lime-lime-500, #39D551)',
+              background: 'var(--Foundation-Lime-lime-50, #EBFBEE)',
+              zIndex: 2,
               gap: 0.5,
+            }}
+          >
+            {/* punto verde */}
+            <Box
+              sx={{
+                width: 8,
+                height: 8,
+                borderRadius: '50%',
+                bgcolor: 'var(--Foundation-Lime-lime-500, #39D551)',
+              }}
+            />
+            <Typography
+              sx={{
+                color: 'var(--Foundation-Black, #000)',
+                fontFamily: '"DM Sans"',
+                fontSize: '12px',
+                fontStyle: 'normal',
+                fontWeight: 500,
+                lineHeight: '16px',
+              }}
+            >
+              Live
+            </Typography>
+          </Box>
+        )}
+
+        {isEnded && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 12,
+              right: 12,
+              display: 'flex',
+              height: 28,
+              padding: '0 8px',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: '100px',
+              border: '1px solid var(--Foundation-Grey-grey-500, #E1E2EA)',
+              background: 'var(--Foundation-Grey-grey-50, #FCFCFD)',
               zIndex: 2,
             }}
           >
-            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: '#39D551' }} />
-            <Typography fontSize={12} fontWeight={600} fontFamily="Sora">
-              Live
+            <Typography
+              sx={{
+                color: 'var(--Foundation-Grey-grey-900, #4B4B4E)',
+                fontFamily: '"DM Sans"',
+                fontSize: '12px',
+                fontStyle: 'normal',
+                fontWeight: 500,
+                lineHeight: '16px',
+              }}
+            >
+              Ended
             </Typography>
           </Box>
         )}
@@ -211,7 +263,7 @@ function CampaignCard({
         </Typography>
 
         <Box sx={{ mt: '4px', display: 'flex', alignItems: 'center', gap: 1 }}>
-          {campaign.can_claim && !campaign.claimed && (
+          {campaign.can_claim && !campaign.claimed ? (
             <>
               <Button
                 variant="contained"
@@ -251,22 +303,29 @@ function CampaignCard({
                 {`Claim by ${formatClaimBy(campaign.max_claim_date)}`}
               </Typography>
             </>
-          )}
-          {campaign.can_claim && campaign.claimed && (
-            <Box sx={{ marginTop: '4px', display: 'flex', alignItems: 'center', gap: 1 }}>
+          ) : (
+            <Box
+              sx={{
+                mt: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between', // ✅ separa a los extremos
+                width: '100%',
+              }}
+            >
+              {/* Reward chip */}
               <Stack
                 alignItems="center"
                 direction="row"
                 gap="4px"
-                style={{
+                sx={{
                   border: '1px solid #E1E2EA',
                   borderRadius: '100px',
-                  padding: '4px',
-                  paddingLeft: '10px',
-                  paddingRight: '4px',
+                  padding: '4px 4px 4px 10px',
+                  flexShrink: 0, // evita que se contraiga
                 }}
               >
-                <Typography variant="caption" fontWeight={600} color="black">
+                <Typography variant="caption" fontWeight={600} color="black" sx={{ whiteSpace: 'nowrap' }}>
                   {formatAmount(campaign?.campaign_reward?.amount ?? 0)} {campaign?.campaign_reward?.symbol ?? '--'}
                 </Typography>
                 <SvgIcon
@@ -275,8 +334,15 @@ function CampaignCard({
                 />
               </Stack>
 
-              {/* Network chips (overlap estilo) */}
-              <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto' }}>
+              {/* Network icon(s) */}
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end', // ✅ asegura alineación completa a la derecha
+                  flexGrow: 1,
+                }}
+              >
                 {campaign.network.map((network: string, index: number) => (
                   <Box
                     key={`${campaign.id}-${network}`}
