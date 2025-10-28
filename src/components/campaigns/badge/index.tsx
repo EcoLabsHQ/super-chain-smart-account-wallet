@@ -4,9 +4,15 @@ import CheckCircleIcon from '@/public/images/common/check-circle-white.svg'
 import SuperchainPointIcon from '@/public/images/common/superChain.svg'
 import { type CampaignBadge } from '..'
 import SeasonChip from '@/components/badges/seasonChip'
+import { AppRoutes } from '@/config/routes'
+import router from 'next/router'
 type Props = {
   badge: CampaignBadge
   my_points?: { id: number; points: number }[]
+}
+
+const handlePickBadge = (id: string) => {
+  router.push({ pathname: `${AppRoutes.badges.allTime}/${id}`, query: { safe: router.query.safe } })
 }
 
 export default function CampaignBadge({ badge, my_points }: Props) {
@@ -20,8 +26,10 @@ export default function CampaignBadge({ badge, my_points }: Props) {
         <SeasonChip season={badge?.season ?? 0} />
       </div>
       <Card
+        onClick={() => handlePickBadge(badge.id)}
         variant="outlined"
         sx={{
+          cursor: 'pointer',
           position: 'relative',
           borderRadius: '12px',
           backgroundColor: 'white',

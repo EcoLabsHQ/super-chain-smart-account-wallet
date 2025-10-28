@@ -130,7 +130,7 @@ export default function Page() {
   const rewardAmount = formatAmount(campaign.campaign_reward?.amount ?? 0)
   const { day, month } = getCalendarValues(campaign.start_date)
   const now = new Date()
-  const isLive = now >= campaign.start_date && now <= campaign.end_date
+  const isLive = now >= new Date(campaign.start_date) && now <= new Date(campaign.end_date)
 
   return (
     <>
@@ -426,6 +426,39 @@ export default function Page() {
                     />
                   ))}
                 </Stack>
+              </Stack>
+
+              <Stack direction="row" justifyContent="flex-end" sx={{ mt: 2 }}>
+                <button
+                  onClick={() => {
+                    router.push({
+                      pathname: '/badges',
+                      query: router.query,
+                    })
+                  }}
+                  style={{
+                    WebkitBoxOrient: 'vertical',
+                    WebkitLineClamp: 1,
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    color: '#4B4B4E',
+                    fontFamily: '"DM Sans", sans-serif',
+                    fontSize: '14px',
+                    fontStyle: 'normal',
+                    fontWeight: 400,
+                    lineHeight: '20px',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: 0,
+                  }}
+                >
+                  Claim Badges
+                  <span style={{ fontSize: '16px', lineHeight: '20px', transform: 'translateY(-1px)' }}>›</span>
+                </button>
               </Stack>
             </Card>
           </Stack>

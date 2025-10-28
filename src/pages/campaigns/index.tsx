@@ -21,7 +21,7 @@ function CampaignsPage() {
               Campaigns
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
-              Discover builder and user campaigns across the Superchain.
+              Participate in Super Account Campaigns to earn rewards.
             </Typography>
           </Stack>
           <Divider style={{ marginTop: '10px', marginBottom: '16px' }} />
