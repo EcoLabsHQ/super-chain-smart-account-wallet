@@ -78,7 +78,7 @@ export default function Page() {
     queryFn: () => checkAirdropEligibility(safeAddress),
     enabled: !!safeAddress,
   })
-  const erc20Token = (airdropData?.token ?? '0x471EcE3750Da237f93B8E339c536989b8978a438') as Address
+  const erc20Token = (campaign?.claimable_reward?.token) as Address
 
   const { mutate, isPending, isError } = useMutation({
     mutationFn: async () => {
@@ -99,11 +99,12 @@ export default function Page() {
         erc20Token,
         safeAddress as Address,
         BigInt(airdropData?.value ?? 0),
-        1, //TODO: this is the condition_ID, IDK if we need to get it from the backend or not
+        campaign?.airdrop_condition_id,
         airdropData?.proofs,
-        
+
       ])
-     await publicClient.waitForTransactionReceipt({ hash })
+
+      await publicClient.waitForTransactionReceipt({ hash })
       console.log('Airdrop claim tx hash:', hash)
       return await axios.post(`${BACKEND_BASE_URI}/airdrop/${router.query.safe}`, {
         airdropId: campaignId,
@@ -115,7 +116,10 @@ export default function Page() {
     },
     onSuccess: (data: any) => {
       setOpenClaimDialog(true)
-      setClaimTransactionLink(data.recipient)
+
+      const link = 'https://optimistic.etherscan.io/tx/' + data.data.recipient
+
+      setClaimTransactionLink(link)
     },
   })
 
