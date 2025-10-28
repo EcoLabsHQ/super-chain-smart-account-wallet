@@ -23,7 +23,7 @@ const Home: NextPage = () => {
   const [token, setToken] = useState<string | null>(null)
   const [openClaimDialog, setOpenClaimDialog] = useState<boolean>(false)
   const [chain, setChain] = useState('')
-  const [season, setSeason] = useState<undefined | string>()
+  const [withRewards, setWithRewards] = useState<undefined | string>()
   const [campaign, setCampaign] = useState('')
   const [search, setSearch] = useState('')
   const [claimData, setClaimData] = useState<ClaimData | null>(null)
@@ -103,12 +103,12 @@ const Home: NextPage = () => {
         badge.metadata.chains?.some((currentChain: string) => currentChain == chain),
       )
     }
-    if (season) {
-      filtered = filtered.filter((badge) => badge.metadata.season == (parseInt(season) ?? 0))
+    if (withRewards) {
+      filtered = filtered.filter((badge) =>
+        withRewards == 'Available' ? badge.tokenBadge != null : badge.tokenBadge == null,
+      )
     }
-    if (season) {
-      filtered = filtered.filter((badge) => badge.metadata.season == (parseInt(season) ?? 0))
-    }
+
     if (campaign) {
       filtered = filtered.filter((badge) => badge.campaigns.includes(campaign))
     }
@@ -117,7 +117,7 @@ const Home: NextPage = () => {
   }
   const filteredBadges = useMemo<BadgeWithPrize[]>(
     () => filterBadges(data?.currentBadges ?? []),
-    [data?.currentBadges, search, chain, season, campaign],
+    [data?.currentBadges, search, chain, withRewards, campaign],
   )
 
   const handlePickBadge = (id: string) => {
@@ -237,11 +237,11 @@ const Home: NextPage = () => {
                   <MenuItem value="arb">Arbitrum</MenuItem>
                 </Select>
                 <Select
-                  value={season}
+                  value={withRewards}
                   displayEmpty
                   size="small"
-                  onChange={(event) => setSeason(event.target.value ?? undefined)}
-                  renderValue={() => (season == undefined ? 'Season' : season)}
+                  onChange={(event) => setWithRewards(event.target.value)}
+                  renderValue={() => (withRewards == undefined ? 'Rewards' : withRewards)}
                   sx={{
                     height: 36,
                     borderRadius: '12px',
@@ -256,9 +256,9 @@ const Home: NextPage = () => {
                     },
                   }}
                 >
-                  <MenuItem value={undefined}>All time</MenuItem>
-                  <MenuItem value={7}>7</MenuItem>
-                  <MenuItem value={8}>8</MenuItem>
+                  <MenuItem value={undefined}>All</MenuItem>
+                  <MenuItem value="Available">Available</MenuItem>
+                  <MenuItem value="Not Available">Not Available</MenuItem>
                 </Select>
                 <Select
                   value={campaign}
@@ -292,7 +292,7 @@ const Home: NextPage = () => {
                   onClick={() => {
                     setSearch('')
                     setChain('')
-                    setSeason(undefined)
+                    setWithRewards(undefined)
                     setCampaign('')
                   }}
                   sx={{
@@ -389,6 +389,7 @@ const Home: NextPage = () => {
                     season: badge.metadata.season,
                     image: badge.metadata.image?.replace('/Badge.svg', `/T${badge.tier}.svg`) ?? '',
                     type: '',
+                    tokenBadge: !!badge.tokenBadge,
                   }}
                 />
               </div>
