@@ -383,24 +383,20 @@ function Campaigns({ chain, search }: { chain: string; search: string }) {
     refetchInterval: 10000,
     enabled: !!address,
   })
-  const filterCampaign = (campaign: Campaign) => {
-    if (chain == '' && search == '') {
-      return true
-    }
-    const searchValue = search.toUpperCase()
-    let searchFilter = false
-    if (
-      search != '' &&
-      (campaign.name.toUpperCase().includes(searchValue) || campaign.description.toUpperCase().includes(searchValue))
-    ) {
-      searchFilter = true
-    }
-    let chainFilter = false
-    campaign.network.forEach((network) => {
-      console.log('net: ', network)
-      chainFilter = network == chain ? true : chainFilter
-    })
-    return chainFilter || searchFilter
+  const filterCampaign = (campaign: Campaign): boolean => {
+    const q = (search ?? '').trim().toLowerCase()
+    const sel = (chain ?? '').trim().toLowerCase()
+
+    // Coincide con texto si NO hay búsqueda o si name/description contiene q
+    const matchesSearch =
+      !q || campaign.name?.toLowerCase().includes(q) || campaign.description?.toLowerCase().includes(q)
+
+    // Coincide con chain si NO hay chain o si alguna network === sel
+    const matchesChain =
+      !sel || (Array.isArray(campaign.network) && campaign.network.some((n) => (n ?? '').toLowerCase() === sel))
+
+    // Si ambos filtros existen, exige ambos; si uno está vacío, el otro decide
+    return matchesSearch && matchesChain
   }
 
   if (isLoadingCampaigns || !campaigns) {
