@@ -24,6 +24,7 @@ import { BadgeRenderStrategy } from '@/components/badges/badgeInfo/BadgeStrategy
 import { WorldIDVerificationStrategy } from '@/components/badges/badgeInfo/strategies/WorldVerificationStrategy'
 import { FarcasterLinkStrategy } from '@/components/badges/badgeInfo/strategies/FarcasterLinkStrategy'
 import ETHVaultStrategy from '@/components/badges/badgeInfo/strategies/ETHVaultStrategy'
+import { SelfVerificationStrategy } from '@/components/badges/badgeInfo/strategies/SelfVerificationStrategy'
 
 export const getBadgeStrategy = (
   badgeOrClaim: any,
@@ -39,7 +40,12 @@ export const getBadgeStrategy = (
   })
 }
 
-const strategies = [new WorldIDVerificationStrategy(), new FarcasterLinkStrategy(), new ETHVaultStrategy()]
+const strategies = [
+  new WorldIDVerificationStrategy(),
+  new FarcasterLinkStrategy(),
+  new ETHVaultStrategy(),
+  new SelfVerificationStrategy(),
+]
 
 export default function BadgePage() {
   const router = useRouter()
