@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Card, Stack, Typography, Avatar } from '@mui/material'
+import { Box, Card, Stack, Typography, Avatar } from '@mui/material'
 import GiftIcon from '@/public/images/common/gift.svg'
 import CheckCircleIcon from '@/public/images/common/check-circle-white.svg'
 import SuperchainPointIcon from '@/public/images/common/superChain.svg'
@@ -29,10 +29,10 @@ export default function CampaignBadge({ badge, myPoints, pointsOnHover }: Props)
   const shouldShowPoints = !pointsOnHover || hovered
 
   return (
-    <div style={{ position: 'relative' }}>
-      <div style={{ zIndex: 2, position: 'absolute', top: '-4px', left: '-4px' }}>
+    <Box sx={{ position: 'relative', height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ zIndex: 2, position: 'absolute', top: -1, left: -1 }}>
         <SeasonChip season={badge?.season ?? 0} />
-      </div>
+      </Box>
 
       <Card
         onClick={() => handlePickBadge(badge.id)}
@@ -43,26 +43,27 @@ export default function CampaignBadge({ badge, myPoints, pointsOnHover }: Props)
           borderRadius: '12px',
           backgroundColor: 'white',
           border: '1px solid #E1E2EA',
-          padding: '16px',
-          overflow: 'auto',
+          p: 2,
+          overflow: 'visible',
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
         }}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => setHovered(false)}
       >
-        <Stack direction="row" alignItems="center" gap="16px">
+        <Stack direction="row" alignItems="center" gap="16px" sx={{ flex: 1 }}>
           {/* Icono principal */}
-          <div style={{ position: 'relative', border: '1px solid #E1E2EA', borderRadius: '12px' }}>
+          <Box sx={{ position: 'relative', border: '1px solid #E1E2EA', borderRadius: '12px' }}>
             <Avatar
               src={badge.image}
               sx={{ width: { xs: 40, sm: 60 }, height: { xs: 40, sm: 60 } }}
               variant="rounded"
             />
             {badge.completed && (
-              <CheckCircleIcon
-                style={{ position: 'absolute', right: '-5px', bottom: '-5px', width: '16px', height: '16px' }}
-              />
+              <CheckCircleIcon sx={{ position: 'absolute', right: -1, bottom: -1.25, width: 16, height: 16 }} />
             )}
-          </div>
+          </Box>
 
           <Stack width="100%">
             <Stack direction="row" alignItems="center" justifyContent="space-between" gap="8px">
@@ -74,39 +75,35 @@ export default function CampaignBadge({ badge, myPoints, pointsOnHover }: Props)
               </Stack>
 
               {myPoints && (
-                <div
-                  style={{
+                <Box
+                  sx={{
                     visibility: shouldShowPoints ? 'visible' : 'hidden',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '4px',
+                    gap: 1,
                     border: '1px solid #E1E2EA',
                     borderRadius: '100px',
-                    padding: '4px 6px 4px 6px',
+                    px: 1,
+                    py: 0.5,
                   }}
                 >
                   <Stack direction="row" alignItems="center">
-                    <Typography variant="caption" fontWeight="600" sx={{ color: 'black' }}>
+                    <Typography variant="caption" fontWeight={600} sx={{ color: 'black' }}>
                       {myPoints.find((x) => x.id.toString() == badge.id)?.points ?? 0}
                     </Typography>
-                    <Typography variant="caption" fontWeight="600" sx={{ color: '#75757A' }}>
+                    <Typography variant="caption" fontWeight={600} sx={{ color: '#75757A' }}>
                       /{badge.maxPoints ?? 0}
                     </Typography>
                   </Stack>
-                  <SuperchainPointIcon style={{ width: '16px', height: '16px' }} />
-                </div>
+                  <SuperchainPointIcon style={{ width: 16, height: 16 }} />
+                </Box>
               )}
             </Stack>
-            <Typography
-              variant="body2"
-              style={{ color: '#75757A' }}
-              fontSize={{ xs: '12px', sm: '14px' }}
-              lineHeight="20px"
-            >
+            <Typography variant="body2" sx={{ color: '#75757A' }} fontSize={{ xs: '12px', sm: '14px' }} lineHeight="20px">
               {truncateText(badge.description, 40)}
             </Typography>
 
-            <Stack direction="row" alignItems="center" gap="6px" mt="8px">
+            <Stack direction="row" alignItems="center" gap={1} mt={1} sx={{ width: '100%' }}>
               {Array.from({ length: badge.maxLevel }).map((_, i) => (
                 <span
                   key={i}
@@ -122,6 +119,6 @@ export default function CampaignBadge({ badge, myPoints, pointsOnHover }: Props)
           </Stack>
         </Stack>
       </Card>
-    </div>
+    </Box>
   )
 }

@@ -3,7 +3,7 @@ import DotIcon from '@/public/images/common/dot_soft_gray.svg'
 import badgesService from '@/features/superChain/services/badges.service'
 import useSafeInfo from '@/hooks/useSafeInfo'
 import { ArrowBack, Close, Launch } from '@mui/icons-material'
-import { Button, Card, Dialog, Divider, IconButton, Skeleton, Stack, SvgIcon, Tooltip, Typography } from '@mui/material'
+import { Box, Button, Card, Dialog, Divider, IconButton, Skeleton, Stack, SvgIcon, Tooltip, Typography } from '@mui/material'
 import GiftIcon from '@/public/images/common/gift.svg'
 import InfoIcon from '@/public/images/common/info-soft-gray.svg'
 import InfoBlackIcon from '@/public/images/common/info-black.svg'
@@ -24,6 +24,7 @@ import { BadgeRenderStrategy } from '@/components/badges/badgeInfo/BadgeStrategy
 import { WorldIDVerificationStrategy } from '@/components/badges/badgeInfo/strategies/WorldVerificationStrategy'
 import { FarcasterLinkStrategy } from '@/components/badges/badgeInfo/strategies/FarcasterLinkStrategy'
 import ETHVaultStrategy from '@/components/badges/badgeInfo/strategies/ETHVaultStrategy'
+import { SelfVerificationStrategy } from '@/components/badges/badgeInfo/strategies/SelfVerificationStrategy'
 
 export const getBadgeStrategy = (
   badgeOrClaim: any,
@@ -39,7 +40,12 @@ export const getBadgeStrategy = (
   })
 }
 
-const strategies = [new WorldIDVerificationStrategy(), new FarcasterLinkStrategy(), new ETHVaultStrategy()]
+const strategies = [
+  new WorldIDVerificationStrategy(),
+  new FarcasterLinkStrategy(),
+  new ETHVaultStrategy(),
+  new SelfVerificationStrategy(),
+]
 
 export default function BadgePage() {
   const router = useRouter()
@@ -123,12 +129,23 @@ export default function BadgePage() {
                 >
                   <ArrowBack sx={{ width: '16px', height: '16px' }} />
                 </button>
-                <Stack direction="row" alignItems="center" gap="12px">
-                  <Typography variant="h3" fontWeight={600}>
+                <Stack sx={{ flexDirection: { xs: 'column', md: 'row' }, gap: { xs: '0px', sm: '8px' }, alignItems: { xs: 'start', md: 'center' } }}>
+                  <Typography variant="h3" fontWeight={600}
+                    sx={{
+                      display: 'inline-block',
+                      fontSize: { xs: '12px', sm: '24px' },
+                      lineHeight: { xs: '20px', sm: '32px' },
+                    }}
+                  >
                     {currentBadge.metadata.name}
                   </Typography>
                   <Typography
-                    sx={{ transform: 'translateY(2px)', display: 'inline-block' }}
+                    sx={{
+                      transform: 'translateY(-2px)',
+                      display: 'inline-block',
+                      fontSize: { xs: '12px', sm: '14px' },
+                      lineHeight: { xs: '20px', sm: '32px' },
+                    }}
                     component="span"
                     variant="body2"
                     color="#A0A0A6"
@@ -152,39 +169,43 @@ export default function BadgePage() {
                       padding: '15px 10px 15px 8px',
                     }}
                   >
-                    <Typography variant="body2" fontWeight={600}>
+                    <Typography variant="body2" fontWeight={600} sx={{
+                      fontSize: { xs: '12px', sm: '14px' },
+                    }}>
                       Learn More
                     </Typography>
-                    <InfoBlackIcon
-                      style={{ width: '16px', heigth: '16px', transform: 'translateY(-1px)', marginLeft: '4px' }}
-                    />
+                    <Box sx={{ width: { xs: '12px', sm: '16px' }, height: { xs: '12px', sm: '16px' } }}>
+                      <InfoBlackIcon
+                        style={{ width: '100%', heigth: '100%', transform: 'translateY(-1px)', marginLeft: '4px' }}
+                      />
+                    </Box>
                   </Button>
                 )}
                 {strategy?.render
                   ? strategy.render(currentBadge as any)
                   : currentBadge.action_description && (
-                      <Button
-                        component="a"
-                        href={currentBadge.action_link}
-                        target="_blank"
-                        rel="noreferrer"
-                        variant="text"
-                        sx={{
-                          width: '118px',
-                          height: '36px',
-                          backgroundColor: 'black',
-                          borderRadius: '12px',
-                          color: 'white',
-                          ':hover': { backgroundColor: 'black' },
-                          padding: '15px 10px 15px 8px',
-                        }}
-                      >
-                        <Typography variant="body2" fontWeight={600}>
-                          {currentBadge.action_description}
-                        </Typography>
-                        <Launch sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
-                      </Button>
-                    )}
+                    <Button
+                      component="a"
+                      href={currentBadge.action_link}
+                      target="_blank"
+                      rel="noreferrer"
+                      variant="text"
+                      sx={{
+                        width: '118px',
+                        height: '36px',
+                        backgroundColor: 'black',
+                        borderRadius: '12px',
+                        color: 'white',
+                        ':hover': { backgroundColor: 'black' },
+                        padding: '15px 10px 15px 8px',
+                      }}
+                    >
+                      <Typography variant="body2" fontWeight={600}>
+                        {currentBadge.action_description}
+                      </Typography>
+                      <Launch sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
+                    </Button>
+                  )}
               </Stack>
             </Stack>
             <Divider />
@@ -214,7 +235,7 @@ export default function BadgePage() {
                   </Typography>
                 </Stack>
               </Card>
-              <Stack direction="row" gap="8px">
+              <Stack direction="row" gap="8px" sx={{ flexDirection: { xs: 'column', sm: 'row' } }}>
                 <Card sx={{ flex: 1, border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
                   <Stack direction="row" gap="16px" alignItems="center">
                     <Stack
@@ -264,29 +285,27 @@ export default function BadgePage() {
                   <Button sx={{ flex: 1, padding: '0px' }}>
                     <Card sx={{ flex: 1, border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
                       <Stack direction="row" gap="16px" alignItems="center">
-                        <Stack style={{ position: 'relative', zIndex: 0 }} direction="row" alignItems="center">
-                          <div
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              width: '40px',
-                              minWidth: '40px',
-                              height: '40px',
-                              border: '1px solid #E1E2EA',
-                              background: '#FFFFFF',
-                              borderRadius: '12px',
-                            }}
-                          >
-                            <BadgesClaimedIcon style={{ width: '24px', heigth: '24px' }} />
-                          </div>
-                        </Stack>
+                        <div
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '40px',
+                            minWidth: '40px',
+                            height: '40px',
+                            border: '1px solid #E1E2EA',
+                            background: '#FFFFFF',
+                            borderRadius: '12px',
+                          }}
+                        >
+                          <BadgesClaimedIcon style={{ width: '24px', heigth: '24px' }} />
+                        </div>
                         <Stack>
                           <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
                             Badges Claimed
                           </Typography>
                           <Typography
-                            sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px', textTransform: 'capitalize' }}
+                            sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px', textTransform: 'capitalize', textAlign: 'start' }}
                           >
                             {formatAmount(currentBadge.totalClaimed ?? 0)}
                           </Typography>
@@ -296,7 +315,7 @@ export default function BadgePage() {
                   </Button>
                 </Tooltip>
               </Stack>
-              <Card sx={{ flex: 1, border: '1px solid #E1E2EA', borderRadius: '12px', padding: '48px' }}>
+              <Card sx={{ flex: 1, border: '1px solid #E1E2EA', borderRadius: '12px', padding: { xs: '16px', sm: '48px' } }}>
                 <Stack gap="8px">
                   {currentBadge.countUnit && (
                     <Card
@@ -308,13 +327,13 @@ export default function BadgePage() {
                       }}
                     >
                       <Stack direction="row" justifyContent="space-between" alignItems="center">
-                        <Stack direction="row" alignItems="center" gap="4px">
-                          <Typography variant="body2" fontWeight={500} color="#75757A">
+                        <Stack direction="row" alignItems="center" sx={{ gap: { xs: '2px', sm: '4px' } }}>
+                          <Typography variant="body2" fontWeight={500} color="#75757A" sx={{ fontSize: { xs: '12px', sm: '14px' } }}>
                             Your Progress
                           </Typography>
                           <Tooltip title="Progress data is refreshed every 2 hours to reflect your latest activity.">
-                            <IconButton>
-                              <InfoIcon style={{ width: '16px', heigth: '16px', transform: 'translateY(1px)' }} />
+                            <IconButton sx={{ padding: '0px' }}>
+                              <InfoIcon style={{ width: '16px', heigth: '16px' }} />
                             </IconButton>
                           </Tooltip>
                         </Stack>
@@ -335,7 +354,7 @@ export default function BadgePage() {
                         flex: 1,
                         border: '1px solid #E1E2EA',
                         borderRadius: '12px',
-                        padding: '12px 16px 12px 16px',
+                        padding: { xs: '12px 8px 12px 8px', sm: '12px 16px 12px 16px' },
                       }}
                     >
                       <Stack gap="12px">
@@ -349,7 +368,7 @@ export default function BadgePage() {
                     </Card>
                   )}
                   <Card
-                    sx={{ flex: 1, border: '1px solid #E1E2EA', borderRadius: '12px', padding: '12px 16px 12px 16px' }}
+                    sx={{ flex: 1, border: '1px solid #E1E2EA', borderRadius: '12px', padding: { xs: '12px 8px 12px 8px', sm: '12px 16px 12px 16px' } }}
                   >
                     <Stack gap="12px">
                       <BadgeTierCard
@@ -361,52 +380,54 @@ export default function BadgePage() {
                           direction="row"
                           alignItems="center"
                           justifyContent="space-between"
-                          padding="8px 12px 8px 12px"
-                          style={{ height: '64px', border: '1px solid #1FC1BF' }}
                           sx={{
                             width: '100%',
                             background: 'linear-gradient(180deg, #E7F8F8 0%, #F6FEFD 100%)',
                             borderRadius: '12px',
+                            border: '1px solid #1FC1BF',
+                            p: { xs: '8px 12px', sm: '8px 12px' },
+                            minHeight: { xs: 64, sm: 64 },
                           }}
                         >
-                          <Stack direction="row" alignItems="center" gap="16px" width="100%">
-                            <Stack
-                              justifyContent="center"
-                              alignItems="center"
-                              style={{
-                                width: '40px',
-                                height: '40px',
+                          <Stack direction="row" alignItems="center" gap={2} sx={{ width: '100%' }}>
+                            <Box
+                              sx={{
+                                width: 40,
+                                height: 40,
                                 position: 'relative',
                                 border: '1px solid #1FC1BF',
                                 background: 'white',
-                                borderRadius: '12px',
+                                borderRadius: 2,
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                flex: '0 0 40px',
                               }}
                             >
                               <GiftIcon style={{ width: '24px', height: '24px' }} />
-                            </Stack>
-                            <Stack flex={1}>
+                            </Box>
+                            <Stack sx={{ flex: 1, minWidth: 0 }}>
                               <Stack justifyContent="space-between" alignItems="center" direction="row">
-                                <Typography variant="h5" fontWeight={500}>
+                                <Typography variant="h5" fontWeight={500} sx={{ fontSize: { xs: '14px', sm: '16px' } }}>
                                   Exclusive Bonus
                                 </Typography>
-                                <Stack direction="row" alignItems="center" justifyContent="center">
-                                  <Typography variant="h5" fontWeight={600}>
+                                <Stack direction="row" alignItems="center" justifyContent="center" sx={{ gap: { xs: '2px', sm: 4 } }}>
+                                  <Typography variant="h5" fontWeight={600} sx={{ fontSize: { xs: '10px', sm: '16px' } }}>
                                     {currentBadge.tokenBadge?.amount}
                                   </Typography>
                                   {rewardIcon && (
-                                    <SvgIcon
-                                      component={rewardIcon}
-                                      sx={{ width: 24, height: 24, marginTop: '2px', marginLeft: '4px' }}
-                                    />
+                                    <SvgIcon component={rewardIcon} sx={{ width: { xs: 16, sm: 24 }, height: { xs: 16, sm: 24 }, mt: '2px', ml: '4px' }} />
                                   )}
                                 </Stack>
                               </Stack>
-                              <Stack direction="row">
-                                <Typography variant="caption" fontWeight={500} color="#75757A">
+                              <Stack sx={{ flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'start', sm: 'center' }, mt: 0.5 }}>
+                                <Typography variant="caption" fontWeight={500} color="#75757A" sx={{ fontSize: { xs: '10px', sm: '12px' }, lineHeight: { xs: '14px', sm: '16px' } }}>
                                   Limited to first 100 users who reach Tier MAX
                                 </Typography>
-                                <DotIcon style={{ width: '16px', heigth: '16px' }} />
-                                <Typography variant="caption" fontWeight={500} color="#75757A">
+                                <Box sx={{ display: { xs: 'none', sm: 'block' }, width: 16, height: 16 }}>
+                                  <DotIcon style={{ width: '100%', height: '100%' }} />
+                                </Box>
+                                <Typography variant="caption" fontWeight={500} color="#75757A" sx={{ fontSize: { xs: '10px', sm: '12px' }, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                   {currentBadge.totalClaimed}/{currentBadge.tokenBadge.maxClaims ?? 0}
                                 </Typography>
                               </Stack>

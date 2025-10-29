@@ -2,7 +2,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect, useMemo, useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search'
-import { Box, Button, Divider, InputAdornment, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
+import { Box, Button, Divider, Grid, InputAdornment, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import useSafeInfo from '@/hooks/useSafeInfo'
 import LoadIcon from '@/public/images/common/load.svg'
@@ -156,7 +156,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main>
-        <Stack gap="32px" sx={{ maxWidth: 852, mx: 'auto' }}>
+        <Stack gap="32px" sx={{ maxWidth: { xs: '100%', md: 852 }, mx: 'auto', px: { xs: 2, md: 0 } }}>
           <Stack gap="8px">
             <Typography variant="h3" fontWeight={600}>
               Badges
@@ -167,8 +167,15 @@ const Home: NextPage = () => {
           </Stack>
           <Stack gap="16px">
             <Divider />
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Stack direction="row" alignItems="center" gap="8px">
+            <Stack
+              sx={{
+                flexDirection: { xs: 'column', sm: 'row' },
+                justifyContent: 'space-between',
+                alignItems: { xs: 'stretch', sm: 'center' },
+                gap: { xs: 1, sm: 0 },
+              }}
+            >
+              <Stack direction="row" alignItems="center" gap={1} sx={{ flexWrap: 'wrap' }}>
                 {/* Search */}
                 <TextField
                   value={search}
@@ -184,7 +191,7 @@ const Home: NextPage = () => {
                     ),
                   }}
                   sx={{
-                    width: 238,
+                    width: { xs: '100%', sm: 238 },
                     height: 36,
                     borderRadius: '12px',
                     backgroundColor: '#F1F2F5',
@@ -222,6 +229,7 @@ const Home: NextPage = () => {
                     fontWeight: 600,
                     letterSpacing: '0.14px',
                     padding: '0 8px',
+                    width: { xs: '48%', sm: 'auto' },
                     '& .MuiOutlinedInput-notchedOutline': {
                       border: 'none',
                     },
@@ -251,6 +259,7 @@ const Home: NextPage = () => {
                     fontWeight: 600,
                     letterSpacing: '0.14px',
                     padding: '0 8px',
+                    width: { xs: '48%', sm: 'auto' },
                     '& .MuiOutlinedInput-notchedOutline': {
                       border: 'none',
                     },
@@ -275,6 +284,7 @@ const Home: NextPage = () => {
                     fontWeight: 600,
                     letterSpacing: '0.14px',
                     padding: '0 8px',
+                    width: { xs: '48%', sm: 'auto' },
                     '& .MuiOutlinedInput-notchedOutline': {
                       border: 'none',
                     },
@@ -305,6 +315,7 @@ const Home: NextPage = () => {
                     letterSpacing: '0.14px',
                     textTransform: 'none',
                     color: '#000',
+                    width: { xs: '100%', sm: 'auto' },
                     '&:hover': {
                       backgroundColor: 'transparent',
                     },
@@ -313,7 +324,7 @@ const Home: NextPage = () => {
                   Clear All
                 </Button>
               </Stack>
-              <Stack direction="row" alignItems="center" gap="4px">
+              <Stack direction="row" alignItems="center" gap={1} sx={{ mt: { xs: 1, sm: 0 }, justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
                 <Button
                   component="a"
                   onClick={() => mutate()}
@@ -322,7 +333,7 @@ const Home: NextPage = () => {
                   rel="noreferrer"
                   variant="text"
                   sx={{
-                    height: '36px',
+                    height: 36,
                     backgroundColor: 'black',
                     borderRadius: '12px',
                     color: 'white',
@@ -331,10 +342,10 @@ const Home: NextPage = () => {
                       backgroundColor: '#EBECF1',
                       color: '#A0A0A6',
                     },
-                    padding: '15px 10px 15px 8px',
+                    padding: '10px 12px',
                   }}
                 >
-                  <Stack direction="row" alignItems="center" gap="4px">
+                  <Stack direction="row" alignItems="center" gap={1}>
                     <Box
                       sx={{
                         width: 16,
@@ -354,7 +365,7 @@ const Home: NextPage = () => {
                     >
                       <LoadIcon sx={{ width: '100%', height: '100%' }} />
                     </Box>
-                    <Typography variant="body2" fontWeight={600} color="white">
+                    <Typography variant="body2" fontWeight={600} color="white" sx={{ whiteSpace: 'nowrap' }}>
                       Claim badges
                     </Typography>
                   </Stack>
@@ -362,40 +373,42 @@ const Home: NextPage = () => {
               </Stack>
             </Stack>
           </Stack>
-
-          <Box
-            sx={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(2, 1fr)',
-              gap: '8px',
-            }}
-          >
-            {(filteredBadges ?? []).map((badge, idx) => (
-              <div
-                key={badge?.metadata.name ?? `badge-${idx}`}
-                onClick={() => handlePickBadge(badge.badgeId)}
-                style={{ cursor: 'pointer' }}
-              >
-                <CampaignBadge
-                  badge={{
-                    id: badge.badgeId,
-                    completed: badge.claimable,
-                    badgeName: badge.metadata.name,
-                    currentPoints: 0,
-                    maxPoints: 0,
-                    currentLevel: badge.tier,
-                    maxLevel: badge.badgeTiers.length,
-                    description: badge.metadata.description,
-                    season: badge.metadata.season,
-                    image: badge.metadata.image?.replace('/Badge.svg', `/T${badge.tier}.svg`) ?? '',
-                    type: '',
-                    tokenBadge: !!badge.tokenBadge,
-                  }}
-                  myPoints={[{ id: Number(badge.badgeId), points: badge.points }]}
-                  pointsOnHover={true}
-                />
-              </div>
-            ))}
+          <Box>
+            <Grid container spacing={2} alignItems="stretch">
+              {(filteredBadges ?? []).map((badge, idx) => (
+                <Grid item xs={12} sm={6} key={badge?.metadata.name ?? `badge-${idx}`} sx={{ display: 'flex' }}>
+                  <Box
+                    onClick={() => handlePickBadge(badge.badgeId)}
+                    sx={{
+                      flex: 1,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      '& > *': { flex: 1 },
+                    }}
+                  >
+                    <CampaignBadge
+                      badge={{
+                        id: badge.badgeId,
+                        completed: badge.claimable,
+                        badgeName: badge.metadata.name,
+                        currentPoints: 0,
+                        maxPoints: 0,
+                        currentLevel: badge.tier,
+                        maxLevel: badge.badgeTiers.length,
+                        description: badge.metadata.description,
+                        season: badge.metadata.season,
+                        image: badge.metadata.image?.replace('/Badge.svg', `/T${badge.tier}.svg`) ?? '',
+                        type: '',
+                        tokenBadge: !!badge.tokenBadge,
+                      }}
+                      myPoints={[{ id: Number(badge.badgeId), points: badge.points }]}
+                      pointsOnHover={true}
+                    />
+                  </Box>
+                </Grid>
+              ))}
+            </Grid>
           </Box>
         </Stack>
         <LoadingModal open={isPending} title="Claiming badges" />

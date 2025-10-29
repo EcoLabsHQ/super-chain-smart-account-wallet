@@ -1,4 +1,4 @@
-import { Avatar, Divider, Stack, SvgIcon, Typography } from '@mui/material'
+import { Avatar, Box, Divider, Stack, SvgIcon, Typography } from '@mui/material'
 import CheckCircleIcon from '@/public/images/common/check-circle-white.svg'
 import PadLockIcon from '@/public/images/common/padlock.svg'
 import SuperchainPointIcon from '@/public/images/common/superChain.svg'
@@ -34,8 +34,8 @@ export default function BadgeTierCard({ tier, currentBadge }: Props) {
       direction="row"
       alignItems="end"
       justifyContent="space-between"
-      padding="12px 15px 12px 8px"
-      style={{ opacity: completed ? 1 : 0.4, filter: completed ? '' : 'grayscale(100%)' }}
+      gap="4px"
+      sx={{ padding: { xs: "12px 8px 12px 8px", sm: "12px 15px 12px 8px" }, opacity: completed ? 1 : 0.4, filter: completed ? '' : 'grayscale(100%)' }}
     >
       <Stack direction="row" alignItems="center" gap="16px">
         <div style={{ position: 'relative', border: '1px solid #E1E2EA', borderRadius: '12px' }}>
@@ -55,18 +55,20 @@ export default function BadgeTierCard({ tier, currentBadge }: Props) {
           )}
         </div>
         <Stack>
-          <Stack direction="row">
-            <Typography variant="caption" fontWeight={500} color="#75757A">
+          <Stack sx={{ flexDirection: { xs: 'column', sm: 'row' } }}>
+            <Typography variant="caption" fontWeight={500} color="#75757A" sx={{ fontSize: { xs: '10px', sm: '12px' } }}>
               Tier {tier.tier}
             </Typography>
-            <DotIcon style={{ width: '16px', heigth: '16px' }} />
-            <Typography variant="caption" fontWeight={500} color="#75757A">
+            <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+              <DotIcon style={{ width: '16px', heigth: '16px' }} />
+            </Box>
+            <Typography variant="caption" fontWeight={500} color="#75757A" sx={{ fontSize: { xs: '10px', sm: '12px' } }}>
               {`${formatAmount(statistics?.totalClaimed ?? 0)} (${formatPercentage(
                 statistics?.percentage ?? 0,
               )}%) Users Completed`}
             </Typography>
           </Stack>
-          <Typography variant="h5" fontWeight={500}>
+          <Typography variant="h5" fontWeight={500} sx={{ fontSize: { xs: '12px', sm: '16px' } }}>
             {currentBadge.metadata.condition.replace('{{variable}}', formatXP(tier.metadata.minValue))}
           </Typography>
         </Stack>
@@ -82,10 +84,12 @@ export default function BadgeTierCard({ tier, currentBadge }: Props) {
         )}
         {tier.rewards && <Divider sx={{ width: '1px', height: '24px' }} orientation="vertical" />}
         <Stack direction="row" gap="4px" alignItems="center">
-          <Typography variant="h5" fontWeight={600}>
+          <Typography variant="h5" fontWeight={600} sx={{ fontSize: { xs: '12px', sm: '16px' } }}>
             {tier.points}
           </Typography>
-          <SuperchainPointIcon style={{ width: '24px', height: '24px' }} />
+          <Box sx={{ width: { xs: '16px', sm: '24px' }, height: { xs: '16px', sm: '24px' } }}>
+            <SuperchainPointIcon style={{ width: '100%', height: '100%' }} />
+          </Box>
         </Stack>
       </Stack>
     </Stack>
