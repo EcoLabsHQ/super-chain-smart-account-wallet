@@ -1,7 +1,19 @@
 'use client'
 import Head from 'next/head'
 import React, { useState } from 'react'
-import { Button, Card, Dialog, Divider, Skeleton, Stack, SvgIcon, Typography, Grid, IconButton, Box } from '@mui/material'
+import {
+  Button,
+  Card,
+  Dialog,
+  Divider,
+  Skeleton,
+  Stack,
+  SvgIcon,
+  Typography,
+  Grid,
+  IconButton,
+  Box,
+} from '@mui/material'
 import InfoIcon from '@/public/images/notifications/info.svg'
 import SuperchainPointIcon from '@/public/images/common/superChain.svg'
 import { ArrowBack, Launch, Close } from '@mui/icons-material'
@@ -157,11 +169,24 @@ export default function Page() {
                 <ArrowBack sx={{ width: '16px', height: '16px' }} />
               </button>
               <Stack sx={{ flexDirection: { xs: 'column', md: 'row' }, alignItems: { xs: 'start', md: 'center' } }}>
-                <Typography variant="h3" fontWeight={600} sx={{ display: 'inline-block', fontSize: { xs: '12px', sm: '24px' }, lineHeight: { xs: '20px', sm: '32px' } }}>
+                <Typography
+                  variant="h3"
+                  fontWeight={600}
+                  sx={{
+                    display: 'inline-block',
+                    fontSize: { xs: '12px', sm: '24px' },
+                    lineHeight: { xs: '20px', sm: '32px' },
+                  }}
+                >
                   {campaign.name}{' '}
                 </Typography>
                 <Typography
-                  sx={{ transform: 'translateY(-2px)', display: 'inline-block', fontSize: { xs: '12px', sm: '14px' }, lineHeight: { xs: '20px', sm: '32px' } }}
+                  sx={{
+                    transform: 'translateY(-2px)',
+                    display: 'inline-block',
+                    fontSize: { xs: '12px', sm: '14px' },
+                    lineHeight: { xs: '20px', sm: '32px' },
+                  }}
                   component="span"
                   variant="body2"
                   color="#A0A0A6"
@@ -186,7 +211,10 @@ export default function Page() {
                 <Typography variant="body2" fontWeight={600} fontSize={{ xs: '12px', sm: '14px' }}>
                   Details
                 </Typography>
-                <SvgIcon component={InfoIcon} sx={{ width: { xs: '12px', sm: '16px' }, height: { xs: '12px', sm: '16px' }, marginLeft: '4px' }} />
+                <SvgIcon
+                  component={InfoIcon}
+                  sx={{ width: { xs: '12px', sm: '16px' }, height: { xs: '12px', sm: '16px' }, marginLeft: '4px' }}
+                />
               </Button>
               {campaign.campaign_link && (
                 <Button
@@ -439,7 +467,15 @@ export default function Page() {
                         {campaign.myPoints ?? 0}
                       </Typography>
                     </Typography>
-                    <Box component="span" sx={{ display: 'inline-flex', ml: 0.5, width: { xs: 12, sm: 14, md: 16 }, height: { xs: 12, sm: 14, md: 16 } }}>
+                    <Box
+                      component="span"
+                      sx={{
+                        display: 'inline-flex',
+                        ml: 0.5,
+                        width: { xs: 12, sm: 14, md: 16 },
+                        height: { xs: 12, sm: 14, md: 16 },
+                      }}
+                    >
                       <SuperchainPointIcon style={{ width: '100%', height: '100%' }} />
                     </Box>
                   </Stack>
@@ -492,7 +528,13 @@ export default function Page() {
           </Stack>
         </Stack>
 
-        <Dialog open={openInfo} onClose={() => setOpenInfo(false)} fullWidth maxWidth="md" PaperProps={{ sx: { p: { xs: 2, md: 3 }, borderRadius: 2 } }}>
+        <Dialog
+          open={openInfo}
+          onClose={() => setOpenInfo(false)}
+          fullWidth
+          maxWidth="md"
+          PaperProps={{ sx: { p: { xs: 2, md: 3 }, borderRadius: 2 } }}
+        >
           <Card sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             {/* Header */}
             <Stack direction="row" justifyContent="space-between" alignItems="center">
@@ -565,7 +607,7 @@ export default function Page() {
             </div>
           </Card>
         </Dialog>
-      </main >
+      </main>
     </>
   )
 }

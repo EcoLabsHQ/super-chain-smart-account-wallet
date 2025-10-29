@@ -1,7 +1,7 @@
 'use client'
 import Head from 'next/head'
 import React from 'react'
-import { Button, Card, Dialog, Divider, Skeleton, Stack, Typography, Grid, IconButton, Box, SvgIcon } from '@mui/material'
+import { Button, Card, Dialog, Divider, Skeleton, Stack, Typography, Grid, Box } from '@mui/material'
 import InfoIcon from '@/public/images/common/info-light.svg'
 import CheckCircleIcon from '@/public/images/common/check-circle-outlined.svg'
 import SuperchainPointIcon from '@/public/images/common/superChain.svg'
@@ -185,7 +185,9 @@ export default function Page() {
               <Card sx={{ borderRadius: '12px', p: { xs: 2, sm: 3, md: 6 } }}>
                 <Stack justifyContent="center" alignItems="center">
                   <Stack gap="8px" sx={{ width: { xs: '100%', sm: 352 } }}>
-                    <Card sx={{ width: '100%', borderRadius: '12px', p: { xs: 2, sm: 3, md: 6 }, backgroundColor: 'white' }}>
+                    <Card
+                      sx={{ width: '100%', borderRadius: '12px', p: { xs: 2, sm: 3, md: 6 }, backgroundColor: 'white' }}
+                    >
                       <Stack gap="16px" justifyContent="center" alignItems="center">
                         <Skeleton variant="text" width={220} height={20} />
                         <Skeleton variant="text" width={180} height={20} />
@@ -239,11 +241,27 @@ export default function Page() {
               >
                 <ArrowBack sx={{ width: '16px', height: '16px' }} />
               </button>
-              <Stack sx={{ flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: '0px', sm: '8px' } }} alignItems="flex-start">
-                <Typography variant="h3" fontWeight={600} sx={{ display: 'inline-block', fontSize: { xs: '14px', sm: '20px', md: '24px' }, lineHeight: { xs: '20px', sm: '32px' } }}>
+              <Stack
+                sx={{ flexDirection: { xs: 'column', sm: 'row' }, gap: { xs: '0px', sm: '8px' } }}
+                alignItems="flex-start"
+              >
+                <Typography
+                  variant="h3"
+                  fontWeight={600}
+                  sx={{
+                    display: 'inline-block',
+                    fontSize: { xs: '14px', sm: '20px', md: '24px' },
+                    lineHeight: { xs: '20px', sm: '32px' },
+                  }}
+                >
                   {campaign.name}
                 </Typography>
-                <Typography sx={{ transform: 'translateY(2px)', display: 'inline-block', fontSize: { xs: '12px', sm: '14px' } }} component="span" variant="body2" color="#A0A0A6">
+                <Typography
+                  sx={{ transform: 'translateY(2px)', display: 'inline-block', fontSize: { xs: '12px', sm: '14px' } }}
+                  component="span"
+                  variant="body2"
+                  color="#A0A0A6"
+                >
                   &nbsp;Campaign
                 </Typography>
               </Stack>
@@ -281,13 +299,29 @@ export default function Page() {
                         <Stack
                           alignItems="center"
                           justifyContent="center"
-                          sx={{ width: 40, height: 16, borderTopLeftRadius: '12px', borderTopRightRadius: '12px', background: '#E1E2EA' }}
+                          sx={{
+                            width: 40,
+                            height: 16,
+                            borderTopLeftRadius: '12px',
+                            borderTopRightRadius: '12px',
+                            background: '#E1E2EA',
+                          }}
                         >
                           <Typography fontSize="8px" fontWeight={600} sx={{ transform: 'translateY(1px)' }}>
                             {month}
                           </Typography>
                         </Stack>
-                        <Stack alignItems="center" justifyContent="center" sx={{ width: 40, height: 24, borderRadius: '0px 0px 12px 12px', border: '1px solid #E1E2EA', background: 'white' }}>
+                        <Stack
+                          alignItems="center"
+                          justifyContent="center"
+                          sx={{
+                            width: 40,
+                            height: 24,
+                            borderRadius: '0px 0px 12px 12px',
+                            border: '1px solid #E1E2EA',
+                            background: 'white',
+                          }}
+                        >
                           <Typography variant="h5" fontWeight={600}>
                             {day}
                           </Typography>
@@ -335,7 +369,9 @@ export default function Page() {
                       <Typography sx={{ fontWeight: '500', fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
                         Network
                       </Typography>
-                      <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px', textTransform: 'capitalize' }}>
+                      <Typography
+                        sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px', textTransform: 'capitalize' }}
+                      >
                         {campaign.network.length == 1 ? campaign.network : `${campaign.network.length} Chains`}
                       </Typography>
                     </Stack>
@@ -346,8 +382,23 @@ export default function Page() {
               <Grid item xs={12} sm={6}>
                 <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
                   <Stack direction="row" gap={2} alignItems="center">
-                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: 40, height: 40, border: '1px solid #E1E2EA', borderRadius: '12px' }}>
-                      <Image src={getTokenIcon(campaign.campaign_reward?.symbol)} alt={`${campaign.campaign_reward?.symbol}-icon`} width={20} height={20} />
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: 40,
+                        height: 40,
+                        border: '1px solid #E1E2EA',
+                        borderRadius: '12px',
+                      }}
+                    >
+                      <Image
+                        src={getTokenIcon(campaign.campaign_reward?.symbol)}
+                        alt={`${campaign.campaign_reward?.symbol}-icon`}
+                        width={20}
+                        height={20}
+                      />
                     </Box>
                     <Stack>
                       <Typography sx={{ fontWeight: '500', fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
@@ -364,7 +415,17 @@ export default function Page() {
               <Grid item xs={12} sm={6}>
                 <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
                   <Stack direction="row" gap={2} alignItems="center">
-                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: 40, height: 40, border: '1px solid #E1E2EA', borderRadius: '12px' }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: 40,
+                        height: 40,
+                        border: '1px solid #E1E2EA',
+                        borderRadius: '12px',
+                      }}
+                    >
                       <SuperchainPointIcon style={{ width: 20, height: 20 }} />
                     </Box>
                     <Stack>
@@ -385,14 +446,29 @@ export default function Page() {
               <Stack justifyContent="center" alignItems="center">
                 <Stack gap="8px" sx={{ width: { xs: '100%', sm: 352 } }}>
                   <Stack alignItems="center" justifyContent="center">
-                    <Card sx={{ width: '100%', border: '1px solid #E1E2EA', borderRadius: '12px', p: { xs: 2, sm: 3, md: 6 }, backgroundColor: 'white' }}>
+                    <Card
+                      sx={{
+                        width: '100%',
+                        border: '1px solid #E1E2EA',
+                        borderRadius: '12px',
+                        p: { xs: 2, sm: 3, md: 6 },
+                        backgroundColor: 'white',
+                      }}
+                    >
                       <Stack gap="16px" justifyContent="center" alignItems="center">
                         <Box>
-                          <Typography sx={{ fontSize: '12px', fontWeight: 400, color: '#75757A', textAlign: 'center', m: 0 }}>
+                          <Typography
+                            sx={{ fontSize: '12px', fontWeight: 400, color: '#75757A', textAlign: 'center', m: 0 }}
+                          >
                             This campaign has ended.
                           </Typography>
-                          <Typography sx={{ fontSize: '12px', fontWeight: 400, color: '#75757A', textAlign: 'center', m: 0 }}>
-                            Claim your rewards <Box component="span" sx={{ fontWeight: 500, color: '#4B4B4E' }}>by December 15, 2025</Box>
+                          <Typography
+                            sx={{ fontSize: '12px', fontWeight: 400, color: '#75757A', textAlign: 'center', m: 0 }}
+                          >
+                            Claim your rewards{' '}
+                            <Box component="span" sx={{ fontWeight: 500, color: '#4B4B4E' }}>
+                              by December 15, 2025
+                            </Box>
                           </Typography>
                         </Box>
                         <Stack direction="row" gap="8px" alignItems="center">
@@ -435,7 +511,13 @@ export default function Page() {
             </Card>
           </Stack>
         </Stack>
-        <Dialog open={openClaimDialog} onClose={() => setOpenClaimDialog(false)} fullWidth maxWidth="sm" PaperProps={{ sx: { p: { xs: 2, md: 3 }, borderRadius: 2 } }}>
+        <Dialog
+          open={openClaimDialog}
+          onClose={() => setOpenClaimDialog(false)}
+          fullWidth
+          maxWidth="sm"
+          PaperProps={{ sx: { p: { xs: 2, md: 3 }, borderRadius: 2 } }}
+        >
           <Card
             sx={{
               padding: '20px',
@@ -454,9 +536,14 @@ export default function Page() {
             </Stack>
             <Divider sx={{ width: '100%' }} />
             <Box>
-              <Typography sx={{ fontSize: '12px', fontWeight: 400, color: '#75757A', m: 0 }}>You’ve successfully claimed your rewards</Typography>
+              <Typography sx={{ fontSize: '12px', fontWeight: 400, color: '#75757A', m: 0 }}>
+                You’ve successfully claimed your rewards
+              </Typography>
               <Typography sx={{ fontSize: '12px', fontWeight: 400, color: '#75757A', m: 0, lineHeight: '12px' }}>
-                from the <Box component="span" sx={{ fontWeight: 500, color: '#4B4B4E' }}>{campaign.name} Campaign.</Box>
+                from the{' '}
+                <Box component="span" sx={{ fontWeight: 500, color: '#4B4B4E' }}>
+                  {campaign.name} Campaign.
+                </Box>
               </Typography>
             </Box>
 
@@ -467,7 +554,12 @@ export default function Page() {
             <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
               <Stack direction="row" alignItems="center" gap={2}>
                 <Box sx={{ position: 'relative' }}>
-                  <Image src={getTokenIcon(campaign.campaign_reward?.symbol)} alt={`${campaign.campaign_reward?.symbol}-icon`} width={44} height={44} />
+                  <Image
+                    src={getTokenIcon(campaign.campaign_reward?.symbol)}
+                    alt={`${campaign.campaign_reward?.symbol}-icon`}
+                    width={44}
+                    height={44}
+                  />
                   <Box sx={{ position: 'absolute', right: -1.5, bottom: 0.5 }}>
                     <NetworkChip
                       key={`${campaign.id + campaign.network}`}
