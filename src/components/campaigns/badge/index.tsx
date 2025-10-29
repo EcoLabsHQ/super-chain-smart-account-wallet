@@ -52,7 +52,7 @@ export default function CampaignBadge({ badge, myPoints, pointsOnHover }: Props)
         <Stack direction="row" alignItems="center" gap="16px">
           {/* Icono principal */}
           <div style={{ position: 'relative', border: '1px solid #E1E2EA', borderRadius: '12px' }}>
-            <Avatar src={badge.image} sx={{ width: 60, height: 60 }} variant="rounded" />
+            <Avatar src={badge.image} sx={{ width: { xs: 40, sm: 60 }, height: { xs: 40, sm: 60 } }} variant="rounded" />
             {badge.completed && (
               <CheckCircleIcon
                 style={{ position: 'absolute', right: '-5px', bottom: '-5px', width: '16px', height: '16px' }}
@@ -61,9 +61,9 @@ export default function CampaignBadge({ badge, myPoints, pointsOnHover }: Props)
           </div>
 
           <Stack width="100%">
-            <Stack direction="row" alignItems="center" justifyContent="space-between">
-              <Stack direction="row" alignItems="center" gap="8px">
-                <Typography variant="body1" fontWeight={600}>
+            <Stack direction="row" alignItems="center" justifyContent="space-between" gap="8px">
+              <Stack direction="row" alignItems="center" gap="8px" minWidth="80px">
+                <Typography variant="body1" fontWeight={600} fontSize={{ xs: '12px', sm: '16px' }} lineHeight="24px">
                   {badge.badgeName}
                 </Typography>
                 {badge.tokenBadge && <GiftIcon style={{ width: '20px', height: '20px' }} />}
@@ -93,8 +93,7 @@ export default function CampaignBadge({ badge, myPoints, pointsOnHover }: Props)
                 </div>
               )}
             </Stack>
-
-            <Typography variant="body2" style={{ color: '#75757A' }}>
+            <Typography variant="body2" style={{ color: '#75757A' }} fontSize={{ xs: '12px', sm: '14px' }} lineHeight="20px">
               {truncateText(badge.description, 40)}
             </Typography>
 

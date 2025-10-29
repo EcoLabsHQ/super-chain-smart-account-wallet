@@ -277,7 +277,7 @@ function CampaignCard({
                   lineHeight: '20px',
                   height: '28px',
                   fontFamily: 'DM Sans',
-                  px: '50px',
+                  px: { xs: '8px', sm: '12px', lg: '50px' },
                   boxShadow: 'none',
                   '&:hover': { background: '#000', boxShadow: 'none' },
                 }}

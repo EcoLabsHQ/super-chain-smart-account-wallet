@@ -1,7 +1,7 @@
 'use client'
 import Head from 'next/head'
 import React, { useState } from 'react'
-import { Button, Card, Dialog, Divider, Skeleton, Stack, SvgIcon, Typography } from '@mui/material'
+import { Button, Card, Dialog, Divider, Skeleton, Stack, SvgIcon, Typography, Grid, IconButton, Box } from '@mui/material'
 import InfoIcon from '@/public/images/notifications/info.svg'
 import SuperchainPointIcon from '@/public/images/common/superChain.svg'
 import { ArrowBack, Launch, Close } from '@mui/icons-material'
@@ -58,7 +58,7 @@ export default function Page() {
           <title>Super Account - Campaigns</title>
         </Head>
         <main>
-          <Stack gap="32px" sx={{ p: 4, maxWidth: 718, mx: 'auto' }}>
+          <Stack gap="32px" sx={{ p: { xs: 0, sm: 3, md: 4 }, maxWidth: { xs: '100%', sm: 720 }, mx: 'auto' }}>
             {/* Header skeleton */}
             <Stack direction="row" justifyContent="space-between" alignItems="center">
               <Stack direction="row" gap="16px" alignContent="center">
@@ -81,25 +81,21 @@ export default function Page() {
             </Card>
 
             {/* Info cards grid */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '8px',
-              }}
-            >
+            <Grid container spacing={1}>
               {Array.from({ length: 4 }).map((_, i) => (
-                <Card key={i} sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
-                  <Stack direction="row" gap="16px" alignItems="center">
-                    <Skeleton variant="rounded" width={40} height={40} />
-                    <Stack>
-                      <Skeleton variant="text" width={100} />
-                      <Skeleton variant="text" width={60} />
+                <Grid item xs={12} sm={6} key={i}>
+                  <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
+                    <Stack direction="row" gap={2} alignItems="center">
+                      <Skeleton variant="rounded" width={40} height={40} />
+                      <Stack>
+                        <Skeleton variant="text" width={100} />
+                        <Skeleton variant="text" width={60} />
+                      </Stack>
                     </Stack>
-                  </Stack>
-                </Card>
+                  </Card>
+                </Grid>
               ))}
-            </div>
+            </Grid>
 
             {/* Badges section */}
             <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '48px' }}>
@@ -139,10 +135,10 @@ export default function Page() {
       </Head>
 
       <main>
-        <Stack gap="32px" sx={{ p: 4, maxWidth: 718, mx: 'auto' }}>
+        <Stack gap="32px" sx={{ p: { xs: 2, sm: 4 }, maxWidth: 718, mx: 'auto' }}>
           {/* Header */}
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Stack direction="row" gap="16px" alignContent="center">
+          <Stack direction="row" justifyContent="space-between" alignItems="center" gap="4px">
+            <Stack direction="row" gap="16px" alignItems="center">
               <button
                 onClick={() => router.push({ pathname: AppRoutes.campaigns, query: { safe: router.query.safe } })}
                 style={{
@@ -160,17 +156,19 @@ export default function Page() {
               >
                 <ArrowBack sx={{ width: '16px', height: '16px' }} />
               </button>
-              <Typography variant="h3" fontWeight={600} sx={{ transform: 'translateY(3px)', display: 'inline-block' }}>
-                {campaign.name}{' '}
+              <Stack sx={{ flexDirection: { xs: 'column', md: 'row' }, alignItems: { xs: 'start', md: 'center' } }}>
+                <Typography variant="h3" fontWeight={600} sx={{ display: 'inline-block', fontSize: { xs: '12px', sm: '24px' }, lineHeight: { xs: '20px', sm: '32px' } }}>
+                  {campaign.name}{' '}
+                </Typography>
                 <Typography
-                  sx={{ transform: 'translateY(-2px)', display: 'inline-block' }}
+                  sx={{ transform: 'translateY(-2px)', display: 'inline-block', fontSize: { xs: '12px', sm: '14px' }, lineHeight: { xs: '20px', sm: '32px' } }}
                   component="span"
                   variant="body2"
                   color="#A0A0A6"
                 >
                   Campaign
                 </Typography>
-              </Typography>
+              </Stack>
             </Stack>
             <Stack direction="row" spacing={2}>
               <Button
@@ -182,13 +180,13 @@ export default function Page() {
                   borderRadius: '12px',
                   color: 'black',
                   ':hover': { backgroundColor: '#F1F2F5' },
-                  padding: '15px 10px 15px 12px',
+                  padding: { xs: '4px 10px 4px 8px', sm: '15px 10px 15px 12px' },
                 }}
               >
-                <Typography variant="body2" fontWeight={600}>
+                <Typography variant="body2" fontWeight={600} fontSize={{ xs: '12px', sm: '14px' }}>
                   Details
                 </Typography>
-                <SvgIcon component={InfoIcon} sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
+                <SvgIcon component={InfoIcon} sx={{ width: { xs: '12px', sm: '16px' }, height: { xs: '12px', sm: '16px' }, marginLeft: '4px' }} />
               </Button>
               {campaign.campaign_link && (
                 <Button
@@ -218,203 +216,233 @@ export default function Page() {
           <Divider />
 
           <Stack gap="8px">
-            <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
+            <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
               <Typography color="text.secondary">{campaign.description}</Typography>
             </Card>
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
+            <Grid container spacing={1}>
               {/* Dates */}
-              <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
-                <Stack direction="row" gap="16px" alignItems="center">
-                  <div style={{ position: 'relative' }}>
-                    {isLive && (
-                      <div
-                        style={{
-                          position: 'absolute',
-                          left: '-4px',
-                          top: '-4px',
-                          width: '13px',
-                          height: '13px',
-                          backgroundColor: '#39D551',
-                          borderRadius: '100%',
-                          border: '2px solid white',
-                        }}
-                      />
-                    )}
+              <Grid item xs={12} sm={6}>
+                <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
+                  <Stack direction="row" gap={2} alignItems="center">
+                    <div style={{ position: 'relative' }}>
+                      {isLive && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            left: '-4px',
+                            top: '-4px',
+                            width: '13px',
+                            height: '13px',
+                            backgroundColor: '#39D551',
+                            borderRadius: '100%',
+                            border: '2px solid white',
+                          }}
+                        />
+                      )}
 
-                    <div>
-                      <Stack
-                        alignItems="center"
-                        justifyContent="center"
-                        style={{
-                          width: '40px',
-                          height: '16px',
-                          borderTopLeftRadius: '12px',
-                          borderTopRightRadius: '12px',
-                          background: '#E1E2EA',
-                        }}
-                      >
-                        <Typography fontSize="8px" fontWeight={600} style={{ transform: 'translateY(1px)' }}>
-                          {month}
-                        </Typography>
-                      </Stack>
-                      <Stack
-                        alignItems="center"
-                        justifyContent="center"
-                        style={{
-                          width: '40px',
-                          height: '24px',
-                          borderRadius: '0px 0px 12px 12px',
-                          border: '1px solid #E1E2EA',
-                          background: 'white',
-                        }}
-                      >
-                        <Typography variant="h5" fontWeight={600}>
-                          {day}
-                        </Typography>
-                      </Stack>
+                      <div>
+                        <Stack
+                          alignItems="center"
+                          justifyContent="center"
+                          style={{
+                            width: '40px',
+                            height: '16px',
+                            borderTopLeftRadius: '12px',
+                            borderTopRightRadius: '12px',
+                            background: '#E1E2EA',
+                          }}
+                        >
+                          <Typography fontSize="8px" fontWeight={600} style={{ transform: 'translateY(1px)' }}>
+                            {month}
+                          </Typography>
+                        </Stack>
+                        <Stack
+                          alignItems="center"
+                          justifyContent="center"
+                          style={{
+                            width: '40px',
+                            height: '24px',
+                            borderRadius: '0px 0px 12px 12px',
+                            border: '1px solid #E1E2EA',
+                            background: 'white',
+                          }}
+                        >
+                          <Typography variant="h5" fontWeight={600}>
+                            {day}
+                          </Typography>
+                        </Stack>
+                      </div>
                     </div>
-                  </div>
-                  <Stack gap="2px">
-                    <Typography sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px' }}>
-                      {formatDates(campaign.start_date)}
-                    </Typography>
-                    <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
-                      till {formatDates(campaign.end_date)}
-                    </Typography>
+                    <Stack gap="2px">
+                      <Typography sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px' }}>
+                        {formatDates(campaign.start_date)}
+                      </Typography>
+                      <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
+                        till {formatDates(campaign.end_date)}
+                      </Typography>
+                    </Stack>
                   </Stack>
-                </Stack>
-              </Card>
+                </Card>
+              </Grid>
 
               {/* Networks (con guardas) */}
-              <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
-                <Stack direction="row" gap="16px" alignItems="center">
-                  <Stack
-                    style={{ width: `${avatarStripWidth}px`, position: 'relative', zIndex: 0 }}
-                    direction="row"
-                    alignItems="center"
-                  >
-                    {networks.map((network, index) => (
-                      <div
-                        key={`${campaign.id}-${network}-${index}`}
-                        style={{
-                          zIndex: (networks.length + 1 - index) * 10,
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          width: '40px',
-                          minWidth: '40px',
-                          height: '40px',
-                          border: '1px solid #E1E2EA',
-                          background: '#FFFFFF',
-                          borderRadius: '12px',
-                          transform: `translateX(${-index * 12}px)`,
-                        }}
-                      >
-                        <NetworkChip network={network} style="badge" isFavorite={false} />
-                      </div>
-                    ))}
-                  </Stack>
-                  <Stack>
-                    <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
-                      Network
-                    </Typography>
-                    <Typography
-                      sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px', textTransform: 'capitalize' }}
+              <Grid item xs={12} sm={6}>
+                <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
+                  <Stack direction="row" gap={2} alignItems="center">
+                    <Stack
+                      style={{ width: `${avatarStripWidth}px`, position: 'relative', zIndex: 0 }}
+                      direction="row"
+                      alignItems="center"
                     >
-                      {networks.length === 1 ? networks[0] : `${networks.length} Chains`}
-                    </Typography>
+                      {networks.map((network, index) => (
+                        <div
+                          key={`${campaign.id}-${network}-${index}`}
+                          style={{
+                            zIndex: (networks.length + 1 - index) * 10,
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: '40px',
+                            minWidth: '40px',
+                            height: '40px',
+                            border: '1px solid #E1E2EA',
+                            background: '#FFFFFF',
+                            borderRadius: '12px',
+                            transform: `translateX(${-index * 12}px)`,
+                          }}
+                        >
+                          <NetworkChip network={network} style="badge" isFavorite={false} />
+                        </div>
+                      ))}
+                    </Stack>
+                    <Stack>
+                      <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
+                        Network
+                      </Typography>
+                      <Typography
+                        sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px', textTransform: 'capitalize' }}
+                      >
+                        {networks.length === 1 ? networks[0] : `${networks.length} Chains`}
+                      </Typography>
+                    </Stack>
                   </Stack>
-                </Stack>
-              </Card>
+                </Card>
+              </Grid>
 
               {/* Rewards (con fallback de tokens) */}
-              <Card sx={{ border: '1px solid #E1E2EA', background: 'white', borderRadius: '12px', padding: '16px' }}>
-                <Stack direction="row" gap="16px" alignItems="center">
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: '40px',
-                      height: '40px',
-                      background: '#FFFFFF',
-                      border: '1px solid #E1E2EA',
-                      borderRadius: '12px',
-                    }}
-                  >
-                    {rewardIcon && (
-                      <SvgIcon
-                        component={rewardIcon}
-                        sx={{ width: 20, height: 20, marginTop: '2px', marginLeft: '3px' }}
-                      />
-                    )}
-                  </div>
-                  <Stack>
-                    <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
-                      Campaign Rewards
-                    </Typography>
-                    <Typography sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px' }}>
-                      {rewardAmount} {rewardSymbol}
-                    </Typography>
+              <Grid item xs={12} sm={6}>
+                <Card sx={{ border: '1px solid #E1E2EA', background: 'white', borderRadius: '12px', p: 2 }}>
+                  <Stack direction="row" gap={2} alignItems="center">
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '40px',
+                        height: '40px',
+                        background: '#FFFFFF',
+                        border: '1px solid #E1E2EA',
+                        borderRadius: '12px',
+                      }}
+                    >
+                      {rewardIcon && (
+                        <SvgIcon
+                          component={rewardIcon}
+                          sx={{ width: 20, height: 20, marginTop: '2px', marginLeft: '3px' }}
+                        />
+                      )}
+                    </div>
+                    <Stack>
+                      <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
+                        Campaign Rewards
+                      </Typography>
+                      <Typography sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px' }}>
+                        {rewardAmount} {rewardSymbol}
+                      </Typography>
+                    </Stack>
                   </Stack>
-                </Stack>
-              </Card>
+                </Card>
+              </Grid>
 
               {/* Points */}
-              <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
-                <Stack direction="row" gap="16px" alignItems="center">
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      width: '40px',
-                      height: '40px',
-                      border: '1px solid #E1E2EA',
-                      background: '#FFFFFF',
-                      borderRadius: '12px',
-                    }}
-                  >
-                    <SuperchainPointIcon style={{ width: '20px', height: '20px' }} />
-                  </div>
-                  <Stack>
-                    <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
-                      Total points distributed
-                    </Typography>
-                    <Typography sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px' }}>
-                      {formatAmount(campaign.distributed_points ?? 0)}
-                    </Typography>
+              <Grid item xs={12} sm={6}>
+                <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
+                  <Stack direction="row" gap={2} alignItems="center">
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '40px',
+                        height: '40px',
+                        border: '1px solid #E1E2EA',
+                        background: '#FFFFFF',
+                        borderRadius: '12px',
+                      }}
+                    >
+                      <SuperchainPointIcon style={{ width: '20px', height: '20px' }} />
+                    </div>
+                    <Stack>
+                      <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
+                        Total points distributed
+                      </Typography>
+                      <Typography sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px' }}>
+                        {formatAmount(campaign.distributed_points ?? 0)}
+                      </Typography>
+                    </Stack>
                   </Stack>
-                </Stack>
-              </Card>
-            </div>
+                </Card>
+              </Grid>
+            </Grid>
 
             {/* Badges */}
-            <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '48px' }}>
+            <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: { xs: 3, md: 6 } }}>
               <Stack gap="16px">
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
-                  <Typography variant="body1" fontWeight="500">
+                  <Typography variant="body1" fontWeight="500" sx={{ fontSize: { xs: '14px', sm: '16px' } }}>
                     Campaign Badges
                   </Typography>
-                  <div
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
+                  <Stack
+                    direction="row"
+                    alignItems="center"
+                    spacing={0.25}
+                    sx={{
                       border: '1px solid #E1E2EA',
                       borderRadius: '100px',
-                      padding: '6px',
+                      px: { xs: 0.5, sm: 1, md: 1.25 },
+                      py: { xs: 0.25, sm: 0.4 },
+                      display: 'inline-flex',
+                      minWidth: 0,
                     }}
                   >
-                    <Typography variant="caption" fontWeight="500" sx={{ color: '#75757A' }}>
-                      My Points:{' '}
-                      <Typography component="span" variant="caption" fontWeight="600" sx={{ color: 'black' }}>
+                    <Typography
+                      component="span"
+                      variant="caption"
+                      fontWeight={500}
+                      sx={{
+                        color: '#75757A',
+                        fontSize: { xs: '9px', sm: '10px', md: '11px' },
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        display: 'inline-block',
+                        maxWidth: { xs: '64px', sm: '84px' },
+                      }}
+                    >
+                      My Points:&nbsp;
+                      <Typography
+                        component="span"
+                        variant="caption"
+                        fontWeight={600}
+                        sx={{ color: 'black', fontSize: { xs: '9px', sm: '10px', md: '11px' } }}
+                      >
                         {campaign.myPoints ?? 0}
                       </Typography>
                     </Typography>
-                    <SuperchainPointIcon style={{ width: '16px', height: '16px' }} />
-                  </div>
+                    <Box component="span" sx={{ display: 'inline-flex', ml: 0.5, width: { xs: 12, sm: 14, md: 16 }, height: { xs: 12, sm: 14, md: 16 } }}>
+                      <SuperchainPointIcon style={{ width: '100%', height: '100%' }} />
+                    </Box>
+                  </Stack>
                 </Stack>
 
                 <Stack gap="12px">
@@ -464,12 +492,8 @@ export default function Page() {
           </Stack>
         </Stack>
 
-        <Dialog
-          open={openInfo}
-          onClose={() => setOpenInfo(false)}
-          sx={{ margin: 'auto', width: '720px', overflow: 'visible' }}
-        >
-          <Card sx={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <Dialog open={openInfo} onClose={() => setOpenInfo(false)} fullWidth maxWidth="md" PaperProps={{ sx: { p: { xs: 2, md: 3 }, borderRadius: 2 } }}>
+          <Card sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
             {/* Header */}
             <Stack direction="row" justifyContent="space-between" alignItems="center">
               <Typography variant="h3" fontWeight={600} sx={{ transform: 'translateY(0px)', display: 'inline-block' }}>
@@ -483,25 +507,11 @@ export default function Page() {
                   Campaign Details
                 </Typography>
               </Typography>
-              <button
-                onClick={() => setOpenInfo(false)}
-                style={{
-                  width: '36px',
-                  height: '36px',
-                  backgroundColor: '#F1F2F5',
-                  borderRadius: '12px',
-                  color: 'black',
-                  border: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                }}
-              >
-                <Close sx={{ width: '16px', height: '16px' }} />
-              </button>
+              <IconButton onClick={() => setOpenInfo(false)} sx={{ bgcolor: '#F1F2F5', width: 36, height: 36 }}>
+                <Close sx={{ width: 16, height: 16 }} />
+              </IconButton>
             </Stack>
-            <Divider style={{ width: '720px', margin: '0 auto', transform: 'translateX(-24px)' }} />
+            <Divider sx={{ width: '100%' }} />
             <div style={{ color: '#4B4B4E' }}>
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
@@ -555,7 +565,7 @@ export default function Page() {
             </div>
           </Card>
         </Dialog>
-      </main>
+      </main >
     </>
   )
 }
