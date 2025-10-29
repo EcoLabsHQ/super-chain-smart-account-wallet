@@ -391,6 +391,8 @@ const Home: NextPage = () => {
                     type: '',
                     tokenBadge: !!badge.tokenBadge,
                   }}
+                  myPoints={[{ id: Number(badge.badgeId), points: badge.points }]}
+                  pointsOnHover={true}
                 />
               </div>
             ))}

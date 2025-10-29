@@ -422,7 +422,7 @@ export default function Page() {
                     <CampaignBadge
                       key={badge?.badgeName ?? `badge-${idx}`}
                       badge={badge}
-                      my_points={campaign.my_points}
+                      myPoints={campaign.my_points}
                     />
                   ))}
                 </Stack>
