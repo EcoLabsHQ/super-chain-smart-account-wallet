@@ -28,7 +28,7 @@ export function SelfVerificationComponent({ badge }: { badge: ResponseBadge }) {
       const app = new SelfAppBuilder({
         appName: 'Super Accounts',
         scope: 'super-accounts',
-        endpoint: 'https://super-accounts-backend-staging.up.railway.app/api/self/verify',
+        endpoint: 'https://scsa-backend-staging.up.railway.app/api/self/verify',
         endpointType: 'https',
         logoBase64: 'https://account.superchain.eco/images/logo.png',
         userId, //address,
