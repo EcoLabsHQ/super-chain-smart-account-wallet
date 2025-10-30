@@ -10,6 +10,7 @@ import CheckCircleIcon from '@/public/images/common/check-circle.svg'
 import { GradientProgress } from '../..'
 import { getBadgeStrategy } from '@/components/badges/badgeInfo/BadgeStrategyRenderer'
 import ETHVaultStrategy from '@/components/badges/badgeInfo/strategies/ETHVaultStrategy'
+import { tokens } from '@/config/tokens'
 
 function ClaimModal({
   open,
@@ -49,6 +50,7 @@ function ClaimModal({
         .filter(Boolean)
     }),
   }
+  const rewardIcon = (tokens as any)?.[data?.rewards?.symbol ?? '']?.icon ?? (tokens as any)?.USDC?.icon
 
   return (
     <Dialog className={css.claimModal} open={open} onClose={onClose}>
@@ -92,18 +94,28 @@ function ClaimModal({
           <Typography color="#75757A" fontWeight={400} fontSize="14px" pr={1}>
             You have received:
           </Typography>
-          <Box
-            sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}
-            border={1}
-            borderRadius="100px"
-            borderColor="#E1E2EA"
-            paddingX="8px"
-          >
-            <Typography fontSize="12px" fontWeight={600} p="4px 2px">
-              {data?.totalPoints ?? 0}
-            </Typography>
-            <SuperChainPoints style={{ width: '16px', height: '16px' }} />
-          </Box>
+          <Stack direction="row" alignItems="center" gap="4px">
+            {data?.rewards && (
+              <Stack direction="row" gap="4px" alignItems="center">
+                <Typography variant="h5" fontWeight={600}>
+                  {data?.rewards?.amount ?? '0'}
+                </Typography>
+                <SvgIcon component={rewardIcon} sx={{ width: '24px', height: '24px', marginTop: '2px' }} />
+              </Stack>
+            )}
+            <Box
+              sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}
+              border={1}
+              borderRadius="100px"
+              borderColor="#E1E2EA"
+              paddingX="8px"
+            >
+              <Typography fontSize="12px" fontWeight={600} p="4px 2px">
+                {data?.totalPoints ?? 0}
+              </Typography>
+              <SuperChainPoints style={{ width: '16px', height: '16px' }} />
+            </Box>
+          </Stack>
         </Box>
         <Box flex={1} width="100%">
           <GradientProgress variant="determinate" value={progress} />

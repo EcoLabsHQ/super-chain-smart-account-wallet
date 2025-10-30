@@ -130,7 +130,7 @@ function CampaignCard({
         p: 0,
         borderRadius: '12px',
         overflow: 'hidden',
-        backgroundColor: '#ffffff', // fondo claro consistente
+        backgroundColor: '#FCFCFD', // fondo claro consistente
         border: '1px solid #E1E2EA',
         cursor: 'pointer',
         height: '100%',
@@ -150,6 +150,7 @@ function CampaignCard({
             objectFit: 'cover',
             display: 'block',
             filter: isEnded ? 'grayscale(100%) brightness(0.9)' : 'none',
+            borderBottom: '1px solid #E1E2EA',
             transition: 'filter 0.3s ease-in-out',
           }}
         />

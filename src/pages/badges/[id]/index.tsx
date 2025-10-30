@@ -17,6 +17,7 @@ import {
   Typography,
 } from '@mui/material'
 import GiftIcon from '@/public/images/common/gift.svg'
+import PartyIcon from '@/public/images/common/party.svg'
 import InfoIcon from '@/public/images/common/info-soft-gray.svg'
 import InfoBlackIcon from '@/public/images/common/info-black.svg'
 import BadgesClaimedIcon from '@/public/images/common/badges-claimed.svg'
@@ -398,7 +399,7 @@ export default function BadgePage() {
                         {currentBadge.badgeTiers.slice(0, -1).map((tier, index) => (
                           <Stack key={index} gap="12px">
                             <BadgeTierCard tier={tier} currentBadge={currentBadge} />
-                            {index < currentBadge.badgeTiers.length - 1 && <Divider />}
+                            {index < currentBadge.badgeTiers.length - 2 && <Divider />}
                           </Stack>
                         ))}
                       </Stack>
@@ -457,7 +458,7 @@ export default function BadgePage() {
                                   direction="row"
                                   alignItems="center"
                                   justifyContent="center"
-                                  sx={{ gap: { xs: '2px', sm: 4 } }}
+                                  sx={{ gap: { xs: '2px', sm: '4px' } }}
                                 >
                                   <Typography
                                     variant="h5"
@@ -517,7 +518,98 @@ export default function BadgePage() {
                       )}
                     </Stack>
                   </Card>
+                  {currentBadge.claimable && (
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      justifyContent="space-between"
+                      sx={{
+                        width: '100%',
+                        background: 'linear-gradient(180deg, #E7F8F8 0%, #F6FEFD 100%)',
+                        borderRadius: '12px',
+                        border: '1px solid #1FC1BF',
+                        p: '12px',
+                      }}
+                    >
+                      <Stack direction="row" alignItems="center" gap="8px">
+                        <PartyIcon style={{ width: '16px', height: '16px' }} />
+                        <Typography
+                          variant="body2"
+                          fontWeight={500}
+                          color="#116A69"
+                          sx={{ fontSize: { xs: '12px', sm: '14px' } }}
+                        >
+                          Your are eligible to claim rewards!
+                        </Typography>
+                      </Stack>
+                      <Stack direction="row" justifyContent="flex-end">
+                        <button
+                          onClick={() => {
+                            router.push({
+                              pathname: '/badges',
+                              query: router.query,
+                            })
+                          }}
+                          style={{
+                            WebkitBoxOrient: 'vertical',
+                            WebkitLineClamp: 1,
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            color: 'black',
+                            fontFamily: '"DM Sans", sans-serif',
+                            fontSize: '14px',
+                            fontStyle: 'normal',
+                            fontWeight: 400,
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '4px',
+                            padding: '0px',
+                          }}
+                        >
+                          Claim Badges
+                          <span style={{ fontSize: '20px' }}>›</span>
+                        </button>
+                      </Stack>
+                    </Stack>
+                  )}
                 </Stack>
+                {currentBadge.tokenBadge && (
+                  <Stack direction="row" justifyContent="flex-end" sx={{ mt: 1 }}>
+                    <button
+                      onClick={() => {
+                        router.push({
+                          pathname: '/badges',
+                          query: router.query,
+                        })
+                      }}
+                      style={{
+                        WebkitBoxOrient: 'vertical',
+                        WebkitLineClamp: 1,
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        color: '#4B4B4E',
+                        fontFamily: '"DM Sans", sans-serif',
+                        fontSize: '14px',
+                        fontStyle: 'normal',
+                        fontWeight: 400,
+                        lineHeight: '20px',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        padding: 0,
+                      }}
+                    >
+                      Claim Badges
+                      <span style={{ fontSize: '16px', lineHeight: '20px', transform: 'translateY(-1px)' }}>›</span>
+                    </button>
+                  </Stack>
+                )}
               </Card>
             </Stack>
           </Stack>

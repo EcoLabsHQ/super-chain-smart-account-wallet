@@ -37,6 +37,11 @@ import { networks } from '..'
 export type ClaimData = {
   totalPoints: number
   isLevelUp: boolean
+  rewards?: {
+    tier_id: string
+    symbol: string
+    amount: string
+  }
   badgeUpdates: {
     badgeId: string
     level: number
