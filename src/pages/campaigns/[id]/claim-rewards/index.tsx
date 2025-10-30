@@ -75,7 +75,7 @@ export default function Page() {
     refetch: refetchAirdrop,
   } = useQuery({
     queryKey: ['check-airdrop', safeAddress],
-    queryFn: () => checkAirdropEligibility(safeAddress),
+    queryFn: () => checkAirdropEligibility(safeAddress, campaign?.id!),
     enabled: !!safeAddress,
   })
   const erc20Token = campaign?.claimable_reward?.token as Address
@@ -95,6 +95,7 @@ export default function Page() {
           wallet: walletClient,
         },
       })
+
       const hash = await airdropContract.write.claimERC20([
         erc20Token,
         safeAddress as Address,
