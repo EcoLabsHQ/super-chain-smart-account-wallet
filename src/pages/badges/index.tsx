@@ -28,6 +28,7 @@ import { Address } from 'viem'
 import { ResponseBadge, SuperChainAccount } from '@/types/super-chain'
 import Turnstile from 'react-turnstile'
 import LoadingModal from '@/components/common/LoadingModal'
+import FailedTxnModal from '@/components/common/ErrorModal'
 
 const Home: NextPage = () => {
   const router = useRouter()
@@ -40,6 +41,7 @@ const Home: NextPage = () => {
   const [claimData, setClaimData] = useState<ClaimData | null>(null)
   const { safeAddress, safeLoaded } = useSafeInfo()
   const queryClient = useQueryClient()
+  const [errorDetail, setErrorDetail] = useState<string>('')
   const { data, isLoading, error } = useQuery<{
     currentBadges: BadgeWithPrize[]
   }>({
@@ -48,11 +50,21 @@ const Home: NextPage = () => {
     refetchInterval: 10000,
     enabled: !!safeLoaded,
   })
+
+  const campaignOptions: string[] = useMemo<string[]>(
+    () =>
+      Array.from(new Set((data?.currentBadges ?? []).flatMap((b: BadgeWithPrize) => b.campaigns ?? []))).sort(
+        (a: string, b: string) => a.localeCompare(b),
+      ),
+    [data?.currentBadges],
+  )
+
   const { mutate, isPending, isError } = useMutation({
     mutationFn: async () => {
       return await badgesService.attestBadges(safeAddress as Address, token)
     },
     onError: (error) => {
+      setErrorDetail(String(error))
       console.error(error)
     },
     onSuccess: (data) => {
@@ -99,6 +111,17 @@ const Home: NextPage = () => {
       window.removeEventListener('claim-badges', handler)
     }
   }, [mutate])
+
+  const handleCloseLevelUpModal = () => {
+    setOpenClaimDialog(false)
+    router.push({ pathname: AppRoutes.home, query: { safe: router.query.safe } })
+  }
+
+  useEffect(() => {
+    if (campaign !== '' && !campaignOptions.includes(campaign)) {
+      setCampaign('')
+    }
+  }, [campaignOptions, campaign])
 
   const filterBadges = (badges: BadgeWithPrize[]): BadgeWithPrize[] => {
     let filtered = badges
@@ -284,8 +307,8 @@ const Home: NextPage = () => {
                   value={campaign}
                   displayEmpty
                   size="small"
-                  onChange={(event) => setCampaign(event.target.value ?? '')}
-                  renderValue={() => (campaign == '' ? 'Campaign' : campaign)}
+                  onChange={(event) => setCampaign((event.target.value as string) ?? '')}
+                  renderValue={() => (campaign === '' ? 'Campaign' : campaign)}
                   sx={{
                     height: 36,
                     borderRadius: '12px',
@@ -301,9 +324,15 @@ const Home: NextPage = () => {
                     },
                   }}
                 >
-                  <MenuItem>All</MenuItem>
-                  <MenuItem value="SuperStacks">SuperStacks</MenuItem>
-                  <MenuItem value="Lisk Surge">Lisk Surge</MenuItem>
+                  {/* opción "All" controlada (value = '') */}
+                  <MenuItem value="">All</MenuItem>
+
+                  {/* Opciones dinámicas sin repetición */}
+                  {campaignOptions.map((c: string) => (
+                    <MenuItem key={c} value={c}>
+                      {c}
+                    </MenuItem>
+                  ))}
                 </Select>
 
                 {/* Clear All */}
@@ -428,6 +457,12 @@ const Home: NextPage = () => {
           </Box>
         </Stack>
         <LoadingModal open={isPending} title="Claiming badges" />
+        <FailedTxnModal
+          open={isError}
+          onClose={handleCloseLevelUpModal}
+          handleRetry={() => mutate()}
+          errorDetail={errorDetail}
+        />
         <ClaimModal
           onLevelUp={() => setOpenClaimDialog(false)}
           open={openClaimDialog}
