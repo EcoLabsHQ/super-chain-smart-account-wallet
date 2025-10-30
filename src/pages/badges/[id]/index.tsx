@@ -518,7 +518,7 @@ export default function BadgePage() {
                       )}
                     </Stack>
                   </Card>
-                  {currentBadge.claimable && (
+                  {currentBadge.claimable && currentBadge.tier == currentBadge.badgeTiers.length && (
                     <Stack
                       direction="row"
                       alignItems="center"
@@ -576,7 +576,7 @@ export default function BadgePage() {
                     </Stack>
                   )}
                 </Stack>
-                {currentBadge.tokenBadge && (
+                {!(currentBadge.claimable && currentBadge.tier == currentBadge.badgeTiers.length) && (
                   <Stack direction="row" justifyContent="flex-end" sx={{ mt: 1 }}>
                     <button
                       onClick={() => {

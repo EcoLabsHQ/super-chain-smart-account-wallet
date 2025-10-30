@@ -54,16 +54,14 @@ export default function CampaignBadge({ badge, myPoints, pointsOnHover }: Props)
       >
         <Stack direction="row" alignItems="center" gap="16px" sx={{ flex: 1 }}>
           {/* Icono principal */}
-          <Box sx={{ position: 'relative', border: '1px solid #E1E2EA', borderRadius: '12px' }}>
-            <Avatar
-              src={badge.image}
-              sx={{ width: { xs: 40, sm: 60 }, height: { xs: 40, sm: 60 } }}
-              variant="rounded"
-            />
+          <div style={{ position: 'relative', border: '1px solid #E1E2EA', borderRadius: '12px' }}>
+            <Avatar src={badge.image} sx={{ width: 60, height: 60 }} variant="rounded" />
             {badge.completed && (
-              <CheckCircleIcon sx={{ position: 'absolute', right: -1, bottom: -1.25, width: 16, height: 16 }} />
+              <CheckCircleIcon
+                style={{ position: 'absolute', right: '-5px', bottom: '-5px', width: '16px', height: '16px' }}
+              />
             )}
-          </Box>
+          </div>
 
           <Stack width="100%">
             <Stack direction="row" alignItems="center" justifyContent="space-between" gap="8px">

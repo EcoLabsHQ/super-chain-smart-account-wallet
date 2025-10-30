@@ -95,7 +95,7 @@ export default function Page() {
           wallet: walletClient,
         },
       })
-
+      console.log('Airdrop Data:', airdropData)
       const hash = await airdropContract.write.claimERC20([
         erc20Token,
         safeAddress as Address,
