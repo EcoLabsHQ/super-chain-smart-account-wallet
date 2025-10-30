@@ -99,7 +99,12 @@ export default function CampaignBadge({ badge, myPoints, pointsOnHover }: Props)
                 </Box>
               )}
             </Stack>
-            <Typography variant="body2" sx={{ color: '#75757A' }} fontSize={{ xs: '12px', sm: '14px' }} lineHeight="20px">
+            <Typography
+              variant="body2"
+              sx={{ color: '#75757A' }}
+              fontSize={{ xs: '12px', sm: '14px' }}
+              lineHeight="20px"
+            >
               {truncateText(badge.description, 40)}
             </Typography>
 

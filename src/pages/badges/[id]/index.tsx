@@ -3,7 +3,19 @@ import DotIcon from '@/public/images/common/dot_soft_gray.svg'
 import badgesService from '@/features/superChain/services/badges.service'
 import useSafeInfo from '@/hooks/useSafeInfo'
 import { ArrowBack, Close, Launch } from '@mui/icons-material'
-import { Box, Button, Card, Dialog, Divider, IconButton, Skeleton, Stack, SvgIcon, Tooltip, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Card,
+  Dialog,
+  Divider,
+  IconButton,
+  Skeleton,
+  Stack,
+  SvgIcon,
+  Tooltip,
+  Typography,
+} from '@mui/material'
 import GiftIcon from '@/public/images/common/gift.svg'
 import InfoIcon from '@/public/images/common/info-soft-gray.svg'
 import InfoBlackIcon from '@/public/images/common/info-black.svg'
@@ -129,8 +141,16 @@ export default function BadgePage() {
                 >
                   <ArrowBack sx={{ width: '16px', height: '16px' }} />
                 </button>
-                <Stack sx={{ flexDirection: { xs: 'column', md: 'row' }, gap: { xs: '0px', sm: '8px' }, alignItems: { xs: 'start', md: 'center' } }}>
-                  <Typography variant="h3" fontWeight={600}
+                <Stack
+                  sx={{
+                    flexDirection: { xs: 'column', md: 'row' },
+                    gap: { xs: '0px', sm: '8px' },
+                    alignItems: { xs: 'start', md: 'center' },
+                  }}
+                >
+                  <Typography
+                    variant="h3"
+                    fontWeight={600}
                     sx={{
                       display: 'inline-block',
                       fontSize: { xs: '12px', sm: '24px' },
@@ -169,9 +189,13 @@ export default function BadgePage() {
                       padding: '15px 10px 15px 8px',
                     }}
                   >
-                    <Typography variant="body2" fontWeight={600} sx={{
-                      fontSize: { xs: '12px', sm: '14px' },
-                    }}>
+                    <Typography
+                      variant="body2"
+                      fontWeight={600}
+                      sx={{
+                        fontSize: { xs: '12px', sm: '14px' },
+                      }}
+                    >
                       Learn More
                     </Typography>
                     <Box sx={{ width: { xs: '12px', sm: '16px' }, height: { xs: '12px', sm: '16px' } }}>
@@ -184,28 +208,28 @@ export default function BadgePage() {
                 {strategy?.render
                   ? strategy.render(currentBadge as any)
                   : currentBadge.action_description && (
-                    <Button
-                      component="a"
-                      href={currentBadge.action_link}
-                      target="_blank"
-                      rel="noreferrer"
-                      variant="text"
-                      sx={{
-                        width: '118px',
-                        height: '36px',
-                        backgroundColor: 'black',
-                        borderRadius: '12px',
-                        color: 'white',
-                        ':hover': { backgroundColor: 'black' },
-                        padding: '15px 10px 15px 8px',
-                      }}
-                    >
-                      <Typography variant="body2" fontWeight={600}>
-                        {currentBadge.action_description}
-                      </Typography>
-                      <Launch sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
-                    </Button>
-                  )}
+                      <Button
+                        component="a"
+                        href={currentBadge.action_link}
+                        target="_blank"
+                        rel="noreferrer"
+                        variant="text"
+                        sx={{
+                          width: '118px',
+                          height: '36px',
+                          backgroundColor: 'black',
+                          borderRadius: '12px',
+                          color: 'white',
+                          ':hover': { backgroundColor: 'black' },
+                          padding: '15px 10px 15px 8px',
+                        }}
+                      >
+                        <Typography variant="body2" fontWeight={600}>
+                          {currentBadge.action_description}
+                        </Typography>
+                        <Launch sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
+                      </Button>
+                    )}
               </Stack>
             </Stack>
             <Divider />
@@ -305,7 +329,13 @@ export default function BadgePage() {
                             Badges Claimed
                           </Typography>
                           <Typography
-                            sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px', textTransform: 'capitalize', textAlign: 'start' }}
+                            sx={{
+                              fontWeight: 500,
+                              fontSize: '16px',
+                              lineHeight: '24px',
+                              textTransform: 'capitalize',
+                              textAlign: 'start',
+                            }}
                           >
                             {formatAmount(currentBadge.totalClaimed ?? 0)}
                           </Typography>
@@ -315,7 +345,9 @@ export default function BadgePage() {
                   </Button>
                 </Tooltip>
               </Stack>
-              <Card sx={{ flex: 1, border: '1px solid #E1E2EA', borderRadius: '12px', padding: { xs: '16px', sm: '48px' } }}>
+              <Card
+                sx={{ flex: 1, border: '1px solid #E1E2EA', borderRadius: '12px', padding: { xs: '16px', sm: '48px' } }}
+              >
                 <Stack gap="8px">
                   {currentBadge.countUnit && (
                     <Card
@@ -328,7 +360,12 @@ export default function BadgePage() {
                     >
                       <Stack direction="row" justifyContent="space-between" alignItems="center">
                         <Stack direction="row" alignItems="center" sx={{ gap: { xs: '2px', sm: '4px' } }}>
-                          <Typography variant="body2" fontWeight={500} color="#75757A" sx={{ fontSize: { xs: '12px', sm: '14px' } }}>
+                          <Typography
+                            variant="body2"
+                            fontWeight={500}
+                            color="#75757A"
+                            sx={{ fontSize: { xs: '12px', sm: '14px' } }}
+                          >
                             Your Progress
                           </Typography>
                           <Tooltip title="Progress data is refreshed every 2 hours to reflect your latest activity.">
@@ -368,7 +405,12 @@ export default function BadgePage() {
                     </Card>
                   )}
                   <Card
-                    sx={{ flex: 1, border: '1px solid #E1E2EA', borderRadius: '12px', padding: { xs: '12px 8px 12px 8px', sm: '12px 16px 12px 16px' } }}
+                    sx={{
+                      flex: 1,
+                      border: '1px solid #E1E2EA',
+                      borderRadius: '12px',
+                      padding: { xs: '12px 8px 12px 8px', sm: '12px 16px 12px 16px' },
+                    }}
                   >
                     <Stack gap="12px">
                       <BadgeTierCard
@@ -411,23 +453,61 @@ export default function BadgePage() {
                                 <Typography variant="h5" fontWeight={500} sx={{ fontSize: { xs: '14px', sm: '16px' } }}>
                                   Exclusive Bonus
                                 </Typography>
-                                <Stack direction="row" alignItems="center" justifyContent="center" sx={{ gap: { xs: '2px', sm: 4 } }}>
-                                  <Typography variant="h5" fontWeight={600} sx={{ fontSize: { xs: '10px', sm: '16px' } }}>
+                                <Stack
+                                  direction="row"
+                                  alignItems="center"
+                                  justifyContent="center"
+                                  sx={{ gap: { xs: '2px', sm: 4 } }}
+                                >
+                                  <Typography
+                                    variant="h5"
+                                    fontWeight={600}
+                                    sx={{ fontSize: { xs: '10px', sm: '16px' } }}
+                                  >
                                     {currentBadge.tokenBadge?.amount}
                                   </Typography>
                                   {rewardIcon && (
-                                    <SvgIcon component={rewardIcon} sx={{ width: { xs: 16, sm: 24 }, height: { xs: 16, sm: 24 }, mt: '2px', ml: '4px' }} />
+                                    <SvgIcon
+                                      component={rewardIcon}
+                                      sx={{
+                                        width: { xs: 16, sm: 24 },
+                                        height: { xs: 16, sm: 24 },
+                                        mt: '2px',
+                                        ml: '4px',
+                                      }}
+                                    />
                                   )}
                                 </Stack>
                               </Stack>
-                              <Stack sx={{ flexDirection: { xs: 'column', sm: 'row' }, alignItems: { xs: 'start', sm: 'center' }, mt: 0.5 }}>
-                                <Typography variant="caption" fontWeight={500} color="#75757A" sx={{ fontSize: { xs: '10px', sm: '12px' }, lineHeight: { xs: '14px', sm: '16px' } }}>
+                              <Stack
+                                sx={{
+                                  flexDirection: { xs: 'column', sm: 'row' },
+                                  alignItems: { xs: 'start', sm: 'center' },
+                                  mt: 0.5,
+                                }}
+                              >
+                                <Typography
+                                  variant="caption"
+                                  fontWeight={500}
+                                  color="#75757A"
+                                  sx={{ fontSize: { xs: '10px', sm: '12px' }, lineHeight: { xs: '14px', sm: '16px' } }}
+                                >
                                   Limited to first 100 users who reach Tier MAX
                                 </Typography>
                                 <Box sx={{ display: { xs: 'none', sm: 'block' }, width: 16, height: 16 }}>
                                   <DotIcon style={{ width: '100%', height: '100%' }} />
                                 </Box>
-                                <Typography variant="caption" fontWeight={500} color="#75757A" sx={{ fontSize: { xs: '10px', sm: '12px' }, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                <Typography
+                                  variant="caption"
+                                  fontWeight={500}
+                                  color="#75757A"
+                                  sx={{
+                                    fontSize: { xs: '10px', sm: '12px' },
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                  }}
+                                >
                                   {currentBadge.totalClaimed}/{currentBadge.tokenBadge.maxClaims ?? 0}
                                 </Typography>
                               </Stack>

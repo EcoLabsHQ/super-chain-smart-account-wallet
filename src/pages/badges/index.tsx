@@ -2,7 +2,18 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useEffect, useMemo, useState } from 'react'
 import SearchIcon from '@mui/icons-material/Search'
-import { Box, Button, Divider, Grid, InputAdornment, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Divider,
+  Grid,
+  InputAdornment,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import useSafeInfo from '@/hooks/useSafeInfo'
 import LoadIcon from '@/public/images/common/load.svg'
@@ -324,7 +335,12 @@ const Home: NextPage = () => {
                   Clear All
                 </Button>
               </Stack>
-              <Stack direction="row" alignItems="center" gap={1} sx={{ mt: { xs: 1, sm: 0 }, justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                gap={1}
+                sx={{ mt: { xs: 1, sm: 0 }, justifyContent: { xs: 'flex-start', sm: 'flex-end' } }}
+              >
                 <Button
                   component="a"
                   onClick={() => mutate()}

@@ -35,7 +35,11 @@ export default function BadgeTierCard({ tier, currentBadge }: Props) {
       alignItems="end"
       justifyContent="space-between"
       gap="4px"
-      sx={{ padding: { xs: "12px 8px 12px 8px", sm: "12px 15px 12px 8px" }, opacity: completed ? 1 : 0.4, filter: completed ? '' : 'grayscale(100%)' }}
+      sx={{
+        padding: { xs: '12px 8px 12px 8px', sm: '12px 15px 12px 8px' },
+        opacity: completed ? 1 : 0.4,
+        filter: completed ? '' : 'grayscale(100%)',
+      }}
     >
       <Stack direction="row" alignItems="center" gap="16px">
         <div style={{ position: 'relative', border: '1px solid #E1E2EA', borderRadius: '12px' }}>
@@ -56,13 +60,23 @@ export default function BadgeTierCard({ tier, currentBadge }: Props) {
         </div>
         <Stack>
           <Stack sx={{ flexDirection: { xs: 'column', sm: 'row' } }}>
-            <Typography variant="caption" fontWeight={500} color="#75757A" sx={{ fontSize: { xs: '10px', sm: '12px' } }}>
+            <Typography
+              variant="caption"
+              fontWeight={500}
+              color="#75757A"
+              sx={{ fontSize: { xs: '10px', sm: '12px' } }}
+            >
               Tier {tier.tier}
             </Typography>
             <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
               <DotIcon style={{ width: '16px', heigth: '16px' }} />
             </Box>
-            <Typography variant="caption" fontWeight={500} color="#75757A" sx={{ fontSize: { xs: '10px', sm: '12px' } }}>
+            <Typography
+              variant="caption"
+              fontWeight={500}
+              color="#75757A"
+              sx={{ fontSize: { xs: '10px', sm: '12px' } }}
+            >
               {`${formatAmount(statistics?.totalClaimed ?? 0)} (${formatPercentage(
                 statistics?.percentage ?? 0,
               )}%) Users Completed`}
