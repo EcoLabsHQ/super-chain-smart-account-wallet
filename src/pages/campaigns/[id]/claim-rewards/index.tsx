@@ -74,11 +74,19 @@ export default function Page() {
     isLoading: isCheckLoading,
     refetch: refetchAirdrop,
   } = useQuery({
-    queryKey: ['check-airdrop', safeAddress],
-    queryFn: () => checkAirdropEligibility(safeAddress, campaign?.id!),
-    enabled: !!safeAddress,
+    queryKey: ['check-airdrop', safeAddress, campaignId],
+    queryFn: () => checkAirdropEligibility(safeAddress, campaignId!),
+    enabled: !!safeAddress && !!campaignId,
   })
+
   const erc20Token = campaign?.claimable_reward?.token as Address
+
+  const isAirdropReady =
+    !!airdropData &&
+    !isCheckLoading &&
+    airdropData.value > 0 &&
+    Array.isArray(airdropData.proofs) &&
+    airdropData.proofs.length > 0
 
   const { mutate, isPending, isError } = useMutation({
     mutationFn: async () => {
@@ -496,11 +504,15 @@ export default function Page() {
                       padding: '15px',
                       color: 'white',
                       ':hover': { background: 'black' },
+                      opacity: !isAirdropReady ? 0.5 : 1,
+                      cursor: !isAirdropReady ? 'not-allowed' : 'pointer',
                     }}
                     onClick={() => mutate()}
+                    disabled={!isAirdropReady || isPending}
                   >
                     {isPending ? 'Claiming Rewards...' : isError ? 'Error! Try Again' : 'Claim Rewards'}
                   </Button>
+
                   <Stack direction="row" gap="4px" justifyContent="center" alignItems="center">
                     <Typography variant="caption" color="#75757A">
                       Reward Formula{' '}
