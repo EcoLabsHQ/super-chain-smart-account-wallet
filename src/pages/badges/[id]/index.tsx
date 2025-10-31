@@ -150,6 +150,11 @@ export default function BadgePage() {
   console.log('Current Badge:', currentBadge)
   console.log('Strategy:', strategy)
 
+
+  function canClaimBadge(currentBadge: BadgeWithPrize): boolean {
+    return (currentBadge?.claimable && currentBadge?.tier == currentBadge?.badgeTiers.length) || (currentBadge?.claimableByPerk ?? false)
+  }
+
   return (
     <>
       <Head>
@@ -253,28 +258,28 @@ export default function BadgePage() {
                   {strategy?.render
                     ? strategy.render(currentBadge as any)
                     : currentBadge.action_description && (
-                        <Button
-                          component="a"
-                          href={currentBadge.action_link}
-                          target="_blank"
-                          rel="noreferrer"
-                          variant="text"
-                          sx={{
-                            width: '118px',
-                            height: '36px',
-                            backgroundColor: 'black',
-                            borderRadius: '12px',
-                            color: 'white',
-                            ':hover': { backgroundColor: 'black' },
-                            padding: '15px 10px 15px 8px',
-                          }}
-                        >
-                          <Typography variant="body2" fontWeight={600}>
-                            {currentBadge.action_description}
-                          </Typography>
-                          <Launch sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
-                        </Button>
-                      )}
+                      <Button
+                        component="a"
+                        href={currentBadge.action_link}
+                        target="_blank"
+                        rel="noreferrer"
+                        variant="text"
+                        sx={{
+                          width: '118px',
+                          height: '36px',
+                          backgroundColor: 'black',
+                          borderRadius: '12px',
+                          color: 'white',
+                          ':hover': { backgroundColor: 'black' },
+                          padding: '15px 10px 15px 8px',
+                        }}
+                      >
+                        <Typography variant="body2" fontWeight={600}>
+                          {currentBadge.action_description}
+                        </Typography>
+                        <Launch sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
+                      </Button>
+                    )}
                 </Stack>
               </Stack>
               <Divider />
@@ -576,7 +581,7 @@ export default function BadgePage() {
                         )}
                       </Stack>
                     </Card>
-                    {currentBadge.claimable && currentBadge.tier == currentBadge.badgeTiers.length && (
+                    {canClaimBadge(currentBadge) && (
                       <Stack
                         direction="row"
                         alignItems="center"
@@ -608,7 +613,7 @@ export default function BadgePage() {
                       </Stack>
                     )}
                   </Stack>
-                  {!(currentBadge.claimable && currentBadge.tier == currentBadge.badgeTiers.length) && (
+                  {canClaimBadge(currentBadge) && (
                     <Stack direction="row" justifyContent="flex-end" sx={{ mt: 1 }}>
                       <InlineClaimButton
                         style={{
