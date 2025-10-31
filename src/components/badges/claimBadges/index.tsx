@@ -43,18 +43,17 @@ export function ClaimBadgesProvider({ safeAddress, safeLoaded, token, data, chil
 
   const canClaim: boolean = useMemo(() => data.currentBadges.some((b) => b.claimable), [data.currentBadges])
 
+  // p.ej. en ClaimBadgesContext.tsx
+  type ClaimResponse = ClaimData & {
+    points: number // <- agrega lo que realmente devuelve el backend
+    badgeUpdates: ResponseBadge[] // <- asegúrate de que esté tipado
+  }
+
   const { mutate, isPending, isError } = useMutation({
-    mutationFn: async (): Promise<ClaimData> => {
+    mutationFn: async (): Promise<ClaimResponse> => {
       return await badgesService.attestBadges(safeAddress, token)
     },
-    onError: (error: unknown) => {
-      setErrorDetail(String(error))
-      // Consola para debug; no UI extra aquí
-      // eslint-disable-next-line no-console
-      console.error(error)
-    },
-    onSuccess: (response: ClaimData) => {
-      // ——— Cache updates ———
+    onSuccess: (response) => {
       void queryClient.cancelQueries({ queryKey: ['superChainAccount', safeAddress] })
       void queryClient.cancelQueries({ queryKey: ['badges', safeAddress, safeLoaded] })
 
@@ -67,17 +66,26 @@ export function ClaimBadgesProvider({ safeAddress, safeLoaded, token, data, chil
         ['badges', safeAddress, safeLoaded],
         (old: { currentBadges: ResponseBadge[] } | undefined) => {
           if (!old) return old
+
           const badgeUpdates: ResponseBadge[] = old.currentBadges.map((badge) => {
             const upd = response.badgeUpdates.find((u) => u.badgeId === badge.badgeId)
-            return upd ? { ...badge, level: upd.level, points: upd.points, claimable: false } : badge
+            if (!upd) return badge
+
+            // ResponseBadge: { tier: string; points: string; ... }
+            return {
+              ...badge,
+              tier: String(upd.level ?? badge.tier), // ← antes: level
+              points: String(upd.points ?? badge.points),
+              // si ResponseBadge no define 'claimable', NO lo agregues aquí
+            } as ResponseBadge
           })
-          return { currentBadges: [...old.currentBadges, ...badgeUpdates] }
+
+          return { currentBadges: badgeUpdates }
         },
       )
 
       void queryClient.refetchQueries({ queryKey: ['superChainAccount', safeAddress] })
 
-      // ——— Modales ———
       setClaimData(response)
       setOpenClaimDialog(true)
     },
