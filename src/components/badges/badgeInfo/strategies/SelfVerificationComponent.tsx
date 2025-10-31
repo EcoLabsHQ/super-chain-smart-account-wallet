@@ -9,6 +9,7 @@ import { ResponseBadge } from '@/types/super-chain'
 import { uuidv4 } from '@walletconnect/utils'
 import dynamic from 'next/dynamic'
 import CountryFlag from '@/components/CountryFlag'
+import { useClaimBadges } from '@/components/badges/claimBadges'
 
 const SelfQRcodeWrapper = dynamic(() => import('@selfxyz/qrcode').then((mod) => mod.SelfQRcodeWrapper), { ssr: false })
 
@@ -16,10 +17,10 @@ export function SelfVerificationComponent({ badge }: { badge: ResponseBadge }) {
   const [isValidationModalOpen, setValidationModalOpen] = useState(false)
   const [isSuccessModalOpen, setSuccessModalOpen] = useState(false)
   const [selfApp, setSelfApp] = useState<any>(null)
-  const [SelfQRcode, setSelfQRcode] = useState<any>(null)
   const [userId] = useState<string | undefined>(uuidv4())
   const address = useSafeAddress()
   const queryClient = useQueryClient()
+  const { claim, isPending } = useClaimBadges()
 
   useEffect(() => {
     const init = async () => {
@@ -65,7 +66,7 @@ export function SelfVerificationComponent({ badge }: { badge: ResponseBadge }) {
 
   const handleSuccessModalClose = () => {
     setSuccessModalOpen(false)
-    window.dispatchEvent(new CustomEvent('claim-badges', { detail: { userId: userId?.toString() } }))
+    claim()
   }
 
   const { data } = useQuery({
@@ -198,6 +199,7 @@ export function SelfVerificationComponent({ badge }: { badge: ResponseBadge }) {
             fullWidth
             variant="contained"
             onClick={handleSuccessModalClose}
+            disabled={isPending}
             sx={{
               mx: 0,
               backgroundColor: '#000',
@@ -208,7 +210,7 @@ export function SelfVerificationComponent({ badge }: { badge: ResponseBadge }) {
               ':hover': { backgroundColor: '#222' },
             }}
           >
-            Claim Badge
+            {isPending ? 'Claiming…' : 'Claim Badge'}
           </Button>
         </DialogContent>
       </Dialog>

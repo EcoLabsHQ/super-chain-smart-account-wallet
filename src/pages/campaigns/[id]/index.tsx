@@ -495,10 +495,7 @@ export default function Page() {
               <Stack direction="row" justifyContent="flex-end" sx={{ mt: 2 }}>
                 <button
                   onClick={() => {
-                    router.push({
-                      pathname: '/badges',
-                      query: router.query,
-                    })
+                    window.dispatchEvent(new CustomEvent('claim-badges'))
                   }}
                   style={{
                     WebkitBoxOrient: 'vertical',
