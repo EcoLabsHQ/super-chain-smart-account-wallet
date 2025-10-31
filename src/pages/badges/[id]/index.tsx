@@ -39,6 +39,7 @@ import { FarcasterLinkStrategy } from '@/components/badges/badgeInfo/strategies/
 import ETHVaultStrategy from '@/components/badges/badgeInfo/strategies/ETHVaultStrategy'
 import { ClaimBadgesProvider, useClaimBadges } from '@/components/badges/claimBadges'
 import { Address } from 'viem'
+import { SelfVerificationStrategy } from '@/components/badges/badgeInfo/strategies/SelfVerificationStrategy'
 
 export const getBadgeStrategy = (
   badgeOrClaim: any,
@@ -58,7 +59,7 @@ const strategies = [
   new WorldIDVerificationStrategy(),
   new FarcasterLinkStrategy(),
   new ETHVaultStrategy(),
-  // new SelfVerificationStrategy(),
+  new SelfVerificationStrategy(),
 ]
 
 function InlineClaimButton({ children, style }: { children?: React.ReactNode; style?: React.CSSProperties }) {
