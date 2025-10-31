@@ -3,6 +3,7 @@ import { Box, Stack, SvgIcon, Typography } from '@mui/material'
 import SuperChainPoints from '@/public/images/common/superChain.svg'
 import React from 'react'
 import { NounProps } from '@/components/new-safe/create/steps/AvatarStep'
+import CountryFlag from '@/components/CountryFlag'
 
 type _Props = {
   isMainProfile?: boolean
@@ -12,10 +13,11 @@ type _Props = {
   level: string
   noun: NounProps
   badges: number
+  nationality?: string
   onClick?: () => void
 }
 
-function RankingProfile({ isMainProfile, position, points, name, level, badges, noun, onClick }: _Props) {
+function RankingProfile({ isMainProfile, position, points, name, level, badges, noun, nationality, onClick }: _Props) {
   return (
     <Box
       sx={{
@@ -66,6 +68,7 @@ function RankingProfile({ isMainProfile, position, points, name, level, badges, 
           <Typography fontSize={14}>
             <strong>{name.split('.superchain')[0]}</strong>.superchain
           </Typography>
+          {nationality && <CountryFlag alpha3={nationality} size={24} />}
           <Box
             display={{ xs: 'none', sm: 'block' }}
             bgcolor="white"

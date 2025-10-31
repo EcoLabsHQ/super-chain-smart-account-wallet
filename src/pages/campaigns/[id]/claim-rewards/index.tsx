@@ -515,20 +515,16 @@ export default function Page() {
         <Dialog
           open={openClaimDialog}
           onClose={() => setOpenClaimDialog(false)}
-          fullWidth
-          maxWidth="sm"
-          PaperProps={{ sx: { p: { xs: 2, md: 3 }, borderRadius: 2 } }}
+          PaperProps={{ sx: { width: '345px', paddingY: '4px', borderRadius: 2 } }}
         >
           <Card
             sx={{
-              padding: '20px',
               display: 'flex',
               flexDirection: 'column',
-              gap: 2,
             }}
           >
             {/* Header */}
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Stack direction="row" justifyContent="space-between" alignItems="center" padding="16px">
               <Typography variant="h4" fontWeight="600">
                 Claim Complete
               </Typography>
@@ -536,7 +532,7 @@ export default function Page() {
               {/* <CheckCircleIcon sx={{ color: "success.main" }} /> */}
             </Stack>
             <Divider sx={{ width: '100%' }} />
-            <Box>
+            <Box padding="16px 16px 0 16px">
               <Typography sx={{ fontSize: '12px', fontWeight: 400, color: '#75757A', m: 0 }}>
                 You’ve successfully claimed your rewards
               </Typography>
@@ -552,7 +548,7 @@ export default function Page() {
 
             {/* Reward Box */}
             {/* <Image src="/imgs/usd-coin.svg" alt="usd coin" width={36} height={36} /> */}
-            <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
+            <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: 2, margin: '16px' }}>
               <Stack direction="row" alignItems="center" gap={2}>
                 <Box sx={{ position: 'relative' }}>
                   <Image
@@ -583,7 +579,7 @@ export default function Page() {
               </Stack>
             </Card>
             <Divider sx={{ width: '100%' }} />
-            <Stack gap="8px">
+            <Stack gap="8px" padding="16px">
               <Button
                 onClick={() => router.push({ pathname: AppRoutes.vaults.index, query: { safe: router.query.safe } })}
                 sx={{
@@ -607,7 +603,11 @@ export default function Page() {
               </Button>
             </Stack>
 
-            <Button href={claimTransactionLink} target="_blank" sx={{ '&:hover': { background: 'transparent' } }}>
+            <Button
+              href={claimTransactionLink}
+              target="_blank"
+              sx={{ '&:hover': { background: 'transparent' }, paddingBottom: '16px' }}
+            >
               <Stack direction="row" gap="4px" justifyContent="center" alignItems="center">
                 <Typography variant="caption" color="#75757A">
                   View on Explorer

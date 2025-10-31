@@ -2,6 +2,7 @@ import { BACKEND_BASE_URI } from '@/config/constants'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { Address } from 'viem'
+import { fetchNationalities } from './useLeaderboard'
 
 type Noun = {
   accessory: number
@@ -13,6 +14,7 @@ type Noun = {
 
 type UserRank = {
   rank: number
+  nationality?: string
   data: {
     levels: number
     noun: string
@@ -32,11 +34,13 @@ export const useUserRank = (userAddress: Address) => {
     queryKey: ['userRank', userAddress],
     queryFn: async () => {
       const response = await axios.get<UserRank>(`${BACKEND_BASE_URI}/leaderboard/${userAddress}`)
+      const nationality = await fetchNationalities([response.data.data.superaccount])
       if (response.data === null) {
         return null
       }
       return {
         rank: response.data.rank,
+        nationality: nationality[response.data.data.superaccount] || 'UNKNOWN',
         data: {
           ...response.data.data,
           noun: JSON.parse(response.data.data.noun) as Noun,
@@ -46,5 +50,5 @@ export const useUserRank = (userAddress: Address) => {
     enabled: !!userAddress,
   })
 
-  return { rank: response?.rank, user: response?.data, loading: isLoading, error }
+  return { rank: response?.rank, nationality: response?.nationality, user: response?.data, loading: isLoading, error }
 }

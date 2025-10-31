@@ -1,5 +1,6 @@
 import ModalDialog from '@/components/common/ModalDialog'
 import NounsAvatar from '@/components/common/NounsAvatar'
+import CountryFlag from '@/components/CountryFlag'
 import Badges from '@/components/superChain/Badges'
 import Perks from '@/components/superChain/Perks'
 import { BACKEND_BASE_URI } from '@/config/constants'
@@ -20,7 +21,7 @@ function AccountOverview({ open, onClose }: { open: boolean; onClose: () => void
   const superChainSmartAccount = useAppSelector(selectSuperChainAccount)
   const safeAddress: Address = useSafeAddress() as Address
 
-  const { rank } = useUserRank(safeAddress)
+  const { rank, nationality } = useUserRank(safeAddress)
 
   const { data: user, isLoading: userIsLoading } = useQuery<UserResponse>({
     queryKey: ['AccountOverview'],
@@ -113,6 +114,13 @@ function AccountOverview({ open, onClose }: { open: boolean; onClose: () => void
               justifyContent="flex-start"
               alignItems="flex-start"
             >
+              <Box display="flex" alignItems="center" gap={1}>
+                <Typography fontWeight={600} color="primary" fontSize={16} whiteSpace="normal" display="inline">
+                  {truncateName(superChainSmartAccount.data.superChainID.split('.prosperity')[0], 12)}
+                  <span style={{ color: 'var(--color-secondary-main)' }}>.prosperity</span>
+                </Typography>
+                {nationality && <CountryFlag alpha3={nationality} size={24} />}
+              </Box>
               <Typography
                 fontWeight={600}
                 color="primary"
