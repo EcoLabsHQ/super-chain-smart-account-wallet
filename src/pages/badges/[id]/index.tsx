@@ -150,7 +150,14 @@ export default function BadgePage() {
   console.log('Current Badge:', currentBadge)
   console.log('Strategy:', strategy)
 
-  function canClaimBadge(currentBadge: BadgeWithPrize): boolean {
+  // function canClaimBadge(currentBadge: BadgeWithPrize): boolean {
+  //   return (
+  //     (currentBadge?.claimable && currentBadge?.tier == currentBadge?.badgeTiers.length) ||
+  //     (currentBadge?.claimableByPerk ?? false)
+  //   )
+  // }
+
+  function canClaimByPerk(currentBadge: BadgeWithPrize): boolean {
     return (
       (currentBadge?.claimable && currentBadge?.tier == currentBadge?.badgeTiers.length) ||
       (currentBadge?.claimableByPerk ?? false)
@@ -583,7 +590,7 @@ export default function BadgePage() {
                         )}
                       </Stack>
                     </Card>
-                    {canClaimBadge(currentBadge) && (
+                    {currentBadge.claimableByPerk && (
                       <Stack
                         direction="row"
                         alignItems="center"
@@ -615,7 +622,7 @@ export default function BadgePage() {
                       </Stack>
                     )}
                   </Stack>
-                  {canClaimBadge(currentBadge) && (
+                  {currentBadge.claimable && !currentBadge.claimableByPerk && (
                     <Stack direction="row" justifyContent="flex-end" sx={{ mt: 1 }}>
                       <InlineClaimButton
                         style={{
