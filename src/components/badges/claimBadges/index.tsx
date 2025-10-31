@@ -41,7 +41,9 @@ export function ClaimBadgesProvider({ safeAddress, safeLoaded, token, data, chil
   const [claimData, setClaimData] = useState<ClaimData | null>(null)
   const [errorDetail, setErrorDetail] = useState<string>('')
 
-  const canClaim: boolean = useMemo(() => data.currentBadges.some((b) => b.claimable), [data.currentBadges])
+  const canClaim: boolean = useMemo(() => {
+    return data.currentBadges.some((b) => b.claimable || (b.claimableByPerk ?? false))
+  }, [data.currentBadges])
 
   // p.ej. en ClaimBadgesContext.tsx
   type ClaimResponse = ClaimData & {

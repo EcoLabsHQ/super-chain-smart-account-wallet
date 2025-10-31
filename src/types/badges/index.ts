@@ -37,6 +37,7 @@ export type BadgeWithPrize = {
   tier: number
   claimableTier: number
   claimable: boolean
+  claimableByPerk: boolean
   campaigns: string[]
   currentCount: number
   totalClaimed?: number
