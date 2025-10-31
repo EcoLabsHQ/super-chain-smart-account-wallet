@@ -52,12 +52,9 @@ export function FarcasterVerificationComponent({ badge, onClaim }: FarcasterVeri
 
   // Intentar obtener claim() del Provider si no nos pasan onClaim
   let claimFromProvider: (() => void) | undefined
-  try {
-    const { claim } = useClaimBadges()
-    claimFromProvider = claim
-  } catch {
-    claimFromProvider = undefined
-  }
+
+  const { claim } = useClaimBadges()
+  claimFromProvider = claim
 
   const triggerClaim = () => {
     const fire = onClaim ?? claimFromProvider

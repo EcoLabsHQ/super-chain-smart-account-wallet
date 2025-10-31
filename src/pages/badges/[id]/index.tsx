@@ -39,7 +39,6 @@ import { FarcasterLinkStrategy } from '@/components/badges/badgeInfo/strategies/
 import ETHVaultStrategy from '@/components/badges/badgeInfo/strategies/ETHVaultStrategy'
 import { SelfVerificationStrategy } from '@/components/badges/badgeInfo/strategies/SelfVerificationStrategy'
 import { ClaimBadgesProvider, useClaimBadges } from '@/components/badges/claimBadges'
-import Turnstile from 'react-turnstile'
 import { Address } from 'viem'
 
 export const getBadgeStrategy = (

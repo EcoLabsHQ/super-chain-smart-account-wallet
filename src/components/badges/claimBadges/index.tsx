@@ -121,6 +121,9 @@ export function ClaimBadgesProvider({ safeAddress, safeLoaded, token, data, chil
 
 export function useClaimBadges(): ClaimBadgesContextValue {
   const ctx = useContext(ClaimBadgesContext)
-  if (!ctx) throw new Error('useClaimBadges must be used within <ClaimBadgesProvider>')
+  if (!ctx) {
+    console.error('useClaimBadges must be used within <ClaimBadgesProvider>')
+    return undefined as unknown as ClaimBadgesContextValue
+  }
   return ctx
 }
