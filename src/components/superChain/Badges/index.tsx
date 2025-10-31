@@ -15,7 +15,6 @@ function Badges({ badges, isLoading }: { badges?: BadgeResponse[]; isLoading?: b
         </>
       ) : (
         badges?.map((badge, key) => {
-          console.debug('Badge:', badge)
           return (
             <Tooltip
               arrow

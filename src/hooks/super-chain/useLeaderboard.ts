@@ -35,7 +35,7 @@ export function useLeaderboard() {
       return {
         data: response.data.data.map((user) => ({
           ...user,
-          nationality: nationalities[user.superaccount] || 'UNKNOWN',
+          nationality: nationalities[user.superaccount.trim().toUpperCase()],
           noun: JSON.parse(user.noun) as Noun,
         })),
         hasNextPage: response.data.hasNextPage,

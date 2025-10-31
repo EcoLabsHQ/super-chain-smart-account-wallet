@@ -5,6 +5,7 @@ import Badges from '@/components/superChain/Badges'
 import Perks from '@/components/superChain/Perks'
 import { BACKEND_BASE_URI } from '@/config/constants'
 import useCurrentPerks from '@/hooks/super-chain/useCurrentPerks'
+import { useUserNationality } from '@/hooks/super-chain/useUserNationality'
 import { useUserRank } from '@/hooks/super-chain/useUserRank'
 import useSafeAddress from '@/hooks/useSafeAddress'
 import { useAppSelector } from '@/store'
@@ -21,7 +22,8 @@ function AccountOverview({ open, onClose }: { open: boolean; onClose: () => void
   const superChainSmartAccount = useAppSelector(selectSuperChainAccount)
   const safeAddress: Address = useSafeAddress() as Address
 
-  const { rank, nationality } = useUserRank(safeAddress)
+  const { rank } = useUserRank(safeAddress)
+  const { data: nationalityData } = useUserNationality(safeAddress)
 
   const { data: user, isLoading: userIsLoading } = useQuery<UserResponse>({
     queryKey: ['AccountOverview'],
@@ -119,7 +121,7 @@ function AccountOverview({ open, onClose }: { open: boolean; onClose: () => void
                   {truncateName(superChainSmartAccount.data.superChainID.split('.prosperity')[0], 12)}
                   <span style={{ color: 'var(--color-secondary-main)' }}>.prosperity</span>
                 </Typography>
-                {nationality && <CountryFlag alpha3={nationality} size={24} />}
+                {nationalityData && <CountryFlag alpha3={nationalityData.nationality} size={24} />}
               </Box>
               <Typography
                 fontWeight={600}
