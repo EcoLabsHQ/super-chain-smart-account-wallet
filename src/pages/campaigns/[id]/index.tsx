@@ -29,10 +29,15 @@ import NetworkChip from '@/components/badges/networkChip'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { tokens } from '@/config/tokens'
+import useSafeInfo from '@/hooks/useSafeInfo'
+import { ClaimBadgesProvider } from '@/components/badges/claimBadges'
+import { Address } from 'viem'
+import { InlineClaimButton } from '@/pages/badges/[id]'
 
 export default function Page() {
   const router = useRouter()
   const [openInfo, setOpenInfo] = useState(false)
+  const [token, setToken] = useState<string | null>(null)
   const address = useSafeAddress()
   const campaignId = router.query.id as string | undefined
 
@@ -45,6 +50,7 @@ export default function Page() {
       return (data as Campaign[]).find((c) => c.id === campaignId)
     },
   })
+  const { safeAddress, safeLoaded, badges } = useSafeInfo()
 
   function getCalendarValues(date: string | Date): { day: number; month: string } {
     const d = new Date(date)
@@ -139,6 +145,7 @@ export default function Page() {
   const { day, month } = getCalendarValues(campaign.start_date)
   const now = new Date()
   const isLive = now >= new Date(campaign.start_date) && now <= new Date(campaign.end_date)
+  const claimableBadges = badges?.some((badge) => campaign.campaign_badges?.some((cb) => cb.id === badge.badgeId && (badge.claimable || badge.claimableByPerk)))
 
   return (
     <>
@@ -147,463 +154,449 @@ export default function Page() {
       </Head>
 
       <main>
-        <Stack gap="32px" sx={{ p: { xs: 2, sm: 4 }, maxWidth: 718, mx: 'auto' }}>
-          {/* Header */}
-          <Stack direction="row" justifyContent="space-between" alignItems="center" gap="4px">
-            <Stack direction="row" gap="16px" alignItems="center">
-              <button
-                onClick={() => router.push({ pathname: AppRoutes.campaigns, query: { safe: router.query.safe } })}
-                style={{
-                  width: '36px',
-                  height: '36px',
-                  backgroundColor: '#F1F2F5',
-                  borderRadius: '12px',
-                  color: 'black',
-                  border: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                }}
-              >
-                <ArrowBack sx={{ width: '16px', height: '16px' }} />
-              </button>
-              <Stack sx={{ flexDirection: { xs: 'column', md: 'row' }, alignItems: { xs: 'start', md: 'center' } }}>
-                <Typography
-                  variant="h3"
-                  fontWeight={600}
-                  sx={{
-                    display: 'inline-block',
-                    fontSize: { xs: '12px', sm: '24px' },
-                    lineHeight: { xs: '20px', sm: '32px' },
-                  }}
-                >
-                  {campaign.name}{' '}
-                </Typography>
-                <Typography
-                  sx={{
-                    transform: 'translateY(-2px)',
-                    display: 'inline-block',
-                    fontSize: { xs: '12px', sm: '14px' },
-                    lineHeight: { xs: '20px', sm: '32px' },
-                  }}
-                  component="span"
-                  variant="body2"
-                  color="#A0A0A6"
-                >
-                  Campaign
-                </Typography>
-              </Stack>
-            </Stack>
-            <Stack direction="row" spacing={2}>
-              <Button
-                onClick={() => setOpenInfo(true)}
-                variant="text"
-                sx={{
-                  height: '36px',
-                  backgroundColor: '#F1F2F5',
-                  borderRadius: '12px',
-                  color: 'black',
-                  ':hover': { backgroundColor: '#F1F2F5' },
-                  padding: { xs: '4px 10px 4px 8px', sm: '15px 10px 15px 12px' },
-                }}
-              >
-                <Typography variant="body2" fontWeight={600} fontSize={{ xs: '12px', sm: '14px' }}>
-                  Details
-                </Typography>
-                <SvgIcon
-                  component={InfoIcon}
-                  sx={{ width: { xs: '12px', sm: '16px' }, height: { xs: '12px', sm: '16px' }, marginLeft: '4px' }}
-                />
-              </Button>
-              {campaign.campaign_link && (
-                <Button
-                  component="a"
-                  href={campaign.campaign_link}
-                  target="_blank"
-                  rel="noreferrer"
-                  variant="text"
-                  sx={{
-                    width: '118px',
+        <ClaimBadgesProvider
+          safeAddress={safeAddress as Address}
+          safeLoaded={!!safeLoaded}
+          token={token}
+          data={{ currentBadges: badges ?? [] }}
+        >
+          <Stack gap="32px" sx={{ p: { xs: 2, sm: 4 }, maxWidth: 718, mx: 'auto' }}>
+            {/* Header */}
+            <Stack direction="row" justifyContent="space-between" alignItems="center" gap="4px">
+              <Stack direction="row" gap="16px" alignItems="center">
+                <button
+                  onClick={() => router.push({ pathname: AppRoutes.campaigns, query: { safe: router.query.safe } })}
+                  style={{
+                    width: '36px',
                     height: '36px',
-                    backgroundColor: 'black',
+                    backgroundColor: '#F1F2F5',
                     borderRadius: '12px',
-                    color: 'white',
-                    ':hover': { backgroundColor: 'black' },
-                    padding: '15px 10px 15px 8px',
+                    color: 'black',
+                    border: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
                   }}
                 >
-                  <Typography variant="body2" fontWeight={600}>
-                    Participate
-                  </Typography>
-                  <Launch sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
-                </Button>
-              )}
-            </Stack>
-          </Stack>
-          <Divider />
-
-          <Stack gap="8px">
-            <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
-              <Typography color="text.secondary">{campaign.description}</Typography>
-            </Card>
-            <Grid container spacing={1}>
-              {/* Dates */}
-              <Grid item xs={12} sm={6}>
-                <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
-                  <Stack direction="row" gap={2} alignItems="center">
-                    <div style={{ position: 'relative' }}>
-                      {isLive && (
-                        <div
-                          style={{
-                            position: 'absolute',
-                            left: '-4px',
-                            top: '-4px',
-                            width: '13px',
-                            height: '13px',
-                            backgroundColor: '#39D551',
-                            borderRadius: '100%',
-                            border: '2px solid white',
-                          }}
-                        />
-                      )}
-
-                      <div>
-                        <Stack
-                          alignItems="center"
-                          justifyContent="center"
-                          style={{
-                            width: '40px',
-                            height: '16px',
-                            borderTopLeftRadius: '12px',
-                            borderTopRightRadius: '12px',
-                            background: '#E1E2EA',
-                          }}
-                        >
-                          <Typography fontSize="8px" fontWeight={600} style={{ transform: 'translateY(1px)' }}>
-                            {month}
-                          </Typography>
-                        </Stack>
-                        <Stack
-                          alignItems="center"
-                          justifyContent="center"
-                          style={{
-                            width: '40px',
-                            height: '24px',
-                            borderRadius: '0px 0px 12px 12px',
-                            border: '1px solid #E1E2EA',
-                            background: 'white',
-                          }}
-                        >
-                          <Typography variant="h5" fontWeight={600}>
-                            {day}
-                          </Typography>
-                        </Stack>
-                      </div>
-                    </div>
-                    <Stack gap="2px">
-                      <Typography sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px' }}>
-                        {formatDates(campaign.start_date)}
-                      </Typography>
-                      <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
-                        till {formatDates(campaign.end_date)}
-                      </Typography>
-                    </Stack>
-                  </Stack>
-                </Card>
-              </Grid>
-
-              {/* Networks (con guardas) */}
-              <Grid item xs={12} sm={6}>
-                <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
-                  <Stack direction="row" gap={2} alignItems="center">
-                    <Stack
-                      style={{ width: `${avatarStripWidth}px`, position: 'relative', zIndex: 0 }}
-                      direction="row"
-                      alignItems="center"
-                    >
-                      {networks.map((network, index) => (
-                        <div
-                          key={`${campaign.id}-${network}-${index}`}
-                          style={{
-                            zIndex: (networks.length + 1 - index) * 10,
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width: '40px',
-                            minWidth: '40px',
-                            height: '40px',
-                            border: '1px solid #E1E2EA',
-                            background: '#FFFFFF',
-                            borderRadius: '12px',
-                            transform: `translateX(${-index * 12}px)`,
-                          }}
-                        >
-                          <NetworkChip network={network} style="badge" isFavorite={false} />
-                        </div>
-                      ))}
-                    </Stack>
-                    <Stack>
-                      <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
-                        Network
-                      </Typography>
-                      <Typography
-                        sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px', textTransform: 'capitalize' }}
-                      >
-                        {networks.length === 1 ? networks[0] : `${networks.length} Chains`}
-                      </Typography>
-                    </Stack>
-                  </Stack>
-                </Card>
-              </Grid>
-
-              {/* Rewards (con fallback de tokens) */}
-              <Grid item xs={12} sm={6}>
-                <Card sx={{ border: '1px solid #E1E2EA', background: 'white', borderRadius: '12px', p: 2 }}>
-                  <Stack direction="row" gap={2} alignItems="center">
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        width: '40px',
-                        height: '40px',
-                        background: '#FFFFFF',
-                        border: '1px solid #E1E2EA',
-                        borderRadius: '12px',
-                      }}
-                    >
-                      {rewardIcon && (
-                        <SvgIcon
-                          component={rewardIcon}
-                          sx={{ width: 20, height: 20, marginTop: '2px', marginLeft: '3px' }}
-                        />
-                      )}
-                    </div>
-                    <Stack>
-                      <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
-                        Campaign Rewards
-                      </Typography>
-                      <Typography sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px' }}>
-                        {rewardAmount} {rewardSymbol}
-                      </Typography>
-                    </Stack>
-                  </Stack>
-                </Card>
-              </Grid>
-
-              {/* Points */}
-              <Grid item xs={12} sm={6}>
-                <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
-                  <Stack direction="row" gap={2} alignItems="center">
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        width: '40px',
-                        height: '40px',
-                        border: '1px solid #E1E2EA',
-                        background: '#FFFFFF',
-                        borderRadius: '12px',
-                      }}
-                    >
-                      <SuperchainPointIcon style={{ width: '20px', height: '20px' }} />
-                    </div>
-                    <Stack>
-                      <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
-                        Total points distributed
-                      </Typography>
-                      <Typography sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px' }}>
-                        {formatAmount(campaign.distributed_points ?? 0)}
-                      </Typography>
-                    </Stack>
-                  </Stack>
-                </Card>
-              </Grid>
-            </Grid>
-
-            {/* Badges */}
-            <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: { xs: 3, md: 6 } }}>
-              <Stack gap="16px">
-                <Stack direction="row" justifyContent="space-between" alignItems="center">
-                  <Typography variant="body1" fontWeight="500" sx={{ fontSize: { xs: '14px', sm: '16px' } }}>
-                    Campaign Badges
-                  </Typography>
-                  <Stack
-                    direction="row"
-                    alignItems="center"
-                    spacing={0.25}
+                  <ArrowBack sx={{ width: '16px', height: '16px' }} />
+                </button>
+                <Stack sx={{ flexDirection: { xs: 'column', md: 'row' }, alignItems: { xs: 'start', md: 'center' } }}>
+                  <Typography
+                    variant="h3"
+                    fontWeight={600}
                     sx={{
-                      border: '1px solid #E1E2EA',
-                      borderRadius: '100px',
-                      px: { xs: 0.5, sm: 1, md: 1.25 },
-                      py: { xs: 0.25, sm: 0.4 },
-                      display: 'inline-flex',
-                      minWidth: 0,
+                      display: 'inline-block',
+                      fontSize: { xs: '12px', sm: '24px' },
+                      lineHeight: { xs: '20px', sm: '32px' },
                     }}
                   >
-                    <Typography
-                      component="span"
-                      variant="caption"
-                      fontWeight={500}
+                    {campaign.name}{' '}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      transform: 'translateY(-2px)',
+                      display: 'inline-block',
+                      fontSize: { xs: '12px', sm: '14px' },
+                      lineHeight: { xs: '20px', sm: '32px' },
+                    }}
+                    component="span"
+                    variant="body2"
+                    color="#A0A0A6"
+                  >
+                    Campaign
+                  </Typography>
+                </Stack>
+              </Stack>
+              <Stack direction="row" spacing={2}>
+                <Button
+                  onClick={() => setOpenInfo(true)}
+                  variant="text"
+                  sx={{
+                    height: '36px',
+                    backgroundColor: '#F1F2F5',
+                    borderRadius: '12px',
+                    color: 'black',
+                    ':hover': { backgroundColor: '#F1F2F5' },
+                    padding: { xs: '4px 10px 4px 8px', sm: '15px 10px 15px 12px' },
+                  }}
+                >
+                  <Typography variant="body2" fontWeight={600} fontSize={{ xs: '12px', sm: '14px' }}>
+                    Details
+                  </Typography>
+                  <SvgIcon
+                    component={InfoIcon}
+                    sx={{ width: { xs: '12px', sm: '16px' }, height: { xs: '12px', sm: '16px' }, marginLeft: '4px' }}
+                  />
+                </Button>
+                {campaign.campaign_link && (
+                  <Button
+                    component="a"
+                    href={campaign.campaign_link}
+                    target="_blank"
+                    rel="noreferrer"
+                    variant="text"
+                    sx={{
+                      width: '118px',
+                      height: '36px',
+                      backgroundColor: 'black',
+                      borderRadius: '12px',
+                      color: 'white',
+                      ':hover': { backgroundColor: 'black' },
+                      padding: '15px 10px 15px 8px',
+                    }}
+                  >
+                    <Typography variant="body2" fontWeight={600}>
+                      Participate
+                    </Typography>
+                    <Launch sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
+                  </Button>
+                )}
+              </Stack>
+            </Stack>
+            <Divider />
+
+            <Stack gap="8px">
+              <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
+                <Typography color="text.secondary">{campaign.description}</Typography>
+              </Card>
+              <Grid container spacing={1}>
+                {/* Dates */}
+                <Grid item xs={12} sm={6}>
+                  <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
+                    <Stack direction="row" gap={2} alignItems="center">
+                      <div style={{ position: 'relative' }}>
+                        {isLive && (
+                          <div
+                            style={{
+                              position: 'absolute',
+                              left: '-4px',
+                              top: '-4px',
+                              width: '13px',
+                              height: '13px',
+                              backgroundColor: '#39D551',
+                              borderRadius: '100%',
+                              border: '2px solid white',
+                            }}
+                          />
+                        )}
+
+                        <div>
+                          <Stack
+                            alignItems="center"
+                            justifyContent="center"
+                            style={{
+                              width: '40px',
+                              height: '16px',
+                              borderTopLeftRadius: '12px',
+                              borderTopRightRadius: '12px',
+                              background: '#E1E2EA',
+                            }}
+                          >
+                            <Typography fontSize="8px" fontWeight={600} style={{ transform: 'translateY(1px)' }}>
+                              {month}
+                            </Typography>
+                          </Stack>
+                          <Stack
+                            alignItems="center"
+                            justifyContent="center"
+                            style={{
+                              width: '40px',
+                              height: '24px',
+                              borderRadius: '0px 0px 12px 12px',
+                              border: '1px solid #E1E2EA',
+                              background: 'white',
+                            }}
+                          >
+                            <Typography variant="h5" fontWeight={600}>
+                              {day}
+                            </Typography>
+                          </Stack>
+                        </div>
+                      </div>
+                      <Stack gap="2px">
+                        <Typography sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px' }}>
+                          {formatDates(campaign.start_date)}
+                        </Typography>
+                        <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
+                          till {formatDates(campaign.end_date)}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                  </Card>
+                </Grid>
+
+                {/* Networks (con guardas) */}
+                <Grid item xs={12} sm={6}>
+                  <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
+                    <Stack direction="row" gap={2} alignItems="center">
+                      <Stack
+                        style={{ width: `${avatarStripWidth}px`, position: 'relative', zIndex: 0 }}
+                        direction="row"
+                        alignItems="center"
+                      >
+                        {networks.map((network, index) => (
+                          <div
+                            key={`${campaign.id}-${network}-${index}`}
+                            style={{
+                              zIndex: (networks.length + 1 - index) * 10,
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              width: '40px',
+                              minWidth: '40px',
+                              height: '40px',
+                              border: '1px solid #E1E2EA',
+                              background: '#FFFFFF',
+                              borderRadius: '12px',
+                              transform: `translateX(${-index * 12}px)`,
+                            }}
+                          >
+                            <NetworkChip network={network} style="badge" isFavorite={false} />
+                          </div>
+                        ))}
+                      </Stack>
+                      <Stack>
+                        <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
+                          Network
+                        </Typography>
+                        <Typography
+                          sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px', textTransform: 'capitalize' }}
+                        >
+                          {networks.length === 1 ? networks[0] : `${networks.length} Chains`}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                  </Card>
+                </Grid>
+
+                {/* Rewards (con fallback de tokens) */}
+                <Grid item xs={12} sm={6}>
+                  <Card sx={{ border: '1px solid #E1E2EA', background: 'white', borderRadius: '12px', p: 2 }}>
+                    <Stack direction="row" gap={2} alignItems="center">
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          width: '40px',
+                          height: '40px',
+                          background: '#FFFFFF',
+                          border: '1px solid #E1E2EA',
+                          borderRadius: '12px',
+                        }}
+                      >
+                        {rewardIcon && (
+                          <SvgIcon
+                            component={rewardIcon}
+                            sx={{ width: 20, height: 20, marginTop: '2px', marginLeft: '3px' }}
+                          />
+                        )}
+                      </div>
+                      <Stack>
+                        <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
+                          Campaign Rewards
+                        </Typography>
+                        <Typography sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px' }}>
+                          {rewardAmount} {rewardSymbol}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                  </Card>
+                </Grid>
+
+                {/* Points */}
+                <Grid item xs={12} sm={6}>
+                  <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
+                    <Stack direction="row" gap={2} alignItems="center">
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          width: '40px',
+                          height: '40px',
+                          border: '1px solid #E1E2EA',
+                          background: '#FFFFFF',
+                          borderRadius: '12px',
+                        }}
+                      >
+                        <SuperchainPointIcon style={{ width: '20px', height: '20px' }} />
+                      </div>
+                      <Stack>
+                        <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>
+                          Total points distributed
+                        </Typography>
+                        <Typography sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px' }}>
+                          {formatAmount(campaign.distributed_points ?? 0)}
+                        </Typography>
+                      </Stack>
+                    </Stack>
+                  </Card>
+                </Grid>
+              </Grid>
+
+              {/* Badges */}
+              <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: { xs: 3, md: 6 } }}>
+                <Stack gap="16px">
+                  <Stack direction="row" justifyContent="space-between" alignItems="center">
+                    <Typography variant="body1" fontWeight="500" sx={{ fontSize: { xs: '14px', sm: '16px' } }}>
+                      Campaign Badges
+                    </Typography>
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      spacing={0.25}
                       sx={{
-                        color: '#75757A',
-                        fontSize: { xs: '9px', sm: '10px', md: '11px' },
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        display: 'inline-block',
-                        maxWidth: { xs: '64px', sm: '84px' },
+                        border: '1px solid #E1E2EA',
+                        borderRadius: '100px',
+                        px: { xs: 0.5, sm: 1, md: 1.25 },
+                        py: { xs: 0.25, sm: 0.4 },
+                        display: 'inline-flex',
+                        minWidth: 0,
                       }}
                     >
-                      My Points:&nbsp;
                       <Typography
                         component="span"
                         variant="caption"
-                        fontWeight={600}
-                        sx={{ color: 'black', fontSize: { xs: '9px', sm: '10px', md: '11px' } }}
+                        fontWeight={500}
+                        sx={{
+                          color: '#75757A',
+                          fontSize: { xs: '9px', sm: '10px', md: '11px' },
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          display: 'inline-block',
+                          maxWidth: { xs: '64px', sm: '84px' },
+                        }}
                       >
-                        {campaign.myPoints ?? 0}
+                        My Points:&nbsp;
+                        <Typography
+                          component="span"
+                          variant="caption"
+                          fontWeight={600}
+                          sx={{ color: 'black', fontSize: { xs: '9px', sm: '10px', md: '11px' } }}
+                        >
+                          {campaign.myPoints ?? 0}
+                        </Typography>
                       </Typography>
-                    </Typography>
-                    <Box
-                      component="span"
-                      sx={{
-                        display: 'inline-flex',
-                        ml: 0.5,
-                        width: { xs: 12, sm: 14, md: 16 },
-                        height: { xs: 12, sm: 14, md: 16 },
-                      }}
-                    >
-                      <SuperchainPointIcon style={{ width: '100%', height: '100%' }} />
-                    </Box>
+                      <Box
+                        component="span"
+                        sx={{
+                          display: 'inline-flex',
+                          ml: 0.5,
+                          width: { xs: 12, sm: 14, md: 16 },
+                          height: { xs: 12, sm: 14, md: 16 },
+                        }}
+                      >
+                        <SuperchainPointIcon style={{ width: '100%', height: '100%' }} />
+                      </Box>
+                    </Stack>
+                  </Stack>
+
+                  <Stack gap="12px">
+                    {(campaign.campaign_badges ?? []).map((badge, idx) => (
+                      <CampaignBadge
+                        key={badge?.badgeName ?? `badge-${idx}`}
+                        badge={badge}
+                        myPoints={campaign.my_points}
+                      />
+                    ))}
                   </Stack>
                 </Stack>
 
-                <Stack gap="12px">
-                  {(campaign.campaign_badges ?? []).map((badge, idx) => (
-                    <CampaignBadge
-                      key={badge?.badgeName ?? `badge-${idx}`}
-                      badge={badge}
-                      myPoints={campaign.my_points}
-                    />
-                  ))}
-                </Stack>
-              </Stack>
-
-              <Stack direction="row" justifyContent="flex-end" sx={{ mt: 2 }}>
-                <button
-                  onClick={() => {
-                    window.dispatchEvent(new CustomEvent('claim-badges'))
-                  }}
-                  style={{
-                    WebkitBoxOrient: 'vertical',
-                    WebkitLineClamp: 1,
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    color: '#4B4B4E',
-                    fontFamily: '"DM Sans", sans-serif',
-                    fontSize: '14px',
-                    fontStyle: 'normal',
-                    fontWeight: 400,
-                    lineHeight: '20px',
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    padding: 0,
-                  }}
-                >
-                  Claim Badges
-                  <span style={{ fontSize: '16px', lineHeight: '20px', transform: 'translateY(-1px)' }}>›</span>
-                </button>
-              </Stack>
-            </Card>
-          </Stack>
-        </Stack>
-
-        <Dialog
-          open={openInfo}
-          onClose={() => setOpenInfo(false)}
-          fullWidth
-          maxWidth="md"
-          PaperProps={{ sx: { p: { xs: 2, md: 3 }, borderRadius: 2 } }}
-        >
-          <Card sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            {/* Header */}
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
-              <Typography variant="h3" fontWeight={600} sx={{ transform: 'translateY(0px)', display: 'inline-block' }}>
-                {campaign.name}{' '}
-                <Typography
-                  sx={{ transform: 'translateY(-2px)', display: 'inline-block' }}
-                  component="span"
-                  variant="body2"
-                  color="#A0A0A6"
-                >
-                  Campaign Details
-                </Typography>
-              </Typography>
-              <IconButton onClick={() => setOpenInfo(false)} sx={{ bgcolor: '#F1F2F5', width: 36, height: 36 }}>
-                <Close sx={{ width: 16, height: 16 }} />
-              </IconButton>
+                {claimableBadges && (
+                  <Stack mt={2} alignItems="end" justifyContent="center">
+                    <InlineClaimButton>
+                      Claim Badges <span style={{ fontSize: '20px' }}>›</span>
+                    </InlineClaimButton>
+                  </Stack>
+                )
+                }
+              </Card>
             </Stack>
-            <Divider sx={{ width: '100%' }} />
-            <div style={{ color: '#4B4B4E' }}>
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  h1: ({ children }) => (
-                    <Typography component="h1" variant="h4" fontWeight={700} gutterBottom>
-                      {children}
-                    </Typography>
-                  ),
-                  h2: ({ children }) => (
-                    <Typography component="h2" variant="h5" fontWeight={700} gutterBottom>
-                      {children}
-                    </Typography>
-                  ),
-                  h3: ({ children }) => (
-                    <Typography component="h3" variant="h6" fontWeight={700} gutterBottom>
-                      {children}
-                    </Typography>
-                  ),
-                  p: ({ children }) => (
-                    <Typography component="p" variant="body1" sx={{ mb: 2 }}>
-                      {children}
-                    </Typography>
-                  ),
-                  li: ({ children }) => (
-                    <Typography component="li" variant="body1" sx={{ ml: 2 }}>
-                      {children}
-                    </Typography>
-                  ),
-                  code: (props: any) => {
-                    const { inline, className, children, ...rest } = props
-                    return inline ? (
-                      <code style={{ padding: '0 4px', borderRadius: 6, background: '#F5F5F7' }} {...rest}>
+          </Stack>
+
+          <Dialog
+            open={openInfo}
+            onClose={() => setOpenInfo(false)}
+            fullWidth
+            maxWidth="md"
+            PaperProps={{ sx: { p: { xs: 2, md: 3 }, borderRadius: 2 } }}
+          >
+            <Card sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+              {/* Header */}
+              <Stack direction="row" justifyContent="space-between" alignItems="center">
+                <Typography variant="h3" fontWeight={600} sx={{ transform: 'translateY(0px)', display: 'inline-block' }}>
+                  {campaign.name}{' '}
+                  <Typography
+                    sx={{ transform: 'translateY(-2px)', display: 'inline-block' }}
+                    component="span"
+                    variant="body2"
+                    color="#A0A0A6"
+                  >
+                    Campaign Details
+                  </Typography>
+                </Typography>
+                <IconButton onClick={() => setOpenInfo(false)} sx={{ bgcolor: '#F1F2F5', width: 36, height: 36 }}>
+                  <Close sx={{ width: 16, height: 16 }} />
+                </IconButton>
+              </Stack>
+              <Divider sx={{ width: '100%' }} />
+              <div style={{ color: '#4B4B4E' }}>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    h1: ({ children }) => (
+                      <Typography component="h1" variant="h4" fontWeight={700} gutterBottom>
                         {children}
-                      </code>
-                    ) : (
-                      <pre
-                        style={{ padding: 12, borderRadius: 12, background: '#F5F5F7', overflowX: 'auto' }}
-                        {...rest}
-                      >
-                        <code className={className}>{children}</code>
-                      </pre>
-                    )
-                  },
-                  ul: ({ children }) => <ul style={{ paddingLeft: 20, marginBottom: 16 }}>{children}</ul>,
-                  ol: ({ children }) => <ol style={{ paddingLeft: 20, marginBottom: 16 }}>{children}</ol>,
-                }}
-              >
-                {campaign.more_info ?? '--'}
-              </ReactMarkdown>
-            </div>
-          </Card>
-        </Dialog>
+                      </Typography>
+                    ),
+                    h2: ({ children }) => (
+                      <Typography component="h2" variant="h5" fontWeight={700} gutterBottom>
+                        {children}
+                      </Typography>
+                    ),
+                    h3: ({ children }) => (
+                      <Typography component="h3" variant="h6" fontWeight={700} gutterBottom>
+                        {children}
+                      </Typography>
+                    ),
+                    p: ({ children }) => (
+                      <Typography component="p" variant="body1" sx={{ mb: 2 }}>
+                        {children}
+                      </Typography>
+                    ),
+                    li: ({ children }) => (
+                      <Typography component="li" variant="body1" sx={{ ml: 2 }}>
+                        {children}
+                      </Typography>
+                    ),
+                    code: (props: any) => {
+                      const { inline, className, children, ...rest } = props
+                      return inline ? (
+                        <code style={{ padding: '0 4px', borderRadius: 6, background: '#F5F5F7' }} {...rest}>
+                          {children}
+                        </code>
+                      ) : (
+                        <pre
+                          style={{ padding: 12, borderRadius: 12, background: '#F5F5F7', overflowX: 'auto' }}
+                          {...rest}
+                        >
+                          <code className={className}>{children}</code>
+                        </pre>
+                      )
+                    },
+                    ul: ({ children }) => <ul style={{ paddingLeft: 20, marginBottom: 16 }}>{children}</ul>,
+                    ol: ({ children }) => <ol style={{ paddingLeft: 20, marginBottom: 16 }}>{children}</ol>,
+                  }}
+                >
+                  {campaign.more_info ?? '--'}
+                </ReactMarkdown>
+              </div>
+            </Card>
+          </Dialog>
+        </ClaimBadgesProvider>
       </main>
     </>
   )

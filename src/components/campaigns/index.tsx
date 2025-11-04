@@ -62,6 +62,18 @@ export interface CampaignBadge {
   maxPoints: number
 }
 
+function getStartText(now: Date, start: Date): string {
+  const diffInMs = start.getTime() - now.getTime()
+  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24))
+
+  if (diffInDays < 0) return ''
+  if (diffInDays == 1) return 'Starts tomorrow'
+  if (diffInDays < 7) return `Starts in ${diffInDays} day${diffInDays !== 1 ? 's' : ''}`
+  if (diffInDays < 30) return `Starts in ${Math.ceil(diffInDays / 7)} weeks`
+  if (diffInDays < 60) return `Starts next month`
+  return `Starts in ${Math.ceil(diffInDays / 30)} months`
+}
+
 // utils (arriba del componente o en un helper)
 const formatClaimBy = (value?: string | Date) => {
   if (!value) return '--'
@@ -107,6 +119,7 @@ function CampaignCard({
   const end = new Date(campaign.end_date)
   const isLive = now >= start && now <= end
   const isEnded = now > end
+  const startText = isLive ? '' : getStartText(now, start)
   const router = useRouter()
 
   const formatDate = (date: Date) =>
@@ -149,7 +162,7 @@ function CampaignCard({
             height: '100%',
             objectFit: 'cover',
             display: 'block',
-            filter: isEnded ? 'grayscale(100%) brightness(0.9)' : 'none',
+            filter: isEnded ? 'grayscale(100%) brightness(0.9)' : 'none', opacity: isEnded ? 0.4 : 1,
             borderBottom: '1px solid #E1E2EA',
             transition: 'filter 0.3s ease-in-out',
           }}
@@ -225,6 +238,37 @@ function CampaignCard({
               }}
             >
               Ended
+            </Typography>
+          </Box>
+        )}
+        {startText && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 12,
+              right: 12,
+              display: 'flex',
+              height: 28,
+              padding: '0 8px',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: '100px',
+              border: '1px solid var(--Foundation-Grey-grey-500, #E1E2EA)',
+              background: 'var(--Foundation-Grey-grey-50, #FCFCFD)',
+              zIndex: 2,
+            }}
+          >
+            <Typography
+              sx={{
+                color: 'var(--Foundation-Grey-grey-900, #4B4B4E)',
+                fontFamily: '"DM Sans"',
+                fontSize: '12px',
+                fontStyle: 'normal',
+                fontWeight: 500,
+                lineHeight: '16px',
+              }}
+            >
+              {startText}
             </Typography>
           </Box>
         )}

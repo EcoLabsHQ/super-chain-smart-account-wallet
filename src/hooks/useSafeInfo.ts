@@ -4,6 +4,7 @@ import { useAppSelector } from '@/store'
 import { defaultSafeInfo, type ExtendedSafeInfo, selectSafeInfo } from '@/store/safeInfoSlice'
 import { useQuery } from '@tanstack/react-query'
 import badgesService from '@/features/superChain/services/badges.service'
+import { BadgeWithPrize } from '@/types/badges'
 
 const useSafeInfo = (): {
   safe: ExtendedSafeInfo
@@ -11,6 +12,7 @@ const useSafeInfo = (): {
   safeLoaded: boolean
   safeLoading: boolean
   safeError?: string
+  badges: BadgeWithPrize[] | undefined
 } => {
   const { data, error, loading } = useAppSelector(selectSafeInfo, isEqual)
 
@@ -25,12 +27,15 @@ const useSafeInfo = (): {
     [data, error, loading],
   )
 
-  useQuery({
+  const { data: badges } = useQuery<{
+    currentBadges: BadgeWithPrize[]
+  }>({
     queryKey: ['badges', result.safeAddress, result.safeLoaded],
-    queryFn: () => badgesService.getBadges(result.safeAddress as `0x${string}`),
-    enabled: !!result.safeAddress && !!result.safeLoaded,
+    queryFn: async () => await badgesService.getBadgesWithPrizes((result.safeAddress as `0x${string}`) ?? []),
+    refetchInterval: 10000,
+    enabled: !!result.safeLoaded,
   })
 
-  return result
+  return { badges: badges?.currentBadges, ...result }
 }
 export default useSafeInfo
