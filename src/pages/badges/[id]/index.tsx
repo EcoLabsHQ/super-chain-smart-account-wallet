@@ -166,8 +166,9 @@ export default function BadgePage() {
               <Stack direction="row" justifyContent="space-between" alignItems="center">
                 <Stack direction="row" gap="16px" alignContent="center">
                   <button
-                    onClick={() =>
-                      router.push({ pathname: AppRoutes.badges.allTime, query: { safe: router.query.safe } })
+                    onClick={
+                      () => router.back()
+                      //router.push({ pathname: AppRoutes.badges.allTime, query: { safe: router.query.safe } })
                     }
                     style={{
                       width: '36px',

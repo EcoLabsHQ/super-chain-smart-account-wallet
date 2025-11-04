@@ -154,18 +154,19 @@ function CampaignCard({
     >
       {/* Banner */}
       <Box sx={{ position: 'relative', aspectRatio: '16/9', width: '100%', overflow: 'hidden' }}>
-        <img
-          src={campaign.banner}
-          alt={campaign.name}
+        <div
           style={{
             width: '100%',
             height: '100%',
-            objectFit: 'cover',
-            display: 'block',
-            filter: isEnded ? 'grayscale(100%) brightness(0.9)' : 'none',
+            backgroundImage: `url(${campaign.banner})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: 'lightgray',
+            backgroundBlendMode: isEnded ? 'luminosity' : 'normal',
             opacity: isEnded ? 0.4 : 1,
             borderBottom: '1px solid #E1E2EA',
-            transition: 'filter 0.3s ease-in-out',
+            transition: 'background-blend-mode 0.3s ease-in-out, opacity 0.3s ease-in-out',
           }}
         />
 

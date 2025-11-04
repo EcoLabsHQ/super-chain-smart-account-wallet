@@ -606,3 +606,10 @@ export default function Page() {
     </>
   )
 }
+
+import type { GetServerSideProps } from 'next'
+
+export const getServerSideProps: GetServerSideProps = async ({ params, query }) => {
+  // puedes pasar props si quieres; lo importante es forzar SSR
+  return { props: {} }
+}
