@@ -251,28 +251,28 @@ export default function BadgePage() {
                   {strategy?.render
                     ? strategy.render(currentBadge as any)
                     : currentBadge.action_description && (
-                      <Button
-                        component="a"
-                        href={currentBadge.action_link}
-                        target="_blank"
-                        rel="noreferrer"
-                        variant="text"
-                        sx={{
-                          width: '118px',
-                          height: '36px',
-                          backgroundColor: 'black',
-                          borderRadius: '12px',
-                          color: 'white',
-                          ':hover': { backgroundColor: 'black' },
-                          padding: '15px 10px 15px 8px',
-                        }}
-                      >
-                        <Typography variant="body2" fontWeight={600}>
-                          {currentBadge.action_description}
-                        </Typography>
-                        <Launch sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
-                      </Button>
-                    )}
+                        <Button
+                          component="a"
+                          href={currentBadge.action_link}
+                          target="_blank"
+                          rel="noreferrer"
+                          variant="text"
+                          sx={{
+                            width: '118px',
+                            height: '36px',
+                            backgroundColor: 'black',
+                            borderRadius: '12px',
+                            color: 'white',
+                            ':hover': { backgroundColor: 'black' },
+                            padding: '15px 10px 15px 8px',
+                          }}
+                        >
+                          <Typography variant="body2" fontWeight={600}>
+                            {currentBadge.action_description}
+                          </Typography>
+                          <Launch sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
+                        </Button>
+                      )}
                 </Stack>
               </Stack>
               <Divider />
@@ -549,7 +549,7 @@ export default function BadgePage() {
                                       lineHeight: { xs: '14px', sm: '16px' },
                                     }}
                                   >
-                                    Limited to first 100 users who reach Tier MAX
+                                    Limited to first {currentBadge.tokenBadge.maxClaims ?? 0} users who reach Tier MAX
                                   </Typography>
                                   <Box sx={{ display: { xs: 'none', sm: 'block' }, width: 16, height: 16 }}>
                                     <DotIcon style={{ width: '100%', height: '100%' }} />
@@ -565,7 +565,8 @@ export default function BadgePage() {
                                       whiteSpace: 'nowrap',
                                     }}
                                   >
-                                    {currentBadge.totalClaimed}/{currentBadge.tokenBadge.maxClaims ?? 0}
+                                    {(currentBadge.totalClaimed ?? 0) / currentBadge.badgeTiers.length}/
+                                    {currentBadge.tokenBadge.maxClaims ?? 0}
                                   </Typography>
                                 </Stack>
                               </Stack>

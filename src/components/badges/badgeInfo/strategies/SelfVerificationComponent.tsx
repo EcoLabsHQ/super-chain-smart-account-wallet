@@ -11,6 +11,7 @@ import dynamic from 'next/dynamic'
 import CountryFlag from '@/components/CountryFlag'
 import { useClaimBadges } from '@/components/badges/claimBadges'
 import QrCodeIcon from '@/public/images/common/qr_code.svg'
+import { ENV } from '@/features/superChain/constants'
 
 const SelfQRcodeWrapper = dynamic(() => import('@selfxyz/qrcode').then((mod) => mod.SelfQRcodeWrapper), { ssr: false })
 
@@ -30,7 +31,10 @@ export function SelfVerificationComponent({ badge }: { badge: ResponseBadge }) {
       const app = new SelfAppBuilder({
         appName: 'Super Accounts',
         scope: 'super-accounts',
-        endpoint: 'https://scsa-backend-staging.up.railway.app/api/self/verify',
+        endpoint:
+          ENV == 'production'
+            ? 'https://scsa-backend-staging.up.railway.app/api/self/verify'
+            : 'https://scsa-backend-staging.up.railway.app/api/self/verify',
         endpointType: 'https',
         logoBase64: 'https://account.superchain.eco/images/logo.png',
         userId, //address,
@@ -96,14 +100,18 @@ export function SelfVerificationComponent({ badge }: { badge: ResponseBadge }) {
         variant="contained"
         color="primary"
         onClick={handleOpenModal}
-        sx={{ borderRadius: '12px', padding: '8px 10px 8px 10px', textTransform: 'none', fontWeight: 600, fontSize: '14px', mt: 2, mb: 2 }}
+        sx={{
+          borderRadius: '12px',
+          padding: '8px 10px 8px 10px',
+          textTransform: 'none',
+          fontWeight: 600,
+          fontSize: '14px',
+          mt: 2,
+          mb: 2,
+        }}
         disabled={data == undefined || data?.check}
       >
-        {
-          !data.check && (
-            <QrCodeIcon style={{ width: '16px', height: '16px', marginRight: '4px' }} />
-          )
-        }
+        {!data.check && <QrCodeIcon style={{ width: '16px', height: '16px', marginRight: '4px' }} />}
         {data?.check ? 'Verified' : 'Verify Now'}
       </Button>
 
