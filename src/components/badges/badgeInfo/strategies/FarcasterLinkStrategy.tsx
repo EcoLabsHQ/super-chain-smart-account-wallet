@@ -4,6 +4,7 @@ import { AuthKitProvider, SignInButton, UseSignInData } from '@farcaster/auth-ki
 import '@farcaster/auth-kit/styles.css'
 import React, { useEffect, useRef, useState } from 'react'
 import useSafeAddress from '@/hooks/useSafeAddress'
+import QrCodeIcon from '@/public/images/common/qr_code.svg'
 import { Box } from '@mui/material'
 
 import { JSON_RPC_PROVIDER } from '@/features/superChain/constants'
@@ -46,7 +47,7 @@ type FarcasterVerificationProps = {
 export function FarcasterVerificationComponent({ badge, onClaim }: FarcasterVerificationProps) {
   const address = useSafeAddress()
   const buttonRef = useRef<HTMLDivElement>(null)
-  const [currentUser, setCurrentUser] = useState('Link Account')
+  const [currentUser, setCurrentUser] = useState('Verify Now')
   const [errorDetail, setErrorDetail] = useState<string>('')
   const [isError, setIsError] = useState<boolean>(false)
 

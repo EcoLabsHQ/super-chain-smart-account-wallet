@@ -10,6 +10,7 @@ import { uuidv4 } from '@walletconnect/utils'
 import dynamic from 'next/dynamic'
 import CountryFlag from '@/components/CountryFlag'
 import { useClaimBadges } from '@/components/badges/claimBadges'
+import QrCodeIcon from '@/public/images/common/qr_code.svg'
 
 const SelfQRcodeWrapper = dynamic(() => import('@selfxyz/qrcode').then((mod) => mod.SelfQRcodeWrapper), { ssr: false })
 
@@ -95,10 +96,15 @@ export function SelfVerificationComponent({ badge }: { badge: ResponseBadge }) {
         variant="contained"
         color="primary"
         onClick={handleOpenModal}
-        sx={{ borderRadius: '6px', textTransform: 'none', fontWeight: 600, padding: '8px 24px', mt: 2, mb: 2 }}
+        sx={{ borderRadius: '12px', padding: '8px 10px 8px 10px', textTransform: 'none', fontWeight: 600, fontSize: '14px', mt: 2, mb: 2 }}
         disabled={data == undefined || data?.check}
       >
-        {data?.check ? 'Verified' : 'Verify'}
+        {
+          !data.check && (
+            <QrCodeIcon style={{ width: '16px', height: '16px', marginRight: '4px' }} />
+          )
+        }
+        {data?.check ? 'Verified' : 'Verify Now'}
       </Button>
 
       <Dialog
@@ -205,8 +211,8 @@ export function SelfVerificationComponent({ badge }: { badge: ResponseBadge }) {
               backgroundColor: '#000',
               color: '#fff',
               textTransform: 'none',
-              borderRadius: '8px',
-              padding: '10px 24px',
+              borderRadius: '12px',
+              padding: '8px 10px 8px 10px',
               ':hover': { backgroundColor: '#222' },
             }}
           >

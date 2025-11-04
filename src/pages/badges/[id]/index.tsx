@@ -62,7 +62,7 @@ const strategies = [
   new SelfVerificationStrategy(),
 ]
 
-function InlineClaimButton({ children, style }: { children?: React.ReactNode; style?: React.CSSProperties }) {
+export function InlineClaimButton({ children, style }: { children?: React.ReactNode; style?: React.CSSProperties }) {
   const { claim } = useClaimBadges()
   return (
     <button
@@ -147,22 +147,6 @@ export default function BadgePage() {
   const avatarStripWidth = Math.max(40, 40 + 24 * Math.max((currentBadge?.metadata.chains.length ?? 0) - 1, 0))
   const rewardIcon = (tokens as any)?.[currentBadge?.tokenBadge?.symbol ?? '']?.icon ?? (tokens as any)?.USDC?.icon
   const strategy = getBadgeStrategy(currentBadge, strategies)
-  console.log('Current Badge:', currentBadge)
-  console.log('Strategy:', strategy)
-
-  // function canClaimBadge(currentBadge: BadgeWithPrize): boolean {
-  //   return (
-  //     (currentBadge?.claimable && currentBadge?.tier == currentBadge?.badgeTiers.length) ||
-  //     (currentBadge?.claimableByPerk ?? false)
-  //   )
-  // }
-
-  function canClaimByPerk(currentBadge: BadgeWithPrize): boolean {
-    return (
-      (currentBadge?.claimable && currentBadge?.tier == currentBadge?.badgeTiers.length) ||
-      (currentBadge?.claimableByPerk ?? false)
-    )
-  }
 
   return (
     <>
@@ -267,28 +251,28 @@ export default function BadgePage() {
                   {strategy?.render
                     ? strategy.render(currentBadge as any)
                     : currentBadge.action_description && (
-                        <Button
-                          component="a"
-                          href={currentBadge.action_link}
-                          target="_blank"
-                          rel="noreferrer"
-                          variant="text"
-                          sx={{
-                            width: '118px',
-                            height: '36px',
-                            backgroundColor: 'black',
-                            borderRadius: '12px',
-                            color: 'white',
-                            ':hover': { backgroundColor: 'black' },
-                            padding: '15px 10px 15px 8px',
-                          }}
-                        >
-                          <Typography variant="body2" fontWeight={600}>
-                            {currentBadge.action_description}
-                          </Typography>
-                          <Launch sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
-                        </Button>
-                      )}
+                      <Button
+                        component="a"
+                        href={currentBadge.action_link}
+                        target="_blank"
+                        rel="noreferrer"
+                        variant="text"
+                        sx={{
+                          width: '118px',
+                          height: '36px',
+                          backgroundColor: 'black',
+                          borderRadius: '12px',
+                          color: 'white',
+                          ':hover': { backgroundColor: 'black' },
+                          padding: '15px 10px 15px 8px',
+                        }}
+                      >
+                        <Typography variant="body2" fontWeight={600}>
+                          {currentBadge.action_description}
+                        </Typography>
+                        <Launch sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
+                      </Button>
+                    )}
                 </Stack>
               </Stack>
               <Divider />
