@@ -63,7 +63,9 @@ export function SelfVerificationComponent({ badge }: { badge: ResponseBadge }) {
 
   const handleVerificationSuccess = () => {
     if (isValidationModalOpen && data?.check) {
-      queryClient.invalidateQueries({ queryKey: ['self-verification', address] })
+      // keep cache key consistent with useQuery
+      queryClient.invalidateQueries({ queryKey: ['self-verification', userId] })
+
       setValidationModalOpen(false)
       setSuccessModalOpen(true)
     }
@@ -109,9 +111,9 @@ export function SelfVerificationComponent({ badge }: { badge: ResponseBadge }) {
           mt: 2,
           mb: 2,
         }}
-        disabled={data == undefined || data?.check}
+        disabled={!data || data?.check}
       >
-        {!data.check && <QrCodeIcon style={{ width: '16px', height: '16px', marginRight: '4px' }} />}
+        {!data?.check && <QrCodeIcon style={{ width: '16px', height: '16px', marginRight: '4px' }} />}
         {data?.check ? 'Verified' : 'Verify Now'}
       </Button>
 
