@@ -50,7 +50,6 @@ function ClaimModal({
         .filter(Boolean)
     }),
   }
-  const rewardIcon = (tokens as any)?.[data?.rewards?.symbol ?? '']?.icon ?? (tokens as any)?.USDC?.icon
 
   return (
     <Dialog className={css.claimModal} open={open} onClose={onClose}>
@@ -95,14 +94,22 @@ function ClaimModal({
             You have received:
           </Typography>
           <Stack direction="row" alignItems="center" gap="4px">
-            {data?.rewards && (
-              <Stack direction="row" gap="4px" alignItems="center">
-                <Typography variant="h5" fontWeight={600}>
-                  {data?.rewards?.amount ?? '0'}
-                </Typography>
-                <SvgIcon component={rewardIcon} sx={{ width: '24px', height: '24px', marginTop: '2px' }} />
-              </Stack>
-            )}
+            {Array.isArray(data?.rewards) &&
+              data.rewards.map((reward, idx) => (
+                <Stack key={idx} direction="row" gap="4px" alignItems="center">
+                  <Typography variant="h5" fontWeight={600}>
+                    {reward.amount ?? '0'}
+                  </Typography>
+                  <SvgIcon
+                    component={(tokens as any)?.[reward.symbol ?? '']?.icon ?? (tokens as any)?.USDC?.icon}
+                    sx={{ width: '24px', height: '24px', marginTop: '2px' }}
+                  />
+                  <Typography variant="body2" fontWeight={600}>
+                    {reward.symbol}
+                  </Typography>
+                </Stack>
+              ))}
+
             <Box
               sx={{ display: 'flex', alignItems: 'center', gap: '4px' }}
               border={1}

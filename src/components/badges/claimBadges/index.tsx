@@ -115,14 +115,18 @@ export function ClaimBadgesProvider({ safeAddress, safeLoaded, token, data, chil
   return (
     <ClaimBadgesContext.Provider value={value}>
       {children}
-
-      {/* ——— Modales centralizados, se renderizan siempre aquí ——— */}
       <LoadingModal open={isPending} title="Claiming badges" />
       <FailedTxnModal open={isError} onClose={closeAll} handleRetry={retry} errorDetail={errorDetail} />
       <ClaimModal
-        onLevelUp={() => setOpenClaimDialog(false)}
+        onLevelUp={() => {
+          setOpenClaimDialog(false)
+          router.push({ pathname: AppRoutes.home, query: { safe: router.query.safe } })
+        }}
         open={openClaimDialog}
-        onClose={() => setOpenClaimDialog(false)}
+        onClose={() => {
+          setOpenClaimDialog(false)
+          router.push({ pathname: AppRoutes.home, query: { safe: router.query.safe } })
+        }}
         data={claimData}
       />
     </ClaimBadgesContext.Provider>

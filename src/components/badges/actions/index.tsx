@@ -41,7 +41,7 @@ export type ClaimData = {
     tier_id: string
     symbol: string
     amount: string
-  }
+  }[]
   badgeUpdates: {
     badgeId: string
     level: number

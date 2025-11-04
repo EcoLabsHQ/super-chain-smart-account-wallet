@@ -67,7 +67,7 @@ function getStartText(now: Date, start: Date): string {
   const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24))
 
   if (diffInDays < 0) return ''
-  if (diffInDays == 1) return 'Starts tomorrow'
+  if (diffInDays <= 1) return 'Starts tomorrow'
   if (diffInDays < 7) return `Starts in ${diffInDays} day${diffInDays !== 1 ? 's' : ''}`
   if (diffInDays < 30) return `Starts in ${Math.ceil(diffInDays / 7)} weeks`
   if (diffInDays < 60) return `Starts next month`
@@ -162,7 +162,8 @@ function CampaignCard({
             height: '100%',
             objectFit: 'cover',
             display: 'block',
-            filter: isEnded ? 'grayscale(100%) brightness(0.9)' : 'none', opacity: isEnded ? 0.4 : 1,
+            filter: isEnded ? 'grayscale(100%) brightness(0.9)' : 'none',
+            opacity: isEnded ? 0.4 : 1,
             borderBottom: '1px solid #E1E2EA',
             transition: 'filter 0.3s ease-in-out',
           }}
