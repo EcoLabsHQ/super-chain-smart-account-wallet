@@ -4,7 +4,6 @@ import { AuthKitProvider, SignInButton, UseSignInData } from '@farcaster/auth-ki
 import '@farcaster/auth-kit/styles.css'
 import React, { useEffect, useRef, useState } from 'react'
 import useSafeAddress from '@/hooks/useSafeAddress'
-import QrCodeIcon from '@/public/images/common/qr_code.svg'
 import { Box } from '@mui/material'
 
 import { JSON_RPC_PROVIDER } from '@/features/superChain/constants'

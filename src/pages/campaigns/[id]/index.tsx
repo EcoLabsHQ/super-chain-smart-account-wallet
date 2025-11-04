@@ -145,7 +145,9 @@ export default function Page() {
   const { day, month } = getCalendarValues(campaign.start_date)
   const now = new Date()
   const isLive = now >= new Date(campaign.start_date) && now <= new Date(campaign.end_date)
-  const claimableBadges = badges?.some((badge) => campaign.campaign_badges?.some((cb) => cb.id === badge.badgeId && (badge.claimable || badge.claimableByPerk)))
+  const claimableBadges = badges?.some((badge) =>
+    campaign.campaign_badges?.some((cb) => cb.id === badge.badgeId && (badge.claimable || badge.claimableByPerk)),
+  )
 
   return (
     <>
@@ -511,8 +513,7 @@ export default function Page() {
                       Claim Badges <span style={{ fontSize: '20px' }}>›</span>
                     </InlineClaimButton>
                   </Stack>
-                )
-                }
+                )}
               </Card>
             </Stack>
           </Stack>
@@ -527,7 +528,11 @@ export default function Page() {
             <Card sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
               {/* Header */}
               <Stack direction="row" justifyContent="space-between" alignItems="center">
-                <Typography variant="h3" fontWeight={600} sx={{ transform: 'translateY(0px)', display: 'inline-block' }}>
+                <Typography
+                  variant="h3"
+                  fontWeight={600}
+                  sx={{ transform: 'translateY(0px)', display: 'inline-block' }}
+                >
                   {campaign.name}{' '}
                   <Typography
                     sx={{ transform: 'translateY(-2px)', display: 'inline-block' }}
