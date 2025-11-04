@@ -33,7 +33,7 @@
     "build-storybook": "storybook build"
   },
   "engines": {
-    "node": ">=16"
+    "node": "20.x"
   },
   "resolutions": {
     "@walletconnect/core": "^2.11.2",
