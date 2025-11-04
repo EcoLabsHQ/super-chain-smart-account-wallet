@@ -565,7 +565,7 @@ export default function BadgePage() {
                                       whiteSpace: 'nowrap',
                                     }}
                                   >
-                                    {(currentBadge.totalClaimed ?? 0) / currentBadge.badgeTiers.length}/
+                                    {Math.floor((currentBadge.totalClaimed ?? 0) / currentBadge.badgeTiers.length)}/
                                     {currentBadge.tokenBadge.maxClaims ?? 0}
                                   </Typography>
                                 </Stack>
