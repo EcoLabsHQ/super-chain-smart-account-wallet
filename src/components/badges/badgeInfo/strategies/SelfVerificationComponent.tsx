@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, Dialog, DialogContent, DialogTitle, Divider, IconButton, Typography } from '@mui/material'
+import { Box, Button, Dialog, DialogContent, DialogTitle, Divider, IconButton, Stack, Typography } from '@mui/material'
 import axios from 'axios'
 import { BACKEND_BASE_URI } from '@/config/constants'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
@@ -122,49 +122,78 @@ export function SelfVerificationComponent({ badge }: { badge: ResponseBadge }) {
         onClose={handleCloseModal}
         maxWidth="xs"
         fullWidth
-        PaperProps={{ sx: { borderRadius: '12px', p: 0, minWidth: 500 } }}
+        PaperProps={{ sx: { borderRadius: '12px', p: 0, minWidth: 392 } }}
       >
-        <Box display="flex" alignItems="center" justifyContent="space-between" px={3} pt="24px" pb="0px">
-          <DialogTitle sx={{ fontWeight: 600, fontSize: '24px', fontFamily: 'Inter', p: 0 }}>
+        <Box display="flex" alignItems="center" justifyContent="space-between" px={3} py={3}>
+          <DialogTitle
+            sx={{
+              fontWeight: 600,
+              fontSize: '24px',
+              fontFamily: 'Inter',
+              p: 0,
+              m: 0,
+              lineHeight: '32px',
+            }}
+          >
             Self Verification
           </DialogTitle>
-          <IconButton onClick={handleCloseModal}>
-            <CloseIcon />
+
+          <IconButton
+            onClick={handleCloseModal}
+            sx={{
+              width: 36,
+              height: 36,
+              backgroundColor: '#F1F2F5',
+              borderRadius: '12px',
+              p: 0,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              '&:hover': { backgroundColor: '#E4E5E9' },
+            }}
+          >
+            <CloseIcon sx={{ width: 16, height: 16, color: '#4B4B4E' }} />
           </IconButton>
         </Box>
-        <Divider sx={{ mt: '24px', mb: '10px' }} />
-        <DialogContent sx={{ textAlign: 'center', px: 3 }}>
-          <Box display="flex" justifyContent="center" mb="24px">
-            {selfApp ? (
-              <SelfQRcodeWrapper
-                selfApp={selfApp}
-                onSuccess={handleVerificationSuccess}
-                onError={() => {
-                  console.error('Error generating QR code')
-                }}
-              />
-            ) : (
-              <Typography variant="body2" color="textSecondary">
-                Loading QR code...
-              </Typography>
-            )}
-          </Box>
-          <Typography variant="body2" color="textSecondary">
-            Scan this QR code to verify your identity through{' '}
+
+        <Divider sx={{ m: 0 }} />
+
+        <DialogContent sx={{ p: 3 }}>
+          <Stack spacing={3} alignItems="center">
+            <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+              {selfApp ? (
+                <SelfQRcodeWrapper
+                  selfApp={selfApp}
+                  onSuccess={handleVerificationSuccess}
+                  size={300} // cabe: 392 - (24*2) = 344px de ancho útil
+                  onError={() => console.error('Error generating QR code')}
+                />
+              ) : (
+                <Typography variant="body2" color="text.secondary">
+                  Loading QR code...
+                </Typography>
+              )}
+            </Box>
+
             <Typography
-              component="a"
-              href="https://self.xyz/"
-              target="_blank"
-              rel="noopener noreferrer"
-              sx={{ color: '#476520', fontWeight: 500, textDecorationLine: 'underline' }}
+              variant="body2"
+              color="text.secondary"
+              align="center"
+              sx={{ a: { color: '#4B4B4E', fontWeight: 500, textDecoration: 'underline' } }}
             >
-              self.xyz
+              Scan this QR code to verify your identity through{' '}
+              <Typography
+                component="a"
+                href="https://self.xyz/"
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="body2"
+              >
+                self.xyz
+              </Typography>
+              .
             </Typography>
-            .
-          </Typography>
-          <Typography variant="caption" color="textSecondary" sx={{ fontStyle: 'italic', mb: '24px' }}>
-            We&apos;ll only confirm your Self verification status and validate your country.
-          </Typography>
+          </Stack>
         </DialogContent>
       </Dialog>
 
