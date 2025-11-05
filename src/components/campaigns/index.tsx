@@ -11,6 +11,7 @@ import { tokens } from '@/config/tokens'
 import { useRouter } from 'next/router'
 import { AppRoutes } from '@/config/routes'
 import Image from 'next/image'
+import CheckCircleIcon from '@/public/images/common/check-circle.svg'
 export interface Campaign {
   claimed: boolean
   id: string
@@ -351,6 +352,98 @@ function CampaignCard({
                 {`Claim by ${formatClaimBy(campaign.max_claim_date)}`}
               </Typography>
             </>
+          ) : campaign.can_claim && campaign.claimed ? (
+            <Box
+              sx={{
+                mt: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
+              }}
+            >
+              <Stack
+                direction="row"
+                alignItems="center"
+                sx={{
+                  display: 'flex',
+                  height: '28px',
+                  padding: '0 6px',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+
+                  borderRadius: '100px',
+                  border: '1px solid #39D551', // lime-500
+                  background: '#EBFBEE', // lime-50
+
+                  gap: '6px',
+                  flexShrink: 0,
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: '#000',
+                    fontFamily: '"DM Sans"',
+                    fontSize: '12px',
+                    fontStyle: 'normal',
+                    fontWeight: 600,
+                    lineHeight: '16px',
+                    m: 0,
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  Claimed
+                </Typography>
+
+                {/* Caja 16x16 para centrar el ícono con precisión */}
+                <Box
+                  sx={{
+                    width: 16,
+                    height: 16,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    // opcional: evita que se estire por línea base
+                    lineHeight: 0,
+                  }}
+                >
+                  <SvgIcon
+                    component={CheckCircleIcon}
+                    inheritViewBox // respeta el viewBox del SVG para escala precisa
+                    sx={{ width: 16, height: 16 }}
+                  />
+                </Box>
+              </Stack>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  flexGrow: 1,
+                }}
+              >
+                {campaign.network.map((network: string, index: number) => (
+                  <Box
+                    key={`${campaign.id}-${network}`}
+                    sx={{
+                      ml: index === 0 ? 0 : -1.4,
+                      borderRadius: '50%',
+                      border: '1px solid #fff',
+                      width: 30,
+                      height: 30,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      bgcolor: '#fff',
+                      boxShadow: '0 1px 2px rgba(16,24,40,0.06)',
+                    }}
+                  >
+                    <NetworkChip network={network} style="badge" isFavorite={false} width={20} height={20} />
+                  </Box>
+                ))}
+              </Box>
+            </Box>
           ) : (
             <Box
               sx={{
