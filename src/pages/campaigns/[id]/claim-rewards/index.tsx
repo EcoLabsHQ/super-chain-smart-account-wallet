@@ -1,7 +1,7 @@
 'use client'
 import Head from 'next/head'
 import React from 'react'
-import { Button, Card, Dialog, Divider, Skeleton, Stack, Typography, Grid, Box } from '@mui/material'
+import { Button, Card, Dialog, Divider, Skeleton, Stack, Typography, Grid, Box, CircularProgress } from '@mui/material'
 import InfoIcon from '@/public/images/common/info-light.svg'
 import CheckCircleIcon from '@/public/images/common/check-circle-outlined.svg'
 import SuperchainPointIcon from '@/public/images/common/superChain.svg'
@@ -40,13 +40,8 @@ const getTokenIcon = (symbol: string) => {
 }
 function getCalendarValues(date: string | Date): { day: number; month: string } {
   const d = new Date(date)
-
-  // Extrae el día del mes (número)
   const day = d.getDate()
-
-  // Extrae las 3 letras del mes en mayúscula
   const month = d.toLocaleString('en-US', { month: 'short' }).toUpperCase()
-
   return { day, month }
 }
 
@@ -124,10 +119,9 @@ export default function Page() {
     },
     onSuccess: (data: any) => {
       setOpenClaimDialog(true)
-
       const link = 'https://optimistic.etherscan.io/tx/' + data.data.recipient
-
       setClaimTransactionLink(link)
+      refetchAirdrop()
     },
   })
 
@@ -137,7 +131,6 @@ export default function Page() {
       month: 'long',
       day: 'numeric',
     }
-
     const dateFormatted = new Date(date).toLocaleDateString('en-US', options)
     return dateFormatted
   }
@@ -221,6 +214,17 @@ export default function Page() {
   const now = new Date()
   const { day, month } = getCalendarValues(campaign.start_date)
   const isLive = now >= campaign.start_date && now <= campaign.end_date
+
+  // Estados para el botón
+  const isChecking = !isAirdropReady && !isPending
+  const showSpinner = isPending || isChecking
+  const label = isPending
+    ? 'Claiming Rewards...'
+    : isChecking
+    ? 'Checking eligibility...'
+    : isError
+    ? 'Error! Try Again'
+    : 'Claim Rewards'
 
   return (
     <>
@@ -497,6 +501,8 @@ export default function Page() {
                       </Stack>
                     </Card>
                   </Stack>
+
+                  {/* Botón con spinner y mensajes dinámicos */}
                   <Button
                     sx={{
                       background: '#000000',
@@ -504,13 +510,25 @@ export default function Page() {
                       padding: '15px',
                       color: 'white',
                       ':hover': { background: 'black' },
-                      opacity: !isAirdropReady ? 0.5 : 1,
-                      cursor: !isAirdropReady ? 'not-allowed' : 'pointer',
+                      opacity: isChecking ? 0.5 : 1,
+                      cursor: isChecking ? 'not-allowed' : 'pointer',
+                      '&.Mui-disabled': {
+                        background: '#000000',
+                        color: 'white',
+                        opacity: 0.5,
+                      },
+                      '& .MuiCircularProgress-root': {
+                        color: 'white',
+                      },
                     }}
                     onClick={() => mutate()}
-                    disabled={!isAirdropReady || isPending}
+                    disabled={isChecking || isPending}
+                    aria-busy={showSpinner ? 'true' : 'false'}
                   >
-                    {isPending ? 'Claiming Rewards...' : isError ? 'Error! Try Again' : 'Claim Rewards'}
+                    <Stack direction="row" alignItems="center" gap={1}>
+                      {showSpinner && <CircularProgress size={18} thickness={4} />}
+                      {label}
+                    </Stack>
                   </Button>
 
                   <Stack direction="row" gap="4px" justifyContent="center" alignItems="center">
@@ -541,7 +559,6 @@ export default function Page() {
                 Claim Complete
               </Typography>
               <CheckCircleIcon sx={{ width: 24, height: 24 }} />
-              {/* <CheckCircleIcon sx={{ color: "success.main" }} /> */}
             </Stack>
             <Divider sx={{ width: '100%' }} />
             <Box padding="16px 16px 0 16px">
@@ -556,10 +573,6 @@ export default function Page() {
               </Typography>
             </Box>
 
-            {/* Subtitle */}
-
-            {/* Reward Box */}
-            {/* <Image src="/imgs/usd-coin.svg" alt="usd coin" width={36} height={36} /> */}
             <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: 2, margin: '16px' }}>
               <Stack direction="row" alignItems="center" gap={2}>
                 <Box sx={{ position: 'relative' }}>
