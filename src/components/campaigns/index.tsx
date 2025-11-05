@@ -243,6 +243,7 @@ function CampaignCard({
             </Typography>
           </Box>
         )}
+
         {startText && (
           <Box
             sx={{
@@ -255,14 +256,14 @@ function CampaignCard({
               justifyContent: 'center',
               alignItems: 'center',
               borderRadius: '100px',
-              border: '1px solid var(--Foundation-Grey-grey-500, #E1E2EA)',
-              background: 'var(--Foundation-Grey-grey-50, #FCFCFD)',
+              border: '1px solid var(--Foundation-Purple-purple-500, #584DCB)',
+              background: 'var(--Foundation-Purple-purple-50, #EEEDFA)',
               zIndex: 2,
             }}
           >
             <Typography
               sx={{
-                color: 'var(--Foundation-Grey-grey-900, #4B4B4E)',
+                color: 'var(--Foundation-Purple-purple-700, #3F36A8)', // mejor contraste con morado
                 fontFamily: '"DM Sans"',
                 fontSize: '12px',
                 fontStyle: 'normal',
