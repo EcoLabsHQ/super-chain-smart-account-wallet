@@ -39,6 +39,7 @@ import ETHVaultStrategy from '@/components/badges/badgeInfo/strategies/ETHVaultS
 import { ClaimBadgesProvider, useClaimBadges } from '@/components/badges/claimBadges'
 import { Address } from 'viem'
 import { SelfVerificationStrategy } from '@/components/badges/badgeInfo/strategies/SelfVerificationStrategy'
+import CheckCircleIcon from '@/public/images/common/check-circle-white.svg'
 
 export const getBadgeStrategy = (
   badgeOrClaim: any,
@@ -500,6 +501,18 @@ export default function BadgePage() {
                                 }}
                               >
                                 <GiftIcon style={{ width: '24px', height: '24px' }} />
+                                {!currentBadge.claimableByPerk &&
+                                  currentBadge.tier == currentBadge.badgeTiers.length && (
+                                    <CheckCircleIcon
+                                      style={{
+                                        position: 'absolute',
+                                        right: '-5px',
+                                        bottom: '-5px',
+                                        width: '16px',
+                                        height: '16px',
+                                      }}
+                                    />
+                                  )}
                               </Box>
                               <Stack sx={{ flex: 1, minWidth: 0 }}>
                                 <Stack justifyContent="space-between" alignItems="center" direction="row">
