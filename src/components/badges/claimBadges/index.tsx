@@ -21,8 +21,8 @@ type ClaimBadgesProviderProps = {
 }
 
 type ClaimBadgesContextValue = {
-  claim: () => void
-  retry: () => void
+  claim: (extraData?: any) => void
+  retry: (extraData?: any) => void
   closeAll: () => void
   isPending: boolean
   isError: boolean
@@ -52,8 +52,11 @@ export function ClaimBadgesProvider({ safeAddress, safeLoaded, token, data, chil
   }
 
   const { mutate, isPending, isError } = useMutation({
-    mutationFn: async (): Promise<ClaimResponse> => {
-      return await badgesService.attestBadges(safeAddress, token)
+    mutationFn: async (extraData: any): Promise<ClaimResponse> => {
+      return await badgesService.attestBadges(
+        safeAddress,
+        extraData ? { captchaToken: token, ...extraData } : { captchaToken: token },
+      )
     },
     onSuccess: (response) => {
       void queryClient.cancelQueries({ queryKey: ['superChainAccount', safeAddress] })
@@ -93,8 +96,8 @@ export function ClaimBadgesProvider({ safeAddress, safeLoaded, token, data, chil
     },
   })
 
-  const claim = (): void => mutate()
-  const retry = (): void => mutate()
+  const claim = (extraData?: any): void => mutate(extraData)
+  const retry = (extraData?: any): void => mutate(extraData)
 
   const closeAll = (): void => {
     setOpenClaimDialog(false)

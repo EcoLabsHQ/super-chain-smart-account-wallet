@@ -67,21 +67,17 @@ class BadgesService {
   //   return response.data
   // }
 
-  public async attestBadges(account: Address, captchaToken: string | null): Promise<any> {
+  public async attestBadges(account: Address, extraData: any): Promise<any> {
     const maxRetries: number = 1
     let attempt: number = 0
     const token = getSiweToken()
     while (attempt <= maxRetries) {
       try {
-        const response = await this.httpInstance.post(
-          `/user/${account}/badges/claim`,
-          { captchaToken },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        const response = await this.httpInstance.post(`/user/${account}/badges/claim`, extraData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        )
+        })
 
         if (response.status === 201) {
           return response.data
