@@ -186,32 +186,35 @@ export default function BadgePage() {
                   </button>
                   <Stack
                     sx={{
-                      flexDirection: { xs: 'column', md: 'row' },
-                      gap: { xs: '0px', sm: '8px' },
-                      alignItems: { xs: 'start', md: 'center' },
+                      flexDirection: { xs: 'column', sm: 'row' },
+                      alignItems: { xs: 'flex-start', sm: 'center' }, // ← centra verticalmente
+                      gap: { xs: 0, sm: '8px' },
                     }}
                   >
                     <Typography
                       variant="h3"
                       fontWeight={600}
                       sx={{
-                        display: 'inline-block',
-                        fontSize: { xs: '12px', sm: '24px' },
-                        lineHeight: { xs: '20px', sm: '32px' },
+                        fontSize: { xs: '20px', sm: '24px' },
+                        lineHeight: { xs: 1.1, sm: 1.1 }, // caja ajustada al texto
+                        m: 0,
                       }}
                     >
                       {currentBadge.metadata.name}
                     </Typography>
+
                     <Typography
-                      sx={{
-                        transform: 'translateY(-2px)',
-                        display: 'inline-block',
-                        fontSize: { xs: '12px', sm: '14px' },
-                        lineHeight: { xs: '20px', sm: '32px' },
-                      }}
                       component="span"
                       variant="body2"
                       color="#A0A0A6"
+                      sx={{
+                        display: 'inline-flex', // ← evita baseline y usa caja del elemento
+                        alignItems: 'center', // ← centra el contenido dentro de su caja
+                        whiteSpace: 'nowrap',
+                        fontSize: { xs: '12px', sm: '14px' },
+                        lineHeight: { xs: 1, sm: 1 }, // caja compacta para centrar perfecto
+                        m: 0,
+                      }}
                     >
                       Badge
                     </Typography>

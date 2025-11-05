@@ -183,28 +183,38 @@ export default function Page() {
                 >
                   <ArrowBack sx={{ width: '16px', height: '16px' }} />
                 </button>
-                <Stack sx={{ flexDirection: { xs: 'column', md: 'row' }, alignItems: { xs: 'start', md: 'center' } }}>
+                <Stack
+                  sx={{
+                    flexDirection: { xs: 'column', md: 'row' },
+                    alignItems: { xs: 'flex-start', md: 'center' },
+                    gap: { xs: 0, sm: '8px' },
+                  }}
+                >
                   <Typography
                     variant="h3"
                     fontWeight={600}
                     sx={{
                       display: 'inline-block',
-                      fontSize: { xs: '12px', sm: '24px' },
-                      lineHeight: { xs: '20px', sm: '32px' },
+                      fontSize: { xs: '20px', sm: '24px' }, // opcional: subí xs para consistencia visual
+                      lineHeight: { xs: 1.1, sm: 1.1 }, // caja del título sin altura extra
+                      m: 0,
                     }}
                   >
-                    {campaign.name}{' '}
+                    {campaign.name}
                   </Typography>
+
                   <Typography
-                    sx={{
-                      transform: 'translateY(-2px)',
-                      display: 'inline-block',
-                      fontSize: { xs: '12px', sm: '14px' },
-                      lineHeight: { xs: '20px', sm: '32px' },
-                    }}
                     component="span"
                     variant="body2"
                     color="#A0A0A6"
+                    sx={{
+                      display: 'inline-flex', // same trick as badge
+                      alignItems: 'center',
+                      whiteSpace: 'nowrap',
+                      fontSize: { xs: '12px', sm: '14px' },
+                      lineHeight: { xs: 1, sm: 1 },
+                      m: 0,
+                    }}
                   >
                     Campaign
                   </Typography>
