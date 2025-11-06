@@ -16,17 +16,14 @@ export type PendingEOASRequest = {
     }
   }[]
   meta: {
-    count: number // total global (conservado)
-  }
-  ownerPopulatedsConnection: {
-    totalCount: number // total filtrado
+    count: number
   }
 }
 
 function usePendingEOASRequests(account: Address, page = 1) {
   const GET_PENDINGREQUESTS = gql`
     query GetPendingRequests($account: String) {
-      ownerPopulateds(where: { newOwner_contains: $account }, first: 5, skip:  ${5 * (page - 1)}) {
+      ownerPopulateds(where: { newOwner_contains: $account }, first: 100, skip: 0) {
         id
         newOwner
         safe
@@ -38,22 +35,31 @@ function usePendingEOASRequests(account: Address, page = 1) {
           noun_head
           noun_glasses
         }
-    }
+      }
       meta(id: "OwnerPopulated") {
         count
       }
-        ownerPopulatedsConnection(where: { newOwner_contains_nocase: $account }) {
-    totalCount
-  }
     }
   `
 
-  return useQuery<PendingEOASRequest>(GET_PENDINGREQUESTS, {
-    variables: {
-      account,
-      page,
-    },
+  const PER_PAGE = 5
+  const q = useQuery<PendingEOASRequest>(GET_PENDINGREQUESTS, {
+    variables: { account, page },
   })
+
+  const start = (page - 1) * PER_PAGE
+  const end = start + PER_PAGE
+
+  const pagedData: PendingEOASRequest | undefined = q.data
+    ? {
+        ownerPopulateds: q.data.ownerPopulateds.slice(start, end),
+        meta: {
+          count: q.data.ownerPopulateds.length,
+        },
+      }
+    : undefined
+
+  return { ...q, data: pagedData }
 }
 
 export default usePendingEOASRequests

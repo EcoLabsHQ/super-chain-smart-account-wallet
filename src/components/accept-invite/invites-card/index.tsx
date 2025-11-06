@@ -115,7 +115,7 @@ export function InvitesCard({
               <Pagination
                 onChange={(_, page) => setPage(page)}
                 shape="rounded"
-                count={Math.max(1, Math.ceil((populations?.ownerPopulatedsConnection.totalCount ?? 0) / 5))}
+                count={Math.max(1, Math.ceil((populations?.meta.count ?? 0) / 5))}
               />
             </>
           )}
