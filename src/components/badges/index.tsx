@@ -1,14 +1,14 @@
-import { Grid, LinearProgress, Stack, styled, Typography } from '@mui/material'
-import React, { useMemo, useState } from 'react'
-import BadgesActions from './actions'
-import BadgesContent from './content'
-import type { ResponseBadge } from '@/types/super-chain'
-import { useQuery } from '@tanstack/react-query'
-import { useAppSelector } from '@/store'
-import { selectSuperChainAccount } from '@/store/superChainAccountSlice'
-import badgesService from '@/features/superChain/services/badges.service'
-import useSafeInfo from '@/hooks/useSafeInfo'
-import { useRouter } from 'next/router'
+import { LinearProgress, styled } from '@mui/material'
+// import React, { useMemo, useState } from 'react'
+// import BadgesActions from './actions'
+// import BadgesContent from './content'
+// import type { ResponseBadge } from '@/types/super-chain'
+// import { useQuery } from '@tanstack/react-query'
+// import { useAppSelector } from '@/store'
+// import { selectSuperChainAccount } from '@/store/superChainAccountSlice'
+// import badgesService from '@/features/superChain/services/badges.service'
+// import useSafeInfo from '@/hooks/useSafeInfo'
+// import { useRouter } from 'next/router'
 
 export const networks = [
   {
@@ -53,81 +53,81 @@ export const GradientProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }))
 
-function Badges({
-  season,
-  captchaToken,
-}: {
-  season?: { code: number; name: string; isActive: boolean }
-  captchaToken: string | null
-}) {
-  const { data: superChainAccount, loading: isSuperChainLoading } = useAppSelector(selectSuperChainAccount)
-  const { safeAddress, safeLoaded } = useSafeInfo()
-  const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)
-  const [selectedNetworks, setSelectedNetworks] = useState<string[]>([])
-  const router = useRouter()
-  const { campaign } = router.query
-  const [selectedCampaign, setSelectedCampaign] = useState<string>(campaign as string)
+// function Badges({
+//   season,
+//   captchaToken,
+// }: {
+//   season?: { code: number; name: string; isActive: boolean }
+//   captchaToken: string | null
+// }) {
+//   const { data: superChainAccount, loading: isSuperChainLoading } = useAppSelector(selectSuperChainAccount)
+//   const { safeAddress, safeLoaded } = useSafeInfo()
+//   const [searchTerm, setSearchTerm] = useState<string | undefined>(undefined)
+//   const [selectedNetworks, setSelectedNetworks] = useState<string[]>([])
+//   const router = useRouter()
+//   const { campaign } = router.query
+//   const [selectedCampaign, setSelectedCampaign] = useState<string>(campaign as string)
 
-  const { data, isLoading, error } = useQuery<{
-    currentBadges: ResponseBadge[]
-  }>({
-    queryKey: ['badges', safeAddress, safeLoaded],
-    queryFn: async () => await badgesService.getBadges(safeAddress as `0x${string}`),
-    refetchInterval: 10000,
-    enabled: !!safeLoaded,
-  })
-  const isClaimable = useMemo(() => data?.currentBadges.some((badge) => badge.claimable), [data?.currentBadges])
-  const currentPageBadges = season
-    ? data?.currentBadges.filter((x) => x.metadata.season === season.code)
-    : data?.currentBadges
-  const filteredBadges = useMemo(() => {
-    if (!data || !currentPageBadges) return []
+//   const { data, isLoading, error } = useQuery<{
+//     currentBadges: ResponseBadge[]
+//   }>({
+//     queryKey: ['badges', safeAddress, safeLoaded],
+//     queryFn: async () => await badgesService.getBadges(safeAddress as `0x${string}`),
+//     refetchInterval: 10000,
+//     enabled: !!safeLoaded,
+//   })
+//   const isClaimable = useMemo(() => data?.currentBadges.some((badge) => badge.claimable), [data?.currentBadges])
+//   const currentPageBadges = season
+//     ? data?.currentBadges.filter((x) => x.metadata.season === season.code)
+//     : data?.currentBadges
+//   const filteredBadges = useMemo(() => {
+//     if (!data || !currentPageBadges) return []
 
-    let filtered = currentPageBadges
+//     let filtered = currentPageBadges
 
-    if (searchTerm) {
-      filtered = filtered.filter(
-        (badge) =>
-          badge.metadata.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          badge.metadata.platform.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
-    }
-    if (selectedNetworks.length > 0) {
-      filtered = filtered.filter((badge) =>
-        badge.metadata.chains?.some((chain: string) =>
-          selectedNetworks.some((selected) => chain.toLowerCase() === selected.toLowerCase()),
-        ),
-      )
-    }
-    if (selectedCampaign) {
-      console.debug(selectedCampaign)
-      filtered = filtered.filter((badge) => badge.campaigns.includes(selectedCampaign))
-    }
+//     if (searchTerm) {
+//       filtered = filtered.filter(
+//         (badge) =>
+//           badge.metadata.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+//           badge.metadata.platform.toLowerCase().includes(searchTerm.toLowerCase()),
+//       )
+//     }
+//     if (selectedNetworks.length > 0) {
+//       filtered = filtered.filter((badge) =>
+//         badge.metadata.chains?.some((chain: string) =>
+//           selectedNetworks.some((selected) => chain.toLowerCase() === selected.toLowerCase()),
+//         ),
+//       )
+//     }
+//     if (selectedCampaign) {
+//       console.debug(selectedCampaign)
+//       filtered = filtered.filter((badge) => badge.campaigns.includes(selectedCampaign))
+//     }
 
-    return filtered
-  }, [data?.currentBadges, searchTerm, selectedNetworks, selectedCampaign])
-  return (
-    <Grid spacing={2} container>
-      <Stack gap="8px">
-        <Typography variant="h3" fontWeight={600}>
-          Badges
-        </Typography>
-        <Typography variant="body2" fontWeight={400} color="#4B4B4E">
-          Earn badges to gain SC points and unlock rewards.
-        </Typography>
-      </Stack>
-      <BadgesActions
-        captchaToken={captchaToken}
-        setNetworks={setSelectedNetworks}
-        setFilter={setSearchTerm}
-        setCampaign={setSelectedCampaign}
-        claimable={isClaimable ?? false}
-        selectedNetworks={selectedNetworks}
-        selectedCampaign={selectedCampaign}
-      />
-      <BadgesContent badges={filteredBadges} isLoading={isLoading} error={error} />
-    </Grid>
-  )
-}
+//     return filtered
+//   }, [data?.currentBadges, searchTerm, selectedNetworks, selectedCampaign])
+//   return (
+//     <Grid spacing={2} container>
+//       <Stack gap="8px">
+//         <Typography variant="h3" fontWeight={600}>
+//           Badges
+//         </Typography>
+//         <Typography variant="body2" fontWeight={400} color="#4B4B4E">
+//           Earn badges to gain SC points and unlock rewards.
+//         </Typography>
+//       </Stack>
+//       <BadgesActions
+//         captchaToken={captchaToken}
+//         setNetworks={setSelectedNetworks}
+//         setFilter={setSearchTerm}
+//         setCampaign={setSelectedCampaign}
+//         claimable={isClaimable ?? false}
+//         selectedNetworks={selectedNetworks}
+//         selectedCampaign={selectedCampaign}
+//       />
+//       <BadgesContent badges={filteredBadges} isLoading={isLoading} error={error} />
+//     </Grid>
+//   )
+// }
 
-export default Badges
+// export default Badges

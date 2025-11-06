@@ -37,7 +37,7 @@ function ClaimBadgesButton() {
   return (
     <Button
       component="a"
-      onClick={claim}
+      onClick={() => claim()}
       disabled={!canClaim || isPending}
       target="_blank"
       rel="noreferrer"

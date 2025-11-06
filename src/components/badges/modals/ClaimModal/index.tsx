@@ -3,7 +3,7 @@ import React from 'react'
 import Shiny from '@/public/images/common/shiny-animation.svg'
 import SuperChainPoints from '@/public/images/common/superChain.svg'
 import css from './styles.module.css'
-import type { ClaimData } from '../../actions'
+
 import { useAppSelector } from '@/store'
 import { selectSuperChainAccount } from '@/store/superChainAccountSlice'
 import CheckCircleIcon from '@/public/images/common/check-circle.svg'
@@ -11,6 +11,7 @@ import { GradientProgress } from '../..'
 import { getBadgeStrategy } from '@/components/badges/badgeInfo/BadgeStrategyRenderer'
 import ETHVaultStrategy from '@/components/badges/badgeInfo/strategies/ETHVaultStrategy'
 import { tokens } from '@/config/tokens'
+import { ClaimData } from '../../claimBadges'
 
 function ClaimModal({
   open,

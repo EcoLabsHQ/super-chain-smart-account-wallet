@@ -9,8 +9,34 @@ import ClaimModal from '@/components/badges/modals/ClaimModal'
 import { AppRoutes } from '@/config/routes'
 import { type Address } from 'viem'
 import { type BadgeWithPrize } from '@/types/badges'
-import { type ClaimData } from '@/components/badges/actions'
 import { type ResponseBadge, type SuperChainAccount } from '@/types/super-chain'
+
+export type ClaimData = {
+  totalPoints: number
+  isLevelUp: boolean
+  rewards?: {
+    tier_id: string
+    symbol: string
+    amount: string
+  }[]
+  badgeUpdates: {
+    badgeId: string
+    level: number
+    points: number
+    previousLevel: number
+  }[]
+  updatedBadges: {
+    badgeId: string
+    metadata: {
+      condition: string
+    }
+    badgeTiers: {
+      metadata: {
+        minValue: string
+      }
+    }[]
+  }[]
+}
 
 type ClaimBadgesProviderProps = {
   safeAddress: Address
@@ -57,6 +83,10 @@ export function ClaimBadgesProvider({ safeAddress, safeLoaded, token, data, chil
         safeAddress,
         extraData ? { captchaToken: token, ...extraData } : { captchaToken: token },
       )
+    },
+    onError: (error) => {
+      setErrorDetail(String(error))
+      console.error(error)
     },
     onSuccess: (response) => {
       void queryClient.cancelQueries({ queryKey: ['superChainAccount', safeAddress] })
@@ -119,7 +149,7 @@ export function ClaimBadgesProvider({ safeAddress, safeLoaded, token, data, chil
     <ClaimBadgesContext.Provider value={value}>
       {children}
       <LoadingModal open={isPending} title="Claiming badges" />
-      <FailedTxnModal open={isError} onClose={closeAll} handleRetry={retry} errorDetail={errorDetail} />
+      <FailedTxnModal open={isError} onClose={closeAll} handleRetry={() => claim()} errorDetail={errorDetail} />
       <ClaimModal
         onLevelUp={() => {
           setOpenClaimDialog(false)
