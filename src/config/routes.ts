@@ -9,8 +9,8 @@ export const AppRoutes = {
   home: '/home',
   badges: {
     allTime: '/badges',
-    season7: '/badges/season-7',
-    season8: '/badges/season-8',
+    // season7: '/badges/season-7',
+    // season8: '/badges/season-8',
   },
   campaigns: '/campaigns',
   cookie: '/cookie',
