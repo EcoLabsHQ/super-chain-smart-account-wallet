@@ -127,7 +127,7 @@ function CampaignCard({
     date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
 
   const handlePickCampaign = () => {
-    if (campaign.can_claim && !campaign.claimed) {
+    if ((campaign.can_claim && !campaign.claimed) || (campaign.can_claim && campaign.claimed)) {
       router.push({
         pathname: `${AppRoutes.campaigns}/${campaign.id}/claim-rewards`,
         query: { safe: router.query.safe },

@@ -462,10 +462,10 @@ export default function Page() {
                     <Card
                       sx={{
                         width: '100%',
-                        border: '1px solid #E1E2EA',
+                        border: campaign.claimed ? '1px solid #39D551' : '1px solid #E1E2EA',
                         borderRadius: '12px',
                         p: { xs: 2, sm: 3, md: 6 },
-                        backgroundColor: 'white',
+                        backgroundColor: campaign.claimed ? '#EBFBEE' : 'white',
                       }}
                     >
                       <Stack gap="16px" justifyContent="center" alignItems="center">
@@ -473,16 +473,21 @@ export default function Page() {
                           <Typography
                             sx={{ fontSize: '12px', fontWeight: 400, color: '#75757A', textAlign: 'center', m: 0 }}
                           >
-                            This campaign has ended.
+                            {campaign.claimed ? 'You’ve successfully claimed your rewards' : 'This campaign has ended.'}
                           </Typography>
-                          <Typography
-                            sx={{ fontSize: '12px', fontWeight: 400, color: '#75757A', textAlign: 'center', m: 0 }}
-                          >
-                            Claim your rewards{' '}
-                            <Box component="span" sx={{ fontWeight: 500, color: '#4B4B4E' }}>
-                              by December 15, 2025
-                            </Box>
-                          </Typography>
+                          {!campaign.claimed ? (
+                            <>
+                              {' '}
+                              <Typography
+                                sx={{ fontSize: '12px', fontWeight: 400, color: '#75757A', textAlign: 'center', m: 0 }}
+                              >
+                                Claim your rewards{' '}
+                                <Box component="span" sx={{ fontWeight: 500, color: '#4B4B4E' }}>
+                                  by December 15, 2025
+                                </Box>
+                              </Typography>
+                            </>
+                          ) : null}
                         </Box>
                         <Stack direction="row" gap="8px" alignItems="center">
                           <Typography sx={{ fontSize: '24px', fontWeight: '600', lineHeight: '32px' }}>
@@ -502,41 +507,44 @@ export default function Page() {
                     </Card>
                   </Stack>
 
-                  {/* Botón con spinner y mensajes dinámicos */}
-                  <Button
-                    sx={{
-                      background: '#000000',
-                      borderRadius: '12px',
-                      padding: '15px',
-                      color: 'white',
-                      ':hover': { background: 'black' },
-                      opacity: isChecking ? 0.5 : 1,
-                      cursor: isChecking ? 'not-allowed' : 'pointer',
-                      '&.Mui-disabled': {
-                        background: '#000000',
-                        color: 'white',
-                        opacity: 0.5,
-                      },
-                      '& .MuiCircularProgress-root': {
-                        color: 'white',
-                      },
-                    }}
-                    onClick={() => mutate()}
-                    disabled={isChecking || isPending}
-                    aria-busy={showSpinner ? 'true' : 'false'}
-                  >
-                    <Stack direction="row" alignItems="center" gap={1}>
-                      {showSpinner && <CircularProgress size={18} thickness={4} />}
-                      {label}
-                    </Stack>
-                  </Button>
+                  {!campaign.claimed && (
+                    <>
+                      <Button
+                        sx={{
+                          background: '#000000',
+                          borderRadius: '12px',
+                          padding: '15px',
+                          color: 'white',
+                          ':hover': { background: 'black' },
+                          opacity: isChecking ? 0.5 : 1,
+                          cursor: isChecking ? 'not-allowed' : 'pointer',
+                          '&.Mui-disabled': {
+                            background: '#000000',
+                            color: 'white',
+                            opacity: 0.5,
+                          },
+                          '& .MuiCircularProgress-root': {
+                            color: 'white',
+                          },
+                        }}
+                        onClick={() => mutate()}
+                        disabled={isChecking || isPending}
+                        aria-busy={showSpinner ? 'true' : 'false'}
+                      >
+                        <Stack direction="row" alignItems="center" gap={1}>
+                          {showSpinner && <CircularProgress size={18} thickness={4} />}
+                          {label}
+                        </Stack>
+                      </Button>
 
-                  <Stack direction="row" gap="4px" justifyContent="center" alignItems="center">
-                    <Typography variant="caption" color="#75757A">
-                      Reward Formula{' '}
-                    </Typography>
-                    <InfoIcon sx={{ width: 16, height: 16 }} />
-                  </Stack>
+                      <Stack direction="row" gap="4px" justifyContent="center" alignItems="center">
+                        <Typography variant="caption" color="#75757A">
+                          Reward Formula{' '}
+                        </Typography>
+                        <InfoIcon sx={{ width: 16, height: 16 }} />
+                      </Stack>
+                    </>
+                  )}
                 </Stack>
               </Stack>
             </Card>
