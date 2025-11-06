@@ -68,7 +68,11 @@ export function ClaimBadgesProvider({ safeAddress, safeLoaded, token, data, chil
   const [errorDetail, setErrorDetail] = useState<string>('')
 
   const canClaim: boolean = useMemo(() => {
-    return data.currentBadges.some((b) => b.claimable || (b.claimableByPerk ?? false))
+    return data.currentBadges.some(
+      (b) =>
+        (b.claimable && (b.badgeId != '11' || (b.badgeId == '11' && b.claimableTier != b.totalClaimed))) || //COHORT STAGING BADGE TEMP FIX
+        (b.claimableByPerk ?? false),
+    )
   }, [data.currentBadges])
 
   // p.ej. en ClaimBadgesContext.tsx
