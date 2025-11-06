@@ -118,22 +118,12 @@ function AccountOverview({ open, onClose }: { open: boolean; onClose: () => void
             >
               <Box display="flex" alignItems="center" gap={1}>
                 <Typography fontWeight={600} color="primary" fontSize={16} whiteSpace="normal" display="inline">
-                  {truncateName(superChainSmartAccount.data.superChainID.split('.prosperity')[0], 12)}
-                  <span style={{ color: 'var(--color-secondary-main)' }}>.prosperity</span>
+                  {truncateName(superChainSmartAccount.data.superChainID.split('.superchain')[0], 12)}
+                  <span style={{ color: 'var(--color-secondary-main)' }}>.superchain</span>
                 </Typography>
                 {nationalityData && <CountryFlag alpha3={nationalityData.nationality} size={24} />}
               </Box>
-              <Typography
-                fontWeight={600}
-                color="primary"
-                fontSize={16}
-                whiteSpace="normal"
-                display="flex"
-                flexWrap="wrap"
-              >
-                {truncateName(superChainSmartAccount.data.superChainID.split('.superchain')[0], 12)}
-                <span style={{ color: 'var(--color-secondary-main)' }}>.superchain</span>
-              </Typography>
+
               <Box marginTop="12px">
                 <Typography fontSize={14} fontWeight={500} color="var(--color-text-secondary)">
                   SC points:{' '}

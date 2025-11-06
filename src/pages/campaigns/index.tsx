@@ -88,7 +88,7 @@ function CampaignsPage() {
               <MenuItem value="Lisk">Lisk</MenuItem>
               <MenuItem value="Optimism">Optimism</MenuItem>
               <MenuItem value="Base">Base</MenuItem>
-              <MenuItem value="Arbitrum">Arbitrum</MenuItem>
+              <MenuItem value="Celo">Celo</MenuItem>
             </Select>
 
             {/* Clear All */}
