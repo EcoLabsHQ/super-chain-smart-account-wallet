@@ -261,7 +261,6 @@ const Home: NextPage = () => {
                     <MenuItem value="Optimism">Optimisim</MenuItem>
                     <MenuItem value="Mode">Mode</MenuItem>
                     <MenuItem value="Unichain">Unichain</MenuItem>
-                    <MenuItem value="arb">Arbitrum</MenuItem>
                   </Select>
 
                   <Select
