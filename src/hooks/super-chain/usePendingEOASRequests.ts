@@ -16,7 +16,10 @@ export type PendingEOASRequest = {
     }
   }[]
   meta: {
-    count: number
+    count: number // total global (conservado)
+  }
+  ownerPopulatedsConnection: {
+    totalCount: number // total filtrado
   }
 }
 
@@ -39,6 +42,9 @@ function usePendingEOASRequests(account: Address, page = 1) {
       meta(id: "OwnerPopulated") {
         count
       }
+        ownerPopulatedsConnection(where: { newOwner_contains_nocase: $account }) {
+    totalCount
+  }
     }
   `
 
