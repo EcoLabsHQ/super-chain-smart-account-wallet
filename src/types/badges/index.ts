@@ -55,9 +55,12 @@ export type BadgeWithPrize = {
     symbol: string
     amount: string
   }
+
+  perkClaimed: boolean
   tokenBadge?: {
     symbol: string
     amount: string
-    maxClaims?: string
+    maxClaims?: number
+    totalPerkClaims: number
   }
 }

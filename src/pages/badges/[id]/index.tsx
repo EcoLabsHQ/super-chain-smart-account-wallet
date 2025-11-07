@@ -17,6 +17,9 @@ import {
   Typography,
 } from '@mui/material'
 import GiftIcon from '@/public/images/common/gift.svg'
+import CompletedGiftIcon from '@/public/images/common/completed-gift.svg'
+import RewardClaimed from '@/public/images/common/reward-claimed.svg'
+
 import PartyIcon from '@/public/images/common/party.svg'
 import InfoIcon from '@/public/images/common/info-soft-gray.svg'
 import InfoBlackIcon from '@/public/images/common/info-black.svg'
@@ -40,6 +43,8 @@ import { ClaimBadgesProvider, useClaimBadges } from '@/components/badges/claimBa
 import { Address } from 'viem'
 import { SelfVerificationStrategy } from '@/components/badges/badgeInfo/strategies/SelfVerificationStrategy'
 import CheckCircleIcon from '@/public/images/common/check-circle-white.svg'
+import { color } from 'framer-motion'
+import { fill } from 'lodash'
 
 export const getBadgeStrategy = (
   badgeOrClaim: any,
@@ -471,172 +476,226 @@ export default function BadgePage() {
                           tier={currentBadge.badgeTiers[currentBadge.badgeTiers.length - 1]}
                           currentBadge={currentBadge}
                         />
-                        {currentBadge.tokenBadge?.amount && (
-                          <Stack
-                            direction="row"
-                            alignItems="center"
-                            justifyContent="space-between"
-                            sx={{
-                              width: '100%',
-                              background: 'linear-gradient(180deg, #E7F8F8 0%, #F6FEFD 100%)',
-                              borderRadius: '12px',
-                              border: '1px solid #1FC1BF',
-                              p: { xs: '8px 12px', sm: '8px 12px' },
-                              minHeight: { xs: 64, sm: 64 },
-                            }}
-                          >
-                            <Stack direction="row" alignItems="center" gap={2} sx={{ width: '100%' }}>
-                              <Box
+                        {currentBadge.tokenBadge?.amount &&
+                          (currentBadge.tokenBadge.totalPerkClaims < currentBadge.tokenBadge.maxClaims! ||
+                            currentBadge.perkClaimed ||
+                            currentBadge.claimableByPerk) && (
+                            <>
+                              <Stack
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="space-between"
                                 sx={{
-                                  width: 40,
-                                  height: 40,
-                                  position: 'relative',
-                                  border: '1px solid #1FC1BF',
-                                  background: 'white',
-                                  borderRadius: 2,
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  flex: '0 0 40px',
+                                  width: '100%',
+                                  background: currentBadge.perkClaimed
+                                    ? '#EBFBEE'
+                                    : 'linear-gradient(221deg, #E7F8F8 0.97%, #F6FEFD 95.49%);',
+                                  borderRadius:
+                                    currentBadge.tokenBadge?.amount &&
+                                    !currentBadge.claimableByPerk &&
+                                    !currentBadge.perkClaimed
+                                      ? '12px'
+                                      : '12px 12px 0px 0px',
+                                  border: currentBadge.perkClaimed ? '1px solid #39D551' : '1px solid #1FC1BF',
+                                  p: { xs: '8px 12px', sm: '8px 12px' },
+                                  minHeight: { xs: 64, sm: 64 },
                                 }}
                               >
-                                <GiftIcon style={{ width: '24px', height: '24px' }} />
-                                {!currentBadge.claimableByPerk &&
-                                  currentBadge.tier == currentBadge.badgeTiers.length && (
-                                    <CheckCircleIcon
-                                      style={{
-                                        position: 'absolute',
-                                        right: '-5px',
-                                        bottom: '-5px',
-                                        width: '16px',
-                                        height: '16px',
-                                      }}
-                                    />
-                                  )}
-                              </Box>
-                              <Stack sx={{ flex: 1, minWidth: 0 }}>
-                                <Stack justifyContent="space-between" alignItems="center" direction="row">
-                                  <Typography
-                                    variant="h5"
-                                    fontWeight={500}
-                                    sx={{ fontSize: { xs: '14px', sm: '16px' } }}
+                                <Stack direction="row" alignItems="center" gap={2} sx={{ width: '100%' }}>
+                                  <Box
+                                    sx={{
+                                      width: 40,
+                                      height: 40,
+                                      position: 'relative',
+                                      border: currentBadge.perkClaimed ? '1px solid #39D551' : '1px solid #1FC1BF',
+                                      background: 'white',
+                                      borderRadius: 2,
+                                      display: 'flex',
+                                      alignItems: 'center',
+                                      justifyContent: 'center',
+                                      flex: '0 0 40px',
+                                    }}
                                   >
-                                    Exclusive Bonus
-                                  </Typography>
-                                  <Stack
-                                    direction="row"
-                                    alignItems="center"
-                                    justifyContent="center"
-                                    sx={{ gap: { xs: '2px', sm: '4px' } }}
-                                  >
-                                    <Typography
-                                      variant="h5"
-                                      fontWeight={600}
-                                      sx={{ fontSize: { xs: '10px', sm: '16px' } }}
-                                    >
-                                      {currentBadge.tokenBadge?.amount}
-                                    </Typography>
-                                    {rewardIcon && (
-                                      <SvgIcon
-                                        component={rewardIcon}
-                                        sx={{
-                                          width: { xs: 16, sm: 24 },
-                                          height: { xs: 16, sm: 24 },
-                                          mt: '2px',
-                                          ml: '4px',
+                                    {!currentBadge.perkClaimed && (
+                                      <GiftIcon style={{ width: '24px', height: '24px' }} />
+                                    )}
+                                    {currentBadge.perkClaimed && (
+                                      <CompletedGiftIcon style={{ width: '24px', height: '24px' }} />
+                                    )}
+                                    {currentBadge.perkClaimed && (
+                                      <CheckCircleIcon
+                                        style={{
+                                          position: 'absolute',
+                                          right: '-5px',
+                                          bottom: '-5px',
+                                          width: '16px',
+                                          height: '16px',
                                         }}
                                       />
                                     )}
+                                  </Box>
+                                  <Stack sx={{ flex: 1, minWidth: 0 }}>
+                                    <Stack justifyContent="space-between" alignItems="center" direction="row">
+                                      <Typography
+                                        variant="h5"
+                                        fontWeight={500}
+                                        sx={{ fontSize: { xs: '14px', sm: '16px' } }}
+                                      >
+                                        Exclusive Bonus
+                                      </Typography>
+                                      <Stack
+                                        direction="row"
+                                        alignItems="center"
+                                        justifyContent="center"
+                                        sx={{ gap: { xs: '2px', sm: '4px' } }}
+                                      >
+                                        <Typography
+                                          variant="h5"
+                                          fontWeight={600}
+                                          sx={{ fontSize: { xs: '10px', sm: '16px' } }}
+                                        >
+                                          {currentBadge.tokenBadge?.amount}
+                                        </Typography>
+                                        {rewardIcon && (
+                                          <SvgIcon
+                                            component={rewardIcon}
+                                            sx={{
+                                              width: { xs: 16, sm: 24 },
+                                              height: { xs: 16, sm: 24 },
+                                              mt: '2px',
+                                              ml: '4px',
+                                            }}
+                                          />
+                                        )}
+                                      </Stack>
+                                    </Stack>
+                                    <Stack
+                                      sx={{
+                                        flexDirection: { xs: 'column', sm: 'row' },
+                                        alignItems: { xs: 'start', sm: 'center' },
+                                        mt: 0.5,
+                                      }}
+                                    >
+                                      <Typography
+                                        variant="caption"
+                                        fontWeight={500}
+                                        color="#75757A"
+                                        sx={{
+                                          fontSize: { xs: '10px', sm: '12px' },
+                                          lineHeight: { xs: '14px', sm: '16px' },
+                                        }}
+                                      >
+                                        Limited to first {currentBadge.tokenBadge.maxClaims ?? 0} users who reach Tier
+                                        MAX
+                                      </Typography>
+                                      <Box sx={{ display: { xs: 'none', sm: 'block' }, width: 16, height: 16 }}>
+                                        <DotIcon style={{ width: '100%', height: '100%' }} />
+                                      </Box>
+                                      <Typography
+                                        variant="caption"
+                                        fontWeight={500}
+                                        color="#4B4B4E"
+                                        sx={{
+                                          fontSize: { xs: '10px', sm: '12px' },
+                                          overflow: 'hidden',
+                                          textOverflow: 'ellipsis',
+                                          whiteSpace: 'nowrap',
+                                        }}
+                                      >
+                                        {Math.floor((currentBadge.totalClaimed ?? 0) / currentBadge.badgeTiers.length)}/
+                                        {currentBadge.tokenBadge.maxClaims ?? 0} Claimed
+                                      </Typography>
+                                    </Stack>
                                   </Stack>
                                 </Stack>
+                              </Stack>
+                              {currentBadge.perkClaimed && (
                                 <Stack
+                                  direction="row"
+                                  alignItems="center"
+                                  justifyContent="center"
                                   sx={{
-                                    flexDirection: { xs: 'column', sm: 'row' },
-                                    alignItems: { xs: 'start', sm: 'center' },
-                                    mt: 0.5,
+                                    width: '100%',
+                                    background: '#EBFBEE',
+                                    mt: '-12px',
+                                    borderTop: 0,
+                                    borderRadius: '0 0 12px 12px',
+                                    border: '1px solid #39D551',
+                                    p: '12px',
+                                    minHeight: { xs: 20, sm: 20 },
                                   }}
                                 >
-                                  <Typography
-                                    variant="caption"
-                                    fontWeight={500}
-                                    color="#75757A"
-                                    sx={{
-                                      fontSize: { xs: '10px', sm: '12px' },
-                                      lineHeight: { xs: '14px', sm: '16px' },
-                                    }}
-                                  >
-                                    Limited to first {currentBadge.tokenBadge.maxClaims ?? 0} users who reach Tier MAX
-                                  </Typography>
-                                  <Box sx={{ display: { xs: 'none', sm: 'block' }, width: 16, height: 16 }}>
-                                    <DotIcon style={{ width: '100%', height: '100%' }} />
-                                  </Box>
-                                  <Typography
-                                    variant="caption"
-                                    fontWeight={500}
-                                    color="#75757A"
-                                    sx={{
-                                      fontSize: { xs: '10px', sm: '12px' },
-                                      overflow: 'hidden',
-                                      textOverflow: 'ellipsis',
-                                      whiteSpace: 'nowrap',
-                                    }}
-                                  >
-                                    {Math.floor((currentBadge.totalClaimed ?? 0) / currentBadge.badgeTiers.length)}/
-                                    {currentBadge.tokenBadge.maxClaims ?? 0}
-                                  </Typography>
+                                  <Stack direction="row" alignItems="center" gap="8px">
+                                    <RewardClaimed style={{ width: '16px', height: '16px' }} />
+                                    <Typography
+                                      variant="body2"
+                                      fontWeight={500}
+                                      color="#1F752D"
+                                      sx={{ fontSize: { xs: '12px', sm: '14px' } }}
+                                    >
+                                      You have claimed your rewards!
+                                    </Typography>
+                                  </Stack>
                                 </Stack>
-                              </Stack>
-                            </Stack>
-                          </Stack>
-                        )}
+                              )}
+
+                              {!currentBadge.perkClaimed && (
+                                <Stack
+                                  direction="row"
+                                  alignItems="center"
+                                  justifyContent="space-between"
+                                  sx={{
+                                    width: '100%',
+                                    background: '#E9F9F9',
+                                    mt: '-12px',
+                                    borderTop: 0,
+                                    borderRadius: '0 0 12px 12px',
+                                    border: '1px solid #1FC1BF',
+                                    p: '12px',
+                                    minHeight: { xs: 20, sm: 20 },
+                                  }}
+                                >
+                                  <Stack direction="row" alignItems="center" gap="8px">
+                                    <PartyIcon style={{ width: '16px', height: '16px' }} />
+                                    <Typography
+                                      variant="body2"
+                                      fontWeight={500}
+                                      color="#116A69"
+                                      sx={{ fontSize: { xs: '12px', sm: '14px' } }}
+                                    >
+                                      You are eligible to claim rewards!
+                                    </Typography>
+                                  </Stack>
+
+                                  <Stack direction="row" justifyContent="flex-end">
+                                    <InlineClaimButton>
+                                      Claim your Rewards <span style={{ fontSize: '20px' }}>›</span>
+                                    </InlineClaimButton>
+                                  </Stack>
+                                </Stack>
+                              )}
+                            </>
+                          )}
                       </Stack>
                     </Card>
-                    {currentBadge.claimableByPerk && (
-                      <Stack
-                        direction="row"
-                        alignItems="center"
-                        justifyContent="space-between"
-                        sx={{
-                          width: '100%',
-                          background: 'linear-gradient(180deg, #E7F8F8 0%, #F6FEFD 100%)',
-                          borderRadius: '12px',
-                          border: '1px solid #1FC1BF',
-                          p: '12px',
-                        }}
-                      >
-                        <Stack direction="row" alignItems="center" gap="8px">
-                          <PartyIcon style={{ width: '16px', height: '16px' }} />
-                          <Typography
-                            variant="body2"
-                            fontWeight={500}
-                            color="#116A69"
-                            sx={{ fontSize: { xs: '12px', sm: '14px' } }}
-                          >
-                            Your are eligible to claim rewards!
-                          </Typography>
-                        </Stack>
-                        <Stack direction="row" justifyContent="flex-end">
-                          <InlineClaimButton>
-                            Claim Badges <span style={{ fontSize: '20px' }}>›</span>
-                          </InlineClaimButton>
-                        </Stack>
+                  </Stack>
+                  {(!currentBadge.tokenBadge ||
+                    (currentBadge.tokenBadge &&
+                      currentBadge.tokenBadge.totalPerkClaims >= currentBadge.tokenBadge.maxClaims!)) &&
+                    currentBadge.claimable && (
+                      <Stack direction="row" justifyContent="flex-end" sx={{ mt: 1 }}>
+                        <InlineClaimButton
+                          style={{
+                            color: '#4B4B4E',
+                            lineHeight: '20px',
+                            padding: 0,
+                          }}
+                        >
+                          Claim Badges
+                          <span style={{ fontSize: '16px', lineHeight: '20px', transform: 'translateY(-1px)' }}>›</span>
+                        </InlineClaimButton>
                       </Stack>
                     )}
-                  </Stack>
-                  {currentBadge.claimable && !currentBadge.claimableByPerk && (
-                    <Stack direction="row" justifyContent="flex-end" sx={{ mt: 1 }}>
-                      <InlineClaimButton
-                        style={{
-                          color: '#4B4B4E',
-                          lineHeight: '20px',
-                          padding: 0,
-                        }}
-                      >
-                        Claim Badges
-                        <span style={{ fontSize: '16px', lineHeight: '20px', transform: 'translateY(-1px)' }}>›</span>
-                      </InlineClaimButton>
-                    </Stack>
-                  )}
                 </Card>
               </Stack>
             </Stack>
