@@ -43,8 +43,6 @@ import { ClaimBadgesProvider, useClaimBadges } from '@/components/badges/claimBa
 import { Address } from 'viem'
 import { SelfVerificationStrategy } from '@/components/badges/badgeInfo/strategies/SelfVerificationStrategy'
 import CheckCircleIcon from '@/public/images/common/check-circle-white.svg'
-import { color } from 'framer-motion'
-import { fill } from 'lodash'
 
 export const getBadgeStrategy = (
   badgeOrClaim: any,
