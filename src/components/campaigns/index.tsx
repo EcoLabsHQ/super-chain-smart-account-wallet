@@ -264,7 +264,7 @@ function CampaignCard({
           >
             <Typography
               sx={{
-                color: 'var(--Foundation-Purple-purple-700, #3F36A8)', // mejor contraste con morado
+                color: 'var(--Foundation-Purple-purple-700, #000)', // mejor contraste con morado
                 fontFamily: '"DM Sans"',
                 fontSize: '12px',
                 fontStyle: 'normal',

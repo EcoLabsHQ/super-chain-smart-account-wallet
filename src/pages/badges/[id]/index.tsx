@@ -600,7 +600,7 @@ export default function BadgePage() {
                                           whiteSpace: 'nowrap',
                                         }}
                                       >
-                                        {Math.floor((currentBadge.totalClaimed ?? 0) / currentBadge.badgeTiers.length)}/
+                                        {currentBadge.tokenBadge.totalPerkClaims}/
                                         {currentBadge.tokenBadge.maxClaims ?? 0} Claimed
                                       </Typography>
                                     </Stack>
@@ -637,7 +637,7 @@ export default function BadgePage() {
                                 </Stack>
                               )}
 
-                              {!currentBadge.perkClaimed && (
+                              {!currentBadge.perkClaimed && currentBadge.claimableByPerk && (
                                 <Stack
                                   direction="row"
                                   alignItems="center"
