@@ -53,10 +53,7 @@ function RefreshTimer({ message, deadLine, messageAfter }: { message: string; de
       <SvgIcon component={TimerOutlinedIcon} fontSize="small" sx={{ color: 'black', fontSize: '16px' }} />
       <Typography fontSize="14px" fontWeight={400}>
         {message}
-        <span style={{ fontWeight: 600 }}>
-          {timeLeft.days}d : {timeLeft.hours.toString().padStart(2, '0')}h :{' '}
-          {timeLeft.minutes.toString().padStart(2, '0')}m
-        </span>
+        <span style={{ fontWeight: 600 }}>h : {timeLeft.minutes.toString().padStart(2, '0')}m</span>
         {messageAfter}
       </Typography>
     </Box>
