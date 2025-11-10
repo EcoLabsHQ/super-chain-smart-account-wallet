@@ -54,8 +54,7 @@ function RefreshTimer({ message, deadLine, messageAfter }: { message: string; de
       <Typography fontSize="14px" fontWeight={400}>
         {message}
         <span style={{ fontWeight: 600 }}>
-          {timeLeft.days}d : {timeLeft.hours.toString().padStart(2, '0')}h :{' '}
-          {timeLeft.minutes.toString().padStart(2, '0')}m
+          {timeLeft.hours.toString().padStart(2, '0')}h : {timeLeft.minutes.toString().padStart(2, '0')}m
         </span>
         {messageAfter}
       </Typography>

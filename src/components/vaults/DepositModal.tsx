@@ -13,6 +13,7 @@ import {
   Divider,
   CircularProgress,
 } from '@mui/material'
+import { NumericFormat } from 'react-number-format'
 import CloseIcon from '@mui/icons-material/Close'
 import useCompound from '@/hooks/compound/useCompound'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
@@ -24,6 +25,33 @@ import useBalances from '@/hooks/useBalances'
 import useSuperChainAccount from '@/hooks/super-chain/useSuperChainAccount'
 import QrCodeButton from '../sidebar/QrCodeButton'
 import Image from 'next/image'
+
+interface CustomNumericFormatProps {
+  onChange: (event: { target: { name: string; value: string } }) => void
+  name: string
+}
+
+const NumericFormatCustom = React.forwardRef<any, CustomNumericFormatProps>(function NumericFormatCustom(props, ref) {
+  const { onChange, ...other } = props
+
+  return (
+    <NumericFormat
+      {...other}
+      getInputRef={ref}
+      onValueChange={(values) => {
+        onChange({
+          target: {
+            name: props.name,
+            value: values.value,
+          },
+        })
+      }}
+      thousandSeparator
+      decimalScale={2}
+      allowNegative={false}
+    />
+  )
+})
 
 interface DepositModalProps {
   open: boolean
@@ -164,21 +192,16 @@ function DepositModal({
                   value={amount}
                   onChange={handleAmountChange}
                   variant="standard"
-                  type="number"
-                  inputMode="numeric"
                   placeholder="0.00"
+                  name="amount"
                   InputProps={{
+                    inputComponent: NumericFormatCustom as any,
                     disableUnderline: true,
                     sx: {
                       fontSize: '24px',
                       fontWeight: 500,
                       '& input': {
                         p: 0,
-                        '&::-webkit-inner-spin-button, &::-webkit-outer-spin-button': {
-                          '-webkit-appearance': 'none',
-                          margin: 0,
-                        },
-                        '-moz-appearance': 'textfield',
                       },
                     },
                   }}
@@ -194,10 +217,14 @@ function DepositModal({
               </Stack>
               <Stack direction="row" justifyContent="space-between" alignItems="center" mt={1}>
                 <Typography color="text.secondary" fontSize="14px">
-                  ${(Number(amount) * assetPrice || 0).toFixed(2)}
+                  $
+                  {(Number(amount) * assetPrice || 0).toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </Typography>
                 <Typography color="text.secondary" fontSize="14px">
-                  Available: {maxAmount}{' '}
+                  Available: {maxAmount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}{' '}
                   <Button
                     onClick={handleSetMax}
                     size="small"
