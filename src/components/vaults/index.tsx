@@ -206,7 +206,9 @@ function VaultCard({
             <Image src={tokenIcon} alt={title} width={16} height={16} />
 
             <Typography fontSize="18px" variant="h4" fontWeight="bold">
-              {value === 0 ? '0.00' : value.toFixed(5)}
+              {value === 0
+                ? '0.00'
+                : value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </Typography>
           </Box>
         </Box>
@@ -400,7 +402,7 @@ function Vaults() {
                   Total Vault Deposits
                 </Typography>
                 <Typography fontSize="24px" fontWeight={700}>
-                  ${totalDeposits.toFixed(2)}
+                  ${totalDeposits.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </Typography>
               </Stack>
             </CardContent>

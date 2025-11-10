@@ -47,6 +47,7 @@ export default function Page() {
     refetchInterval: 10000,
     queryFn: async () => {
       const { data } = await axios.get(`${BACKEND_BASE_URI}/campaigns/${address}`)
+      console.debug('Fetched campaigns data:', data)
       return (data as Campaign[]).find((c) => c.id === campaignId)
     },
   })
