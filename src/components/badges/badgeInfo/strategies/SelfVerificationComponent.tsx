@@ -34,7 +34,7 @@ export function SelfVerificationComponent({ badge }: { badge: ResponseBadge }) {
         endpoint:
           ENV == 'production'
             ? 'https://scsa-backend-production.up.railway.app/api/self/verify'
-            : 'https://scsa-backend-production.up.railway.app/api/self/verify',
+            : 'https://scsa-backend-staging.up.railway.app/api/self/verify',
         endpointType: 'https',
         logoBase64: 'https://account.superchain.eco/images/logo.png',
         userId, //address,
