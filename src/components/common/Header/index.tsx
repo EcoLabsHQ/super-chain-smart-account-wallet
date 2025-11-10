@@ -59,7 +59,6 @@ const Header = ({ onMenuToggle }: HeaderProps): ReactElement => {
             height={24}
             loading="lazy"
           />
-          Total points distributed
           <span className={css.name}>OP Mainnet</span>
         </span>
       </div>
