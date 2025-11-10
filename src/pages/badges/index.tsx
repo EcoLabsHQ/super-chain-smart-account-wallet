@@ -138,6 +138,12 @@ const Home: NextPage = () => {
     [data?.currentBadges, search, chain, withRewards, campaign],
   )
 
+  const sumPoints = (badge: BadgeWithPrize) => {
+    return badge.badgeTiers
+      .filter((x) => Number(x.tier) <= badge.tier)
+      .reduce((acc, tier) => acc + Number(tier.points), 0)
+  }
+
   const handlePickBadge = (id: string) => {
     router.push({ pathname: `${AppRoutes.badges.allTime}/${id}`, query: { safe: router.query.safe } })
   }
@@ -383,7 +389,7 @@ const Home: NextPage = () => {
                           type: '',
                           tokenBadge: !!badge.tokenBadge,
                         }}
-                        myPoints={[{ id: Number(badge.badgeId), points: badge.points }]}
+                        myPoints={[{ id: Number(badge.badgeId), points: sumPoints(badge) }]}
                         pointsOnHover={true}
                       />
                     </Box>
