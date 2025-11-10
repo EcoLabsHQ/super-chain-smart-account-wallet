@@ -16,7 +16,7 @@ import type { WebhookEvent } from './webhook-types'
 import type { PushNotificationPreferences, PushNotificationPrefsKey } from '@/services/push-notifications/preferences'
 
 const GATEWAY_URL_PRODUCTION =
-  process.env.NEXT_PUBLIC_GATEWAY_URL_PRODUCTION || 'https://scsa-backend-staging.up.railway.app/api/safe'
+  process.env.NEXT_PUBLIC_GATEWAY_URL_PRODUCTION || 'https://scsa-backend-production.up.railway.app/api/safe'
 const GATEWAY_URL_STAGING =
   process.env.NEXT_PUBLIC_GATEWAY_URL_STAGING || 'https://scsa-backend-staging.up.railway.app/api/safe'
 

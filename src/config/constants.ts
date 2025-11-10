@@ -5,7 +5,7 @@ export const APP_IS_PRODUCTION = 'true'
 export const IS_DEV = process.env.NODE_ENV === 'development'
 
 export const GATEWAY_URL_PRODUCTION =
-  process.env.NEXT_PUBLIC_GATEWAY_URL_PRODUCTION || 'https://scsa-backend-staging.up.railway.app/api/safe'
+  process.env.NEXT_PUBLIC_GATEWAY_URL_PRODUCTION || 'https://scsa-backend-production.up.railway.app/api/safe'
 export const GATEWAY_URL_STAGING =
   process.env.NEXT_PUBLIC_GATEWAY_URL_STAGING || 'https://scsa-backend-staging.up.railway.app/api/safe'
 
