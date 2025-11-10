@@ -41,7 +41,7 @@ import ETHVaultStrategy from '@/components/badges/badgeInfo/strategies/ETHVaultS
 import { ClaimBadgesProvider, useClaimBadges } from '@/components/badges/claimBadges'
 import { Address } from 'viem'
 import { SelfVerificationStrategy } from '@/components/badges/badgeInfo/strategies/SelfVerificationStrategy'
-import CheckCircleIcon from '@/public/images/common/check-circle-white.svg'
+import CheckCircleIcon from '@/public/images/common/check-circle.svg'
 import { networks } from '@/components/badges'
 import { formatBeautifulAmount } from '@/utils/formatNumber'
 
@@ -281,6 +281,54 @@ export default function BadgePage() {
                           <Launch sx={{ width: '16px', height: '16px', marginLeft: '4px' }} />
                         </Button>
                       )}
+
+                  {currentBadge.badgeTiers.length <= currentBadge.tier && (
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      sx={{
+                        display: 'flex',
+                        height: '28px',
+                        padding: '0 6px',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+
+                        borderRadius: '100px',
+                        border: '1px solid #39D551', // lime-500
+                        background: '#EBFBEE', // lime-50
+
+                        gap: '6px',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <SvgIcon component={CheckCircleIcon} inheritViewBox sx={{ width: 16, height: 16 }} />
+                      <Typography
+                        sx={{
+                          color: '#000',
+                          fontFamily: '"DM Sans"',
+                          fontSize: '12px',
+                          fontStyle: 'normal',
+                          fontWeight: 600,
+                          lineHeight: '16px',
+                          m: 0,
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        Completed
+                      </Typography>
+
+                      <Box
+                        sx={{
+                          width: 16,
+                          height: 16,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          lineHeight: 0,
+                        }}
+                      ></Box>
+                    </Stack>
+                  )}
                 </Stack>
               </Stack>
               <Divider />
