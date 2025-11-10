@@ -4,14 +4,11 @@ import css from '@/components/common/PageHeader/styles.module.css'
 import LeaderboardNavigation from './LeaderboardNavigation'
 import { Box, Typography } from '@mui/material'
 import RefreshTimer from './RefreshTimer'
-
 function getNextDeadlineUTC(): Date {
   const now: Date = new Date()
   const result: Date = new Date(now)
 
-  const currentUTCDay: number = now.getUTCDay()
-  const daysUntilNextSunday: number = currentUTCDay === 0 ? 7 : 7 - currentUTCDay
-  result.setUTCDate(now.getUTCDate() + daysUntilNextSunday)
+  result.setUTCDate(now.getUTCDate() + 1)
   result.setUTCHours(13, 40, 0, 0)
 
   return result
