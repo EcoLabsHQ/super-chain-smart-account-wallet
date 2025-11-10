@@ -103,6 +103,44 @@ export const formatAmount = (number: string | number, precision?: number): strin
   return format(number, formatter.format)
 }
 
+export function formatBeautifulAmount(value: number, locale: string = 'en-US'): string {
+  // Guard invalid inputs
+  if (typeof value !== 'number' || !Number.isFinite(value)) return '—'
+
+  const abs: number = Math.abs(value)
+  const sign: string = value < 0 ? '-' : ''
+
+  // Helper: up to 2 decimals, strip trailing zeros
+  const fmt = (n: number): string =>
+    n.toLocaleString(locale, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    })
+
+  // Thresholds and suffixes
+  const THOUSAND: number = 1_000
+  const MILLION: number = 1_000_000
+  const BILLION: number = 1_000_000_000
+  const TRILLION: number = 1_000_000_000_000
+
+  let formatted: string
+
+  if (abs >= TRILLION) {
+    formatted = fmt(abs / TRILLION) + 'T'
+  } else if (abs >= BILLION) {
+    formatted = fmt(abs / BILLION) + 'B'
+  } else if (abs >= MILLION) {
+    formatted = fmt(abs / MILLION) + 'M'
+  } else if (abs >= THOUSAND) {
+    formatted = fmt(abs / THOUSAND) + 'K'
+  } else {
+    // Plain number with grouping, up to 2 decimals
+    formatted = fmt(abs)
+  }
+
+  return sign + formatted
+}
+
 /**
  * Returns a formatted number with a defined precision not adhering to our style guide compact notation
  * @param number Number to format

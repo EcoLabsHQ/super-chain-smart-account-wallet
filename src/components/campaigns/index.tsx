@@ -12,6 +12,7 @@ import { useRouter } from 'next/router'
 import { AppRoutes } from '@/config/routes'
 import Image from 'next/image'
 import CheckCircleIcon from '@/public/images/common/check-circle.svg'
+import { formatBeautifulAmount } from '@/utils/formatNumber'
 export interface Campaign {
   claimed: boolean
   id: string
@@ -81,26 +82,6 @@ const formatClaimBy = (value?: string | Date) => {
   const d = value instanceof Date ? value : new Date(value)
   if (Number.isNaN(d.getTime())) return '--'
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-}
-
-export const formatAmount = (amount?: number): string => {
-  // si amount es null o undefined, devolvemos "0"
-  if (amount == null) return '0'
-
-  // para cifras < 1000 devolvemos el número tal cual (como string)
-  if (amount < 1000) return String(amount)
-
-  // convertimos a 'k'
-  const valueK = amount / 1000
-  // redondeo a 1 decimal (ej: 1.55 -> 1.6)
-  const rounded = Math.round(valueK * 10) / 10
-
-  // si el resultado es entero (ej 2.0) mostramos "2k", sino "1.6k"
-  if (Number.isInteger(rounded)) {
-    return `${rounded.toFixed(0)}k`
-  } else {
-    return `${rounded.toFixed(1)}k`
-  }
 }
 
 function truncateText(text: string, maxLength: number): string {
@@ -467,7 +448,8 @@ function CampaignCard({
                 }}
               >
                 <Typography variant="caption" fontWeight={600} color="black" sx={{ whiteSpace: 'nowrap' }}>
-                  {formatAmount(campaign?.campaign_reward?.amount ?? 0)} {campaign?.campaign_reward?.symbol ?? '--'}
+                  {formatBeautifulAmount(campaign?.campaign_reward?.amount ?? 0)}{' '}
+                  {campaign?.campaign_reward?.symbol ?? '--'}
                 </Typography>
                 <SvgIcon
                   component={tokens[campaign?.campaign_reward?.symbol ?? 'USDC'].icon}

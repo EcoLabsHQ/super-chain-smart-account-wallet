@@ -28,7 +28,6 @@ import { useQuery } from '@tanstack/react-query'
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
-import { formatAmount } from '@/components/campaigns'
 import BadgeTierCard from '@/components/badges/tier'
 import SeasonChip from '@/components/badges/seasonChip'
 import { BadgeWithPrize } from '@/types/badges'
@@ -44,6 +43,7 @@ import { Address } from 'viem'
 import { SelfVerificationStrategy } from '@/components/badges/badgeInfo/strategies/SelfVerificationStrategy'
 import CheckCircleIcon from '@/public/images/common/check-circle-white.svg'
 import { networks } from '@/components/badges'
+import { formatBeautifulAmount } from '@/utils/formatNumber'
 
 export const getBadgeStrategy = (
   badgeOrClaim: any,
@@ -391,7 +391,7 @@ export default function BadgePage() {
                                 textAlign: 'start',
                               }}
                             >
-                              {formatAmount(currentBadge.totalClaimed ?? 0)}
+                              {formatBeautifulAmount(currentBadge.totalClaimed ?? 0)}
                             </Typography>
                           </Stack>
                         </Stack>

@@ -24,7 +24,7 @@ import { useQuery } from '@tanstack/react-query'
 import useSafeAddress from '@/hooks/useSafeAddress'
 import axios from 'axios'
 import { BACKEND_BASE_URI } from '@/config/constants'
-import { Campaign, formatAmount } from '@/components/campaigns'
+import { Campaign } from '@/components/campaigns'
 import NetworkChip from '@/components/badges/networkChip'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -142,7 +142,7 @@ export default function Page() {
   const avatarStripWidth = Math.max(40, 40 + 28 * Math.max(networks.length - 1, 0))
   const rewardSymbol = campaign.campaign_reward?.symbol ?? 'USDC'
   const rewardIcon = (tokens as any)?.[rewardSymbol]?.icon ?? (tokens as any)?.USDC?.icon
-  const rewardAmount = formatAmount(campaign.campaign_reward?.amount ?? 0)
+  const rewardAmount = formatBeautifulAmount(campaign.campaign_reward?.amount ?? 0)
   const { day, month } = getCalendarValues(campaign.start_date)
   const now = new Date()
   const isLive = now >= new Date(campaign.start_date) && now <= new Date(campaign.end_date)
@@ -440,7 +440,7 @@ export default function Page() {
                           Total points distributed
                         </Typography>
                         <Typography sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px' }}>
-                          {formatAmount(campaign.distributed_points ?? 0)}
+                          {formatBeautifulAmount(campaign.distributed_points ?? 0)}
                         </Typography>
                       </Stack>
                     </Stack>
@@ -618,6 +618,7 @@ export default function Page() {
 }
 
 import type { GetServerSideProps } from 'next'
+import { formatBeautifulAmount } from '@/utils/formatNumber'
 
 export const getServerSideProps: GetServerSideProps = async ({ params, query }) => {
   // puedes pasar props si quieres; lo importante es forzar SSR

@@ -4,10 +4,11 @@ import PadLockIcon from '@/public/images/common/padlock.svg'
 import SuperchainPointIcon from '@/public/images/common/superChain.svg'
 import DotIcon from '@/public/images/common/dot_soft_gray.svg'
 import React from 'react'
-import { formatAmount } from '@/components/campaigns'
+
 import { BadgeTierDto, BadgeWithPrize } from '@/types/badges'
 import { formatXP } from '../badge'
 import { tokens } from '@/config/tokens'
+import { formatBeautifulAmount } from '@/utils/formatNumber'
 
 type Props = {
   tier: BadgeTierDto
@@ -77,7 +78,7 @@ export default function BadgeTierCard({ tier, currentBadge }: Props) {
               color="#75757A"
               sx={{ fontSize: { xs: '10px', sm: '12px' } }}
             >
-              {`${formatAmount(statistics?.totalClaimed ?? 0)} (${formatPercentage(
+              {`${formatBeautifulAmount(statistics?.totalClaimed ?? 0)} (${formatPercentage(
                 statistics?.percentage ?? 0,
               )}%) Users Completed`}
             </Typography>

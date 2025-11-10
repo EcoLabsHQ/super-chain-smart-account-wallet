@@ -10,7 +10,7 @@ import { useRouter } from 'next/router'
 import { AppRoutes } from '@/config/routes'
 import useSafeAddress from '@/hooks/useSafeAddress'
 import { BACKEND_BASE_URI } from '@/config/constants'
-import { Campaign, formatAmount } from '@/components/campaigns'
+import { Campaign } from '@/components/campaigns'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import NetworkChip from '@/components/badges/networkChip'
 import Image from 'next/image'
@@ -22,6 +22,7 @@ import { EthereumProvider } from 'permissionless/utils/toOwner'
 import { publicClient } from '@/services/pimlico'
 import { AIRDROP_ABI, AIRDROP_ADDRESS } from '@/constants/contracts'
 import { checkAirdropEligibility } from '@/services/airdrop'
+import { formatBeautifulAmount } from '@/utils/formatNumber'
 
 const getTokenIcon = (symbol: string) => {
   const usdc = '/images/currencies/usdc.svg'
@@ -418,7 +419,8 @@ export default function Page() {
                         Campaign Rewards
                       </Typography>
                       <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px' }}>
-                        {formatAmount(campaign.campaign_reward?.amount ?? 0)} {campaign.campaign_reward?.symbol ?? '--'}
+                        {formatBeautifulAmount(campaign.campaign_reward?.amount ?? 0)}{' '}
+                        {campaign.campaign_reward?.symbol ?? '--'}
                       </Typography>
                     </Stack>
                   </Stack>
@@ -446,7 +448,7 @@ export default function Page() {
                         Total points distributed
                       </Typography>
                       <Typography sx={{ fontWeight: '500', fontSize: '16px', lineHeight: '24px' }}>
-                        {formatAmount(campaign.distributed_points ?? 0)}
+                        {formatBeautifulAmount(campaign.distributed_points ?? 0)}
                       </Typography>
                     </Stack>
                   </Stack>
