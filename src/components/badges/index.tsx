@@ -18,7 +18,7 @@ export const networks = [
   },
   {
     label: 'OP Mainnet',
-    value: 'OP Mainnet',
+    value: 'op mainnet',
     icon: 'https://safe-transaction-assets.safe.global/chains/10/chain_logo.png',
   },
   { label: 'Base', value: 'base', icon: 'https://safe-transaction-assets.safe.global/chains/8453/chain_logo.png' },

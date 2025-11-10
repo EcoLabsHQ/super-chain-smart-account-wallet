@@ -43,6 +43,7 @@ import { ClaimBadgesProvider, useClaimBadges } from '@/components/badges/claimBa
 import { Address } from 'viem'
 import { SelfVerificationStrategy } from '@/components/badges/badgeInfo/strategies/SelfVerificationStrategy'
 import CheckCircleIcon from '@/public/images/common/check-circle-white.svg'
+import { networks } from '@/components/badges'
 
 export const getBadgeStrategy = (
   badgeOrClaim: any,
@@ -346,7 +347,8 @@ export default function BadgePage() {
                           sx={{ fontWeight: 500, fontSize: '16px', lineHeight: '24px', textTransform: 'capitalize' }}
                         >
                           {currentBadge.metadata.chains.length === 1
-                            ? currentBadge.metadata.chains[0]
+                            ? networks.find((x) => x.value == currentBadge.metadata.chains[0].toLocaleLowerCase())
+                                ?.label
                             : `${currentBadge.metadata.chains.length} Chains`}
                         </Typography>
                       </Stack>
