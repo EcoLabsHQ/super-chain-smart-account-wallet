@@ -339,7 +339,6 @@ export default function Page() {
                   </Card>
                 </Grid>
 
-                {/* Networks (con guardas) */}
                 <Grid item xs={12} sm={6}>
                   <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', p: 2 }}>
                     <Stack direction="row" gap={2} alignItems="center">

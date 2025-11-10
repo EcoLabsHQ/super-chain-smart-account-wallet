@@ -16,6 +16,11 @@ export const networks = [
     value: 'optimism',
     icon: 'https://safe-transaction-assets.safe.global/chains/10/chain_logo.png',
   },
+  {
+    label: 'OP Mainnet',
+    value: 'OP Mainnet',
+    icon: 'https://safe-transaction-assets.safe.global/chains/10/chain_logo.png',
+  },
   { label: 'Base', value: 'base', icon: 'https://safe-transaction-assets.safe.global/chains/8453/chain_logo.png' },
   { label: 'Mode', value: 'mode', icon: '/chains/34443/chain_logo.svg' },
   { label: 'Ethereum', value: 'ethereum', icon: 'https://safe-transaction-assets.safe.global/chains/1/chain_logo.png' },

@@ -86,7 +86,7 @@ function CampaignsPage() {
               }}
             >
               <MenuItem value="Lisk">Lisk</MenuItem>
-              <MenuItem value="Optimism">OP Mainnet</MenuItem>
+              <MenuItem value="OP Mainnet">OP Mainnet</MenuItem>
               <MenuItem value="Base">Base</MenuItem>
               <MenuItem value="Celo">Celo</MenuItem>
             </Select>

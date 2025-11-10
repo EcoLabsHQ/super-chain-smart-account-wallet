@@ -59,8 +59,8 @@ const Header = ({ onMenuToggle }: HeaderProps): ReactElement => {
             height={24}
             loading="lazy"
           />
-
-          <span className={css.name}>Optimism</span>
+          Total points distributed
+          <span className={css.name}>OP Mainnet</span>
         </span>
       </div>
       <div className={classnames(css.element, css.button)}>
