@@ -22003,6 +22003,11 @@ react-modal@^3.12.1:
     react-lifecycles-compat "^3.0.0"
     warning "^4.0.3"
 
+react-number-format@^5.4.4:
+  version "5.4.4"
+  resolved "https://registry.yarnpkg.com/react-number-format/-/react-number-format-5.4.4.tgz#d31f0e260609431500c8d3f81bbd3ae1fb7cacad"
+  integrity sha512-wOmoNZoOpvMminhifQYiYSTCLUDOiUbBunrMrMjA+dV52sY+vck1S4UhR6PkgnoCquvvMSeJjErXZ4qSaWCliA==
+
 react-papaparse@^4.0.2:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/react-papaparse/-/react-papaparse-4.4.0.tgz#754b18c62240782d9b3b0bbc132b08ed6ec8ca13"
