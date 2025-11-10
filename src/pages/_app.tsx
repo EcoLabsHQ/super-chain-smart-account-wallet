@@ -50,6 +50,7 @@ import { optimism, AppKitNetwork } from '@reown/appkit/networks'
 import { EthersAdapter } from '@reown/appkit-adapter-ethers'
 import { createSIWE } from '@/services/siwe'
 import { WC_PROJECT_ID as projectId } from '@/config/constants'
+import { loadErrorMessages, loadDevMessages } from '@apollo/client/dev'
 
 const metadata = {
   name: 'Super Accounts',
@@ -113,6 +114,12 @@ const InitApp = (): null => {
   useRehydrateSocialWallet()
 
   return null
+}
+
+// Load Apollo Client error messages in development
+if (process.env.NODE_ENV !== 'production') {
+  loadDevMessages()
+  loadErrorMessages()
 }
 
 // Client-side cache, shared for the whole session of the user in the browser.

@@ -55,7 +55,13 @@ const AddEOAModal = ({
       const hash = await superChainSmartAccountSponsored.callContract(wallet, SmartAccountAddres as Address, txData)
       console.log('Invite sent:', hash)
       updateQuery((data) => ({
-        ownerPopulateds: [...data.ownerPopulateds, { address: data.address }],
+        ownerPopulateds: [
+          ...data.ownerPopulateds,
+          {
+            id: `owner-${data.address.toLowerCase()}`,
+            address: data.address,
+          },
+        ],
       }))
       setModalState(ModalState.Success)
     } catch (e) {
