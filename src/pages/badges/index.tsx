@@ -258,7 +258,7 @@ const Home: NextPage = () => {
                     <MenuItem value="lisk">Lisk</MenuItem>
                     <MenuItem value="Soneium">Soneium</MenuItem>
                     <MenuItem value="Base">Base</MenuItem>
-                    <MenuItem value="Optimism">Optimisim</MenuItem>
+                    <MenuItem value="Optimism">OP Mainnet</MenuItem>
                     <MenuItem value="Mode">Mode</MenuItem>
                     <MenuItem value="Unichain">Unichain</MenuItem>
                   </Select>

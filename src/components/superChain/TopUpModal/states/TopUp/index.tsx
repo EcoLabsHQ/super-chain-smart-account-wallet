@@ -127,7 +127,7 @@ function TopUp({
               loading="lazy"
             />
             <p>
-              <strong>Optimism network</strong>— only send Optimism assets to this Account.
+              <strong>OP Mainnet network</strong>— only send OP Mainnet assets to this Account.
             </p>
           </Box>
         </Grid>

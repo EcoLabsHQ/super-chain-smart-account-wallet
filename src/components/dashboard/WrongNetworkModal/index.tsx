@@ -56,7 +56,7 @@ function WrongNetworkModal() {
       </Box>
 
       <Button className={css.outsideButton} fullWidth onClick={handleChainSwitch} color="secondary" variant="contained">
-        Switch to Optimism
+        Switch to OP Mainnet
       </Button>
     </Dialog>
   )

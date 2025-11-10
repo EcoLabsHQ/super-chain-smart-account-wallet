@@ -12,7 +12,7 @@ import { LinearProgress, styled } from '@mui/material'
 
 export const networks = [
   {
-    label: 'Optimism',
+    label: 'OP Mainnet',
     value: 'optimism',
     icon: 'https://safe-transaction-assets.safe.global/chains/10/chain_logo.png',
   },
