@@ -73,7 +73,7 @@ export const SidebarAirdropComponent = ({ item }: { item: any }) => {
 
   const { data: airdropData, isLoading: isCheckLoading } = useQuery({
     queryKey: ['check-airdrop', safeAddress],
-    queryFn: () => checkAirdropEligibility(safeAddress),
+    queryFn: () => checkAirdropEligibility(safeAddress, ''),
     enabled: !!safeAddress,
   })
 

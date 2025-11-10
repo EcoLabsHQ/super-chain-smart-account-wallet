@@ -15,7 +15,6 @@ function Badges({ badges, isLoading }: { badges?: BadgeResponse[]; isLoading?: b
         </>
       ) : (
         badges?.map((badge, key) => {
-          console.debug('Badge:', badge)
           return (
             <Tooltip
               arrow
@@ -42,21 +41,19 @@ function Badges({ badges, isLoading }: { badges?: BadgeResponse[]; isLoading?: b
                 </Box>
               }
             >
-              <Box display="flex" flexDirection="column" alignItems="center">
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="center"
+                sx={{ border: '1px solid #E1E2EA', borderRadius: '12px' }}
+              >
                 <Image
                   height={60}
                   width={60}
                   alt={badge.badge.metadata.name}
                   src={badge.badge.metadata.image ?? (badge.badge.badgeTiers.at(-1)?.metadata as any)['2DImage']}
+                  style={{ border: '1px solid #E1E2EA', borderRadius: '12px' }}
                 />
-                <Box display="flex" gap="4px" mt={1}>
-                  {[...Array(parseInt(badge.tier))].map((_, i) => (
-                    <Box key={i} width={6} height={6} borderRadius="100px" bgcolor="#39D551" />
-                  ))}
-                  {[...Array(badge.badge.badgeTiers.length - parseInt(badge.tier))].map((_, i) => (
-                    <Box key={i} width={6} height={6} borderRadius="100px" bgcolor="#EBECF1" />
-                  ))}
-                </Box>
               </Box>
             </Tooltip>
           )

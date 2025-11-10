@@ -18,6 +18,7 @@ import BadgeStrategyRenderer, { getBadgeStrategy } from './BadgeStrategyRenderer
 import { WorldIDVerificationStrategy } from './strategies/WorldVerificationStrategy'
 import { FarcasterLinkStrategy } from './strategies/FarcasterLinkStrategy'
 import ETHVaultStrategy from './strategies/ETHVaultStrategy'
+import { SelfVerificationStrategy } from './strategies/SelfVerificationStrategy'
 
 function BadgeInfo({
   currentBadge,
@@ -51,7 +52,12 @@ function BadgeInfo({
   if (!currentBadge) return null
 
   const isCompleted = Number(currentBadge.tier) === currentBadge.badgeTiers.length
-  const strategies = [new WorldIDVerificationStrategy(), new FarcasterLinkStrategy(), new ETHVaultStrategy()]
+  const strategies = [
+    new WorldIDVerificationStrategy(),
+    new FarcasterLinkStrategy(),
+    new ETHVaultStrategy(),
+    new SelfVerificationStrategy(),
+  ]
   const strategy = getBadgeStrategy(currentBadge, strategies)
 
   return (

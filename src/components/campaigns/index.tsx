@@ -1,14 +1,19 @@
 import { BACKEND_BASE_URI } from '@/config/constants'
-import { Box, Card, Divider, Drawer, Skeleton, Stack, Typography } from '@mui/material'
+import { Box, Button, Card, Skeleton, Stack, SvgIcon, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import React, { useState } from 'react'
 import useSafeAddress from '@/hooks/useSafeAddress'
-import InsertInvitationTwoToneIcon from '@mui/icons-material/InsertInvitationTwoTone'
-import OfflineBoltOutlinedIcon from '@mui/icons-material/OfflineBoltOutlined'
+import ArrowRightIcon from '@/public/images/common/arrow_right_alt.svg'
+import CalendarIcon from '@/public/images/common/calendar-gray.svg'
 import NetworkChip from '../badges/networkChip'
-import CampaignInfo from './campaignInfo'
+import { tokens } from '@/config/tokens'
+import { useRouter } from 'next/router'
+import { AppRoutes } from '@/config/routes'
+import Image from 'next/image'
+import CheckCircleIcon from '@/public/images/common/check-circle.svg'
 export interface Campaign {
+  claimed: boolean
   id: string
   name: string
   description: string
@@ -16,6 +21,8 @@ export interface Campaign {
   network: string[]
   participate_description: string
   campaign_link: string
+  myPoints: number
+  my_points: { id: number; points: number }[]
   boosts: Array<{
     type: string
     level?: number
@@ -29,15 +36,76 @@ export interface Campaign {
     applies: boolean
   }>
   totalBoost: number
-  campaign_badges: Array<{
-    type: string
-    badgeName: string
-    description: string
-    currentLevel: number
-    maxLevel: number
-  }>
+  campaign_badges: Array<CampaignBadge>
+  more_info: string
+  distributed_points: number
+  can_claim: boolean
+  max_claim_date: Date
+  campaign_reward: { symbol: string; amount: number; decimals: number; token: string }
+  claimable_reward: { symbol: string; amount: string; decimals: number; token: string }
   start_date: string | Date
   end_date: string | Date
+  airdrop_condition_id: number
+}
+
+export interface CampaignBadge {
+  id: string
+  type: string
+  badgeName: string
+  description: string
+  currentLevel: number
+  maxLevel: number
+  image: string
+  tokenBadge?: boolean
+  season?: number
+  completed?: boolean
+  currentPoints: number
+  maxPoints: number
+}
+
+function getStartText(now: Date, start: Date): string {
+  const diffInMs = start.getTime() - now.getTime()
+  const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24))
+
+  if (diffInDays < 0) return ''
+  if (diffInDays <= 1) return 'Starts tomorrow'
+  if (diffInDays < 7) return `Starts in ${diffInDays} day${diffInDays !== 1 ? 's' : ''}`
+  if (diffInDays < 30) return `Starts in ${Math.ceil(diffInDays / 7)} weeks`
+  if (diffInDays < 60) return `Starts next month`
+  return `Starts in ${Math.ceil(diffInDays / 30)} months`
+}
+
+// utils (arriba del componente o en un helper)
+const formatClaimBy = (value?: string | Date) => {
+  if (!value) return '--'
+  const d = value instanceof Date ? value : new Date(value)
+  if (Number.isNaN(d.getTime())) return '--'
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+}
+
+export const formatAmount = (amount?: number): string => {
+  // si amount es null o undefined, devolvemos "0"
+  if (amount == null) return '0'
+
+  // para cifras < 1000 devolvemos el número tal cual (como string)
+  if (amount < 1000) return String(amount)
+
+  // convertimos a 'k'
+  const valueK = amount / 1000
+  // redondeo a 1 decimal (ej: 1.55 -> 1.6)
+  const rounded = Math.round(valueK * 10) / 10
+
+  // si el resultado es entero (ej 2.0) mostramos "2k", sino "1.6k"
+  if (Number.isInteger(rounded)) {
+    return `${rounded.toFixed(0)}k`
+  } else {
+    return `${rounded.toFixed(1)}k`
+  }
+}
+
+function truncateText(text: string, maxLength: number): string {
+  if (text.length <= maxLength) return text
+  return text.slice(0, maxLength - 3) + '...'
 }
 
 function CampaignCard({
@@ -51,12 +119,22 @@ function CampaignCard({
   const start = new Date(campaign.start_date)
   const end = new Date(campaign.end_date)
   const isLive = now >= start && now <= end
+  const isEnded = now > end
+  const startText = isLive ? '' : getStartText(now, start)
+  const router = useRouter()
 
   const formatDate = (date: Date) =>
     date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
 
   const handlePickCampaign = () => {
-    setCurrentCampaign(campaign)
+    if ((campaign.can_claim && !campaign.claimed) || (campaign.can_claim && campaign.claimed)) {
+      router.push({
+        pathname: `${AppRoutes.campaigns}/${campaign.id}/claim-rewards`,
+        query: { safe: router.query.safe },
+      })
+      return
+    }
+    router.push({ pathname: `${AppRoutes.campaigns}/${campaign.id}`, query: { safe: router.query.safe } })
   }
 
   return (
@@ -66,157 +144,375 @@ function CampaignCard({
         p: 0,
         borderRadius: '12px',
         overflow: 'hidden',
-        boxShadow: 2,
-        backgroundColor: 'grey.50',
+        backgroundColor: '#FCFCFD', // fondo claro consistente
+        border: '1px solid #E1E2EA',
         cursor: 'pointer',
         height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
       }}
       onClick={handlePickCampaign}
     >
-      <Box
-        sx={{
-          position: 'relative',
-          background: '#eee',
-          aspectRatio: '16/9',
-          width: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <img
-          src={campaign.banner}
-          alt={campaign.name}
+      {/* Banner */}
+      <Box sx={{ position: 'relative', aspectRatio: '16/9', width: '100%', overflow: 'hidden' }}>
+        <div
           style={{
             width: '100%',
             height: '100%',
-            objectFit: 'contain',
-            position: 'absolute',
-            top: 0,
-            left: 0,
+            backgroundImage: `url(${campaign.banner})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: 'lightgray',
+            backgroundBlendMode: isEnded ? 'luminosity' : 'normal',
+            opacity: isEnded ? 0.4 : 1,
+            borderBottom: '1px solid #E1E2EA',
+            transition: 'background-blend-mode 0.3s ease-in-out, opacity 0.3s ease-in-out',
           }}
         />
+
         {isLive && (
           <Box
             sx={{
               position: 'absolute',
-              top: 16,
-              right: 16,
+              top: 12,
+              right: 12,
               display: 'flex',
+              height: 28,
+              padding: '0 8px',
+              justifyContent: 'center',
               alignItems: 'center',
-              background: '#EBFBEE',
-              border: '1px solid #39D551',
               borderRadius: '100px',
-              padding: '0px 8px',
-              boxShadow: '0 1px 4px rgba(44, 204, 64, 0.08)',
+              border: '1px solid var(--Foundation-Lime-lime-500, #39D551)',
+              background: 'var(--Foundation-Lime-lime-50, #EBFBEE)',
               zIndex: 2,
-              height: '28px',
-              gap: 1,
+              gap: 0.5,
             }}
           >
+            {/* punto verde */}
             <Box
               sx={{
-                width: 10,
-                height: 10,
+                width: 8,
+                height: 8,
                 borderRadius: '50%',
-                background: '#39D551',
+                bgcolor: 'var(--Foundation-Lime-lime-500, #39D551)',
               }}
             />
             <Typography
-              variant="h6"
               sx={{
+                color: 'var(--Foundation-Black, #000)',
+                fontFamily: '"DM Sans"',
+                fontSize: '12px',
+                fontStyle: 'normal',
                 fontWeight: 500,
-                fontSize: 14,
+                lineHeight: '16px',
               }}
             >
               Live
             </Typography>
           </Box>
         )}
-      </Box>
-      <Box sx={{ p: 2 }}>
-        <Typography variant="subtitle1" fontWeight={600} fontSize={18} fontFamily="Sora" gutterBottom>
-          {campaign.name}
-        </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-            <Box
-              component="span"
-              sx={{
-                color: 'text.secondary',
-                backgroundColor: 'grey.300',
-                borderRadius: 1,
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '4px',
-                width: 24,
-                height: 24,
-              }}
-            >
-              <InsertInvitationTwoToneIcon fontSize="small" />
-            </Box>
-            <Typography variant="body2" color="grey.900">
-              {formatDate(start)}
-            </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mx: 0.5 }}>
-              →
-            </Typography>
-            <Typography variant="body2" color="grey.700">
-              {formatDate(end)}
-            </Typography>
-          </Box>
-        </Box>
-        <Typography variant="body2" color="grey.800" fontSize={14} fontWeight={400} sx={{ mb: 2 }}>
-          {campaign.description}
-        </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+
+        {isEnded && (
           <Box
             sx={{
-              padding: '0px 8px',
-              borderRadius: '100px',
+              position: 'absolute',
+              top: 12,
+              right: 12,
               display: 'flex',
-              border: '1px solid #386AFF',
+              height: 28,
+              padding: '0 8px',
+              justifyContent: 'center',
               alignItems: 'center',
-              background: '#EBF0FF',
-              px: 1.5,
-              py: 0.5,
-              visibility: campaign.totalBoost > 0 ? 'visible' : 'hidden',
+              borderRadius: '100px',
+              border: '1px solid var(--Foundation-Grey-grey-500, #E1E2EA)',
+              background: 'var(--Foundation-Grey-grey-50, #FCFCFD)',
+              zIndex: 2,
             }}
           >
-            <OfflineBoltOutlinedIcon sx={{ color: ' #386AFF', pr: '4px' }} />
-            <Typography variant="body2" color="primary" fontWeight={500} fontSize={14}>
-              {campaign.totalBoost}% Boost
+            <Typography
+              sx={{
+                color: 'var(--Foundation-Grey-grey-900, #4B4B4E)',
+                fontFamily: '"DM Sans"',
+                fontSize: '12px',
+                fontStyle: 'normal',
+                fontWeight: 500,
+                lineHeight: '16px',
+              }}
+            >
+              Ended
             </Typography>
           </Box>
-          <Box sx={{ display: 'flex', alignItems: 'center', ml: 'auto' }}>
-            {campaign.network.map((network: string, index: number) => (
-              <Box
-                key={`box${campaign.id + network}`}
+        )}
+
+        {startText && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: 12,
+              right: 12,
+              display: 'flex',
+              height: 28,
+              padding: '0 8px',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: '100px',
+              border: '1px solid var(--Foundation-Purple-purple-500, #584DCB)',
+              background: 'var(--Foundation-Purple-purple-50, #EEEDFA)',
+              zIndex: 2,
+            }}
+          >
+            <Typography
+              sx={{
+                color: 'var(--Foundation-Purple-purple-700, #000)', // mejor contraste con morado
+                fontFamily: '"DM Sans"',
+                fontSize: '12px',
+                fontStyle: 'normal',
+                fontWeight: 500,
+                lineHeight: '16px',
+              }}
+            >
+              {startText}
+            </Typography>
+          </Box>
+        )}
+      </Box>
+
+      {/* Content */}
+      <Stack padding="16px" gap="12px">
+        {/* Fecha */}
+
+        {/* Título */}
+        <Typography variant="h6" fontWeight={500} sx={{ fontSize: 18 }}>
+          {campaign.name}
+        </Typography>
+        <Stack direction="row" gap="6px" alignItems="center">
+          <CalendarIcon style={{ width: '20px', heigth: '20px' }} />
+          <Typography variant="body2" color="#4B4B4E" fontWeight={500}>
+            {formatDate(start)}
+          </Typography>
+          <ArrowRightIcon style={{ width: '16px', heigth: '16px' }} />
+          <Typography variant="body2" color="#A0A0A6" fontWeight={500}>
+            {formatDate(end)}
+          </Typography>
+        </Stack>
+
+        {/* Descripción (truncate) */}
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          fontFamily="Sora"
+          sx={{
+            fontSize: 14,
+            fontWeight: 400,
+            color: '#75757A',
+          }}
+        >
+          {truncateText(campaign.description, 100)}
+        </Typography>
+
+        <Box sx={{ mt: '4px', display: 'flex', alignItems: 'center', gap: 1 }}>
+          {campaign.can_claim && !campaign.claimed ? (
+            <>
+              <Button
+                variant="contained"
+                endIcon={<Image src="/images/diamond_shine.svg" alt="Claim" width={16} height={16} />}
                 sx={{
-                  ml: index === 0 ? 0 : '-10px',
                   borderRadius: '100px',
-                  border: '1px solid #E1E2EA',
-                  width: '30px',
-                  height: '30px',
-                  pl: '2px',
-                  pt: '2px',
-                  backgroundColor: 'white',
-                  zIndex: campaign.network.length - index,
-                  position: 'relative',
+                  background: '#000',
+                  textTransform: 'none',
+                  fontWeight: 600,
+                  fontSize: '14px',
+                  lineHeight: '20px',
+                  height: '28px',
+                  fontFamily: 'DM Sans',
+                  px: { xs: '8px', sm: '12px', lg: '50px' },
+                  boxShadow: 'none',
+                  '&:hover': { background: '#000', boxShadow: 'none' },
                 }}
               >
-                <NetworkChip key={`${campaign.id + network}`} network={network} style="badge" isFavorite={false} />
+                <Typography variant="caption" fontWeight={600}>
+                  Claim Rewards
+                </Typography>
+              </Button>
+
+              {/* Empuja el label a la derecha */}
+              <Typography
+                sx={{
+                  ml: 'auto',
+                  color: '#75757A', // var(--Foundation-Grey-grey-800)
+                  fontFamily: 'DM Sans',
+                  fontSize: '12px',
+                  fontStyle: 'normal',
+                  fontWeight: 500,
+                  lineHeight: '16px',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {`Claim by ${formatClaimBy(campaign.max_claim_date)}`}
+              </Typography>
+            </>
+          ) : campaign.can_claim && campaign.claimed ? (
+            <Box
+              sx={{
+                mt: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                width: '100%',
+              }}
+            >
+              <Stack
+                direction="row"
+                alignItems="center"
+                sx={{
+                  display: 'flex',
+                  height: '28px',
+                  padding: '0 6px',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+
+                  borderRadius: '100px',
+                  border: '1px solid #39D551', // lime-500
+                  background: '#EBFBEE', // lime-50
+
+                  gap: '6px',
+                  flexShrink: 0,
+                }}
+              >
+                <Typography
+                  sx={{
+                    color: '#000',
+                    fontFamily: '"DM Sans"',
+                    fontSize: '12px',
+                    fontStyle: 'normal',
+                    fontWeight: 600,
+                    lineHeight: '16px',
+                    m: 0,
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  Claimed
+                </Typography>
+
+                {/* Caja 16x16 para centrar el ícono con precisión */}
+                <Box
+                  sx={{
+                    width: 16,
+                    height: 16,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    // opcional: evita que se estire por línea base
+                    lineHeight: 0,
+                  }}
+                >
+                  <SvgIcon
+                    component={CheckCircleIcon}
+                    inheritViewBox // respeta el viewBox del SVG para escala precisa
+                    sx={{ width: 16, height: 16 }}
+                  />
+                </Box>
+              </Stack>
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  flexGrow: 1,
+                }}
+              >
+                {campaign.network.map((network: string, index: number) => (
+                  <Box
+                    key={`${campaign.id}-${network}`}
+                    sx={{
+                      ml: index === 0 ? 0 : -1.4,
+                      borderRadius: '50%',
+                      border: '1px solid #fff',
+                      width: 30,
+                      height: 30,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      bgcolor: '#fff',
+                      boxShadow: '0 1px 2px rgba(16,24,40,0.06)',
+                    }}
+                  >
+                    <NetworkChip network={network} style="badge" isFavorite={false} width={20} height={20} />
+                  </Box>
+                ))}
               </Box>
-            ))}
-          </Box>
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                mt: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between', // ✅ separa a los extremos
+                width: '100%',
+              }}
+            >
+              {/* Reward chip */}
+              <Stack
+                alignItems="center"
+                direction="row"
+                gap="4px"
+                sx={{
+                  border: '1px solid #E1E2EA',
+                  borderRadius: '100px',
+                  padding: '4px 4px 4px 10px',
+                  flexShrink: 0, // evita que se contraiga
+                }}
+              >
+                <Typography variant="caption" fontWeight={600} color="black" sx={{ whiteSpace: 'nowrap' }}>
+                  {formatAmount(campaign?.campaign_reward?.amount ?? 0)} {campaign?.campaign_reward?.symbol ?? '--'}
+                </Typography>
+                <SvgIcon
+                  component={tokens[campaign?.campaign_reward?.symbol ?? 'USDC'].icon}
+                  sx={{ width: 18, height: 18, transform: 'translateY(1px)' }}
+                />
+              </Stack>
+
+              {/* Network icon(s) */}
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end', // ✅ asegura alineación completa a la derecha
+                  flexGrow: 1,
+                }}
+              >
+                {campaign.network.map((network: string, index: number) => (
+                  <Box
+                    key={`${campaign.id}-${network}`}
+                    sx={{
+                      ml: index === 0 ? 0 : -1.4,
+                      borderRadius: '50%',
+                      border: '1px solid #fff',
+                      width: 30,
+                      height: 30,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      bgcolor: '#fff',
+                      boxShadow: '0 1px 2px rgba(16,24,40,0.06)',
+                    }}
+                  >
+                    <NetworkChip network={network} style="badge" isFavorite={false} width={20} height={20} />
+                  </Box>
+                ))}
+              </Box>
+            </Box>
+          )}
         </Box>
-      </Box>
+      </Stack>
     </Card>
   )
 }
 
-function Campaigns() {
+function Campaigns({ chain, search }: { chain: string; search: string }) {
   const address = useSafeAddress()
   const [currentCampaign, setCurrentCampaign] = useState<Campaign | null>(null)
   const { data: campaigns, isLoading: isLoadingCampaigns } = useQuery<Campaign[]>({
@@ -228,12 +524,26 @@ function Campaigns() {
     refetchInterval: 10000,
     enabled: !!address,
   })
+  const filterCampaign = (campaign: Campaign): boolean => {
+    const q = (search ?? '').trim().toLowerCase()
+    const sel = (chain ?? '').trim().toLowerCase()
+
+    // Coincide con texto si NO hay búsqueda o si name/description contiene q
+    const matchesSearch =
+      !q || campaign.name?.toLowerCase().includes(q) || campaign.description?.toLowerCase().includes(q)
+
+    // Coincide con chain si NO hay chain o si alguna network === sel
+    const matchesChain =
+      !sel || (Array.isArray(campaign.network) && campaign.network.some((n) => (n ?? '').toLowerCase() === sel))
+
+    // Si ambos filtros existen, exige ambos; si uno está vacío, el otro decide
+    return matchesSearch && matchesChain
+  }
 
   if (isLoadingCampaigns || !campaigns) {
     return (
-      <Stack gap={2} p={1} sx={{ width: '100%' }}>
+      <Stack gap={2} sx={{ width: '100%' }}>
         <Skeleton variant="text" width={200} height={40} />
-        <Divider />
         <Box
           sx={{
             display: 'grid',
@@ -269,36 +579,36 @@ function Campaigns() {
     )
   }
 
-  return (
-    <Stack gap={2} p={1} sx={{ width: '100%' }}>
-      <Typography variant="h4" fontWeight={700} fontFamily="Sora" fontSize={24} gutterBottom>
-        Campaigns
-      </Typography>
-      <Divider />
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-          gap: '16px',
-          width: '100%',
-          gridAutoRows: '1fr',
-          '& > *': {
+  if (campaigns.length > 0) {
+    return (
+      <Stack gap={2} sx={{ width: '100%' }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+            gap: '16px',
             width: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            height: '100%',
-          },
-        }}
-      >
-        {campaigns.map((campaign) => {
-          return <CampaignCard campaign={campaign} key={campaign.name} setCurrentCampaign={setCurrentCampaign} />
-        })}
-      </Box>
-      <Drawer variant="temporary" anchor="right" onClose={() => setCurrentCampaign(null)} open={!!currentCampaign}>
+            gridAutoRows: '1fr',
+            '& > *': {
+              width: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+            },
+          }}
+        >
+          {campaigns
+            .filter((campaign) => filterCampaign(campaign))
+            .map((campaign) => {
+              return <CampaignCard campaign={campaign} key={campaign.name} setCurrentCampaign={setCurrentCampaign} />
+            })}
+        </Box>
+        {/* <Drawer variant="temporary" anchor="right" onClose={() => setCurrentCampaign(null)} open={!!currentCampaign}>
         <CampaignInfo setCurrentCampaign={setCurrentCampaign} currentCampaign={currentCampaign} />
-      </Drawer>
-    </Stack>
-  )
+      </Drawer> */}
+      </Stack>
+    )
+  }
 }
 
 export default Campaigns

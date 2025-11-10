@@ -44,7 +44,7 @@ function Claim() {
     refetch: refetchAirdrop,
   } = useQuery({
     queryKey: ['check-airdrop', safeAddress],
-    queryFn: () => checkAirdropEligibility(safeAddress),
+    queryFn: () => checkAirdropEligibility(safeAddress, ''),
     enabled: !!safeAddress,
   })
 

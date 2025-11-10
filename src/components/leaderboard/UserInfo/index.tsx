@@ -156,7 +156,6 @@ function UserInfo({
                 }}
                 label={<Typography>Rank: {rank}</Typography>}
               />
-              {/* <SeasonChip season={parseInt(context?.superchainsmartaccount[3])} style="info" />*/}
             </Stack>
 
             <IconButton onClick={handleClose}>

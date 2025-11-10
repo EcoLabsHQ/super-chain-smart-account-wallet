@@ -6,6 +6,7 @@ import useSafeAddress from '@/hooks/useSafeAddress'
 import type { Address } from 'viem'
 import { useUserRank } from '@/hooks/super-chain/useUserRank'
 import InfiniteScroll from '../common/InfiniteScroll'
+import { useUserNationality } from '@/hooks/super-chain/useUserNationality'
 
 function Leaderboard({ handleUserSelect }: { handleUserSelect: (address: string, rank: number) => void }) {
   const address = useSafeAddress()
@@ -18,6 +19,7 @@ function Leaderboard({ handleUserSelect }: { handleUserSelect: (address: string,
     hasNextPage,
   } = useLeaderboard()
   const { rank, user, loading: rankIsLoading, error: rankError } = useUserRank(address as Address)
+  const { data: nationalityData } = useUserNationality(address as Address)
 
   const handleLoadMore = () => {
     if (!leaderboardIsFetching && hasNextPage) {
@@ -65,6 +67,7 @@ function Leaderboard({ handleUserSelect }: { handleUserSelect: (address: string,
                   glasses: user!.noun.glasses,
                   head: user!.noun.head,
                 }}
+                nationality={nationalityData?.nationality}
               />
             </>
           )}
@@ -82,6 +85,7 @@ function Leaderboard({ handleUserSelect }: { handleUserSelect: (address: string,
                 level={user.levels?.toString() ?? '0'}
                 isMainProfile={user.superaccount.toLowerCase() === address.toLowerCase()}
                 badges={user.total_badges}
+                nationality={user.nationality}
                 noun={{
                   accessory: user.noun.accessory,
                   background: user.noun.background,

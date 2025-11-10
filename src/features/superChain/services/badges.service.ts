@@ -5,6 +5,7 @@ import type { ResponseBadge } from '@/types/super-chain'
 import local from '@/services/local-storage/local'
 import type { Setter } from '@/services/local-storage/useLocalStorage'
 import { getSiweToken } from '@/utils/helpers'
+import { BadgeWithPrize } from '@/types/badges'
 
 export type Perks = {
   name: string
@@ -45,6 +46,14 @@ class BadgesService {
       .filter((id: string) => id.endsWith(safe))
       .map((id: string) => id.replace(safe, ''))
   }
+  public async getBadgesWithPrizes(account?: Address): Promise<{
+    currentBadges: BadgeWithPrize[]
+  }> {
+    const response = await this.httpInstance.get<{
+      currentBadges: BadgeWithPrize[]
+    }>(`/user/${account}/badges`)
+    return response.data
+  }
   public async getBadges(account?: Address): Promise<{
     currentBadges: ResponseBadge[]
   }> {
@@ -58,21 +67,17 @@ class BadgesService {
   //   return response.data
   // }
 
-  public async attestBadges(account: Address, captchaToken: string | null): Promise<any> {
+  public async attestBadges(account: Address, extraData: any): Promise<any> {
     const maxRetries: number = 1
     let attempt: number = 0
     const token = getSiweToken()
     while (attempt <= maxRetries) {
       try {
-        const response = await this.httpInstance.post(
-          `/user/${account}/badges/claim`,
-          { captchaToken },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        const response = await this.httpInstance.post(`/user/${account}/badges/claim`, extraData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        )
+        })
 
         if (response.status === 201) {
           return response.data

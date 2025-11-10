@@ -55,6 +55,7 @@ function Perks({ data, isLoading }: { data: Perks | undefined; isLoading: boolea
               borderColor="secondary.main"
               borderRadius="100px"
               padding="12px"
+              paddingLeft="18px"
               width="100%"
             >
               Claim {perks.raffle?.value ?? 0} tickets per week
@@ -81,6 +82,7 @@ function Perks({ data, isLoading }: { data: Perks | undefined; isLoading: boolea
               borderColor="secondary.main"
               borderRadius="100px"
               padding="12px"
+              paddingLeft="18px"
               width="100%"
             >
               {perks.sponsoredTxns?.value ?? 0} Sponsored Transactions per week

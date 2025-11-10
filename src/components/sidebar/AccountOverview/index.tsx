@@ -1,9 +1,11 @@
 import ModalDialog from '@/components/common/ModalDialog'
 import NounsAvatar from '@/components/common/NounsAvatar'
+import CountryFlag from '@/components/CountryFlag'
 import Badges from '@/components/superChain/Badges'
 import Perks from '@/components/superChain/Perks'
 import { BACKEND_BASE_URI } from '@/config/constants'
 import useCurrentPerks from '@/hooks/super-chain/useCurrentPerks'
+import { useUserNationality } from '@/hooks/super-chain/useUserNationality'
 import { useUserRank } from '@/hooks/super-chain/useUserRank'
 import useSafeAddress from '@/hooks/useSafeAddress'
 import { useAppSelector } from '@/store'
@@ -21,6 +23,7 @@ function AccountOverview({ open, onClose }: { open: boolean; onClose: () => void
   const safeAddress: Address = useSafeAddress() as Address
 
   const { rank } = useUserRank(safeAddress)
+  const { data: nationalityData } = useUserNationality(safeAddress)
 
   const { data: user, isLoading: userIsLoading } = useQuery<UserResponse>({
     queryKey: ['AccountOverview'],
@@ -49,17 +52,17 @@ function AccountOverview({ open, onClose }: { open: boolean; onClose: () => void
 
   return (
     <ModalDialog
-      maxWidth="xs"
+      // sx={{ width: '568px', margin: 'auto' }}
       open={open}
       hideChainIndicator
       dialogTitle={
-        <Typography fontSize={24} fontWeight={600}>
-          Account overview
+        <Typography fontSize={24} fontWeight={600} sx={{ paddingTop: '12px', paddingBottom: '12px' }}>
+          My Profile
         </Typography>
       }
       onClose={onClose}
     >
-      <DialogContent>
+      <DialogContent sx={{ paddingBottom: '12px' }}>
         <Box display="flex" paddingTop="24px">
           <Box
             width={120}
@@ -72,7 +75,7 @@ function AccountOverview({ open, onClose }: { open: boolean; onClose: () => void
             <NounsAvatar seed={nounSeed} />
           </Box>
           <Box display="flex" flexDirection="column" justifyContent="flex-start" alignItems="flex-start">
-            <Box display="flex" flexDirection="row" gap={2}>
+            <Box display="flex" flexDirection="row" gap={1}>
               <Box
                 display="flex"
                 gap="4px"
@@ -95,13 +98,13 @@ function AccountOverview({ open, onClose }: { open: boolean; onClose: () => void
                 justifyContent="center"
                 alignItems="center"
                 height="34px"
-                bgcolor="gray"
+                bgcolor="#A0A0A6"
                 borderRadius="100px"
                 padding="12px"
                 minWidth="76px"
               >
                 <Typography color="white" fontWeight={500} fontSize="14px">
-                  Rank: <span style={{ fontWeight: 600 }}>{rank}</span>
+                  Rank: <span style={{ fontWeight: 600 }}>{rank ?? 0}</span>
                 </Typography>
               </Box>
             </Box>
@@ -113,18 +116,15 @@ function AccountOverview({ open, onClose }: { open: boolean; onClose: () => void
               justifyContent="flex-start"
               alignItems="flex-start"
             >
-              <Typography
-                fontWeight={600}
-                color="primary"
-                fontSize={16}
-                whiteSpace="normal"
-                display="flex"
-                flexWrap="wrap"
-              >
-                {truncateName(superChainSmartAccount.data.superChainID.split('.superchain')[0], 12)}
-                <span style={{ color: 'var(--color-secondary-main)' }}>.superchain</span>
-              </Typography>
-              <Box>
+              <Box display="flex" alignItems="center" gap={1}>
+                <Typography fontWeight={600} color="primary" fontSize={16} whiteSpace="normal" display="inline">
+                  {truncateName(superChainSmartAccount.data.superChainID.split('.superchain')[0], 12)}
+                  <span style={{ color: 'var(--color-secondary-main)' }}>.superchain</span>
+                </Typography>
+                {nationalityData && <CountryFlag alpha3={nationalityData.nationality} size={24} />}
+              </Box>
+
+              <Box marginTop="12px">
                 <Typography fontSize={14} fontWeight={500} color="var(--color-text-secondary)">
                   SC points:{' '}
                   <span
@@ -151,8 +151,7 @@ function AccountOverview({ open, onClose }: { open: boolean; onClose: () => void
         </Box>
       </DialogContent>
       <Divider />
-
-      <DialogContent>
+      <DialogContent sx={{ paddingBottom: '20px' }}>
         <Typography fontWeight={600} fontSize={20} variant="body1">
           My Badges ({user?.badges?.length ?? 0})
         </Typography>
