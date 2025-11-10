@@ -52,6 +52,14 @@ class BadgesService {
     const response = await this.httpInstance.get<{
       currentBadges: BadgeWithPrize[]
     }>(`/user/${account}/badges`)
+
+    response.data.currentBadges = response.data.currentBadges.sort((a, b) => {
+      const aIsLastTier = a.tier === a.badgeTiers.length
+      const bIsLastTier = b.tier === b.badgeTiers.length
+
+      if (aIsLastTier === bIsLastTier) return 0
+      return aIsLastTier ? 1 : -1
+    })
     return response.data
   }
   public async getBadges(account?: Address): Promise<{
