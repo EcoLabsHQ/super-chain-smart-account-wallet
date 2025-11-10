@@ -111,6 +111,7 @@ export function SelfVerificationComponent({ badge }: { badge: ResponseBadge }) {
           fontSize: '14px',
           mt: 2,
           mb: 2,
+          visibility: data?.check ? 'hidden' : 'visible',
         }}
         disabled={!data || data?.check}
       >

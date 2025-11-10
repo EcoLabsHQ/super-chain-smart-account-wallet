@@ -377,7 +377,7 @@ const Home: NextPage = () => {
                       <CampaignBadge
                         badge={{
                           id: badge.badgeId,
-                          completed: badge.claimable,
+                          completed: badge.badgeTiers.length <= badge.tier,
                           badgeName: badge.metadata.name,
                           currentPoints: badge.points,
                           maxPoints: badge.badgeTiers.reduce((acc, tier) => acc + Number(tier.points), 0),
