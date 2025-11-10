@@ -21,6 +21,11 @@ export const networks = [
     value: 'op mainnet',
     icon: 'https://safe-transaction-assets.safe.global/chains/10/chain_logo.png',
   },
+  {
+    label: 'Celo',
+    value: 'celo',
+    icon: 'https://safe-transaction-assets.safe.global/chains/42220/chain_logo.png',
+  },
   { label: 'Base', value: 'base', icon: 'https://safe-transaction-assets.safe.global/chains/8453/chain_logo.png' },
   { label: 'Mode', value: 'mode', icon: '/chains/34443/chain_logo.svg' },
   { label: 'Ethereum', value: 'ethereum', icon: 'https://safe-transaction-assets.safe.global/chains/1/chain_logo.png' },
