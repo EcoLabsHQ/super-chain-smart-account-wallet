@@ -21,12 +21,12 @@ function formatPercentage(value: number): string {
     return Math.floor(num).toString()
   }
 
-  if (num >= 1) {
+  if (num >= 0.01) {
     const fixed = num.toFixed(2)
     return fixed.endsWith('00') ? Math.floor(num).toString() : fixed
   }
 
-  return '< 1'
+  return '< 0.01'
 }
 
 export default function BadgeTierCard({ tier, currentBadge }: Props) {
