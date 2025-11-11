@@ -152,6 +152,11 @@ export default function BadgePage() {
   const rewardIcon = (tokens as any)?.[currentBadge?.tokenBadge?.symbol ?? '']?.icon ?? (tokens as any)?.USDC?.icon
   const strategy = getBadgeStrategy(currentBadge, strategies)
 
+  const fixedCount =
+    Number(currentBadge?.currentCount ?? 0) < 1000
+      ? currentBadge?.currentCount?.toFixed(2) || '0'
+      : formatBeautifulAmount(currentBadge?.currentCount || 0)
+  const currentCount = fixedCount.endsWith('00') ? Math.floor(currentBadge?.currentCount ?? 0).toString() : fixedCount
   return (
     <>
       <Head>
@@ -226,7 +231,7 @@ export default function BadgePage() {
                   </Stack>
                 </Stack>
                 <Stack direction="row" gap="8px">
-                  {currentBadge.moreInfo && (
+                  {currentBadge.moreInfo && currentBadge.badgeTiers.length > currentBadge.tier && (
                     <Button
                       onClick={() => setOpenInfo(true)}
                       variant="text"
@@ -486,7 +491,7 @@ export default function BadgePage() {
                           </Stack>
                           <Stack direction="row" alignItems="center" gap="4px">
                             <Typography variant="body2" fontWeight={700}>
-                              {currentBadge.currentCount}
+                              {currentCount}
                             </Typography>
                             <Typography variant="body2" fontWeight={500} color="#75757A">
                               {currentBadge.countUnit && currentBadge.countUnit != '' ? currentBadge.countUnit : '--'}
