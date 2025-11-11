@@ -29,6 +29,11 @@ function AccountOverview({ open, onClose }: { open: boolean; onClose: () => void
     queryKey: ['AccountOverview'],
     queryFn: async () => {
       const response = await axios.get(`${BACKEND_BASE_URI}/user/${safeAddress}`)
+      console.log('Fetched user data:', response.data)
+      response.data.badges.sort(
+        (a: any, b: any) => a.badge.badgeTiers.length - Number(a.tier) - (b.badge.badgeTiers.length - Number(b.tier)),
+      )
+
       return response.data
     },
   })

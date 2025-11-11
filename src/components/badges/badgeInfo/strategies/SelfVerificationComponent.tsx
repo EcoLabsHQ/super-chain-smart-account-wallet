@@ -105,17 +105,17 @@ export function SelfVerificationComponent({ badge }: { badge: ResponseBadge }) {
         onClick={handleOpenModal}
         sx={{
           borderRadius: '12px',
-          padding: '8px 10px 8px 10px',
+          px: '10px',
+          height: 36, // altura fija para el header
           textTransform: 'none',
           fontWeight: 600,
           fontSize: '14px',
-          mt: 2,
-          mb: 2,
+          m: 0, // ← elimina mt/mb que agrandan el header
           visibility: data?.check ? 'hidden' : 'visible',
         }}
         disabled={!data || data?.check}
       >
-        {!data?.check && <QrCodeIcon style={{ width: '16px', height: '16px', marginRight: '4px' }} />}
+        {!data?.check && <QrCodeIcon style={{ width: 16, height: 16, marginRight: 4 }} />}
         {data?.check ? 'Verified' : 'Verify Now'}
       </Button>
 

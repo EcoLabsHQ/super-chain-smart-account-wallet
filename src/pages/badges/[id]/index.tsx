@@ -316,17 +316,6 @@ export default function BadgePage() {
                       >
                         Completed
                       </Typography>
-
-                      <Box
-                        sx={{
-                          width: 16,
-                          height: 16,
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          lineHeight: 0,
-                        }}
-                      ></Box>
                     </Stack>
                   )}
                 </Stack>
@@ -335,12 +324,16 @@ export default function BadgePage() {
 
               <Stack gap="8px">
                 <Card sx={{ border: '1px solid #E1E2EA', borderRadius: '12px', padding: '16px' }}>
-                  <Stack direction="row" gap="16px">
+                  <Stack
+                    direction="row"
+                    gap="16px"
+                    alignItems="center" // ← centra verticalmente todo
+                  >
                     {currentBadge.metadata.season >= 7 && currentBadge.metadata.season <= 8 && (
                       <Stack
                         alignItems="center"
                         justifyContent="center"
-                        style={{
+                        sx={{
                           position: 'relative',
                           width: '40px',
                           height: '40px',
@@ -348,12 +341,22 @@ export default function BadgePage() {
                           borderRadius: '12px',
                         }}
                       >
-                        <div style={{ transform: 'translateY(2px)' }}>
+                        <Box sx={{ transform: 'translateY(2px)' }}>
                           <SeasonChip season={currentBadge?.metadata.season ?? 0} width="20px" height="20px" />
-                        </div>
+                        </Box>
                       </Stack>
                     )}
-                    <Typography variant="body2" fontWeight={500} color="#4B4B4E">
+
+                    <Typography
+                      variant="body2"
+                      fontWeight={500}
+                      color="#4B4B4E"
+                      sx={{
+                        display: 'flex', // evita baseline alignment
+                        alignItems: 'center', // centra verticalmente el texto
+                        lineHeight: 1.2, // caja textual compacta
+                      }}
+                    >
                       {currentBadge.metadata.description}
                     </Typography>
                   </Stack>
@@ -499,6 +502,7 @@ export default function BadgePage() {
                           border: '1px solid #E1E2EA',
                           borderRadius: '12px',
                           padding: { xs: '12px 8px 12px 8px', sm: '12px 16px 12px 16px' },
+                          backgroundColor: '#FFF',
                         }}
                       >
                         <Stack gap="12px">
@@ -517,6 +521,7 @@ export default function BadgePage() {
                         border: '1px solid #E1E2EA',
                         borderRadius: '12px',
                         padding: { xs: '12px 8px 12px 8px', sm: '12px 16px 12px 16px' },
+                        backgroundColor: '#FFF',
                       }}
                     >
                       <Stack gap="12px">

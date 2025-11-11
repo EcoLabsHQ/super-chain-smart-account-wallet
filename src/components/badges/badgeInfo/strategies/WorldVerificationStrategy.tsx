@@ -51,7 +51,11 @@ export function WorldIDVerificationComponent({ badge }: { badge: ResponseBadge }
               color="primary"
               onClick={open}
               disabled={Number(badge.tier) > 0}
-              sx={{ borderRadius: '12px', padding: '8px 10px 8px 10px' }}
+              sx={{
+                borderRadius: '12px',
+                padding: '8px 10px 8px 10px',
+                visibility: Number(badge.tier) > 0 ? 'hidden' : 'visible',
+              }}
             >
               <QrCodeIcon style={{ width: '16px', height: '16px', marginRight: '4px' }} />
               <Typography variant="body2" fontWeight={600}>

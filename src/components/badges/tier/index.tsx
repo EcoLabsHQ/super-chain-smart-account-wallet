@@ -14,16 +14,19 @@ type Props = {
   tier: BadgeTierDto
   currentBadge: BadgeWithPrize
 }
-function formatPercentage(num: number): string {
-  if (Number.isInteger(num)) {
-    return num.toString()
-  }
+function formatPercentage(value: number): string {
+  const num = Number(value)
 
-  if (num > 10) {
+  if (num >= 10) {
     return Math.floor(num).toString()
   }
 
-  return num.toFixed(2)
+  if (num >= 1) {
+    const fixed = num.toFixed(2)
+    return fixed.endsWith('00') ? Math.floor(num).toString() : fixed
+  }
+
+  return '< 1'
 }
 
 export default function BadgeTierCard({ tier, currentBadge }: Props) {

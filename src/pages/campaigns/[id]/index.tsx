@@ -401,7 +401,7 @@ export default function Page() {
                         {rewardIcon && (
                           <SvgIcon
                             component={rewardIcon}
-                            sx={{ width: 20, height: 20, marginTop: '2px', marginLeft: '3px' }}
+                            sx={{ width: 24, height: 24, marginTop: '2px', marginLeft: '3px' }}
                           />
                         )}
                       </div>
@@ -433,7 +433,7 @@ export default function Page() {
                           borderRadius: '12px',
                         }}
                       >
-                        <SuperchainPointIcon style={{ width: '20px', height: '20px' }} />
+                        <SuperchainPointIcon style={{ width: '24px', height: '24px' }} />
                       </div>
                       <Stack>
                         <Typography sx={{ fontWeight: 500, fontSize: '12px', lineHeight: '16px', color: '#75757A' }}>

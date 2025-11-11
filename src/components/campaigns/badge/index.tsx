@@ -30,7 +30,7 @@ export default function CampaignBadge({ badge, myPoints, pointsOnHover }: Props)
 
   return (
     <Box sx={{ position: 'relative', height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ zIndex: 2, position: 'absolute', top: -1, left: -1 }}>
+      <Box sx={{ zIndex: 2, position: 'absolute', top: -4, left: -4 }}>
         <SeasonChip season={badge?.season ?? 0} />
       </Box>
 
@@ -78,7 +78,7 @@ export default function CampaignBadge({ badge, myPoints, pointsOnHover }: Props)
                     visibility: shouldShowPoints ? 'visible' : 'hidden',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: 1,
+                    gap: '4px',
                     border: '1px solid #E1E2EA',
                     borderRadius: '100px',
                     px: 1,
