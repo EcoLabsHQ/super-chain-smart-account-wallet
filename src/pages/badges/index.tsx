@@ -125,7 +125,7 @@ const Home: NextPage = () => {
     if (withRewards) {
       filtered = filtered.filter((badge) =>
         withRewards == 'Available'
-          ? badge.tokenBadge != null && badge.tokenBadge.maxClaims! <= badge.tokenBadge.totalPerkClaims
+          ? badge.tokenBadge != null && badge.tokenBadge.maxClaims! > badge.tokenBadge.totalPerkClaims
           : badge.tokenBadge == null,
       )
     }
