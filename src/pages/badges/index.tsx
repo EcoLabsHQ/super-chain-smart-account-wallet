@@ -387,7 +387,7 @@ const Home: NextPage = () => {
                           season: badge.metadata.season,
                           image: badge.metadata.image?.replace('/Badge.svg', `/T${badge.tier}.svg`) ?? '',
                           type: '',
-                          tokenBadge: !!badge.tokenBadge,
+                          tokenBadge: badge.tokenBadge,
                         }}
                         myPoints={[{ id: Number(badge.badgeId), points: sumPoints(badge) }]}
                         pointsOnHover={true}

@@ -512,6 +512,11 @@ export default function Page() {
                         key={badge?.badgeName ?? `badge-${idx}`}
                         badge={badge}
                         myPoints={campaign.my_points}
+                        showGiftIcon={
+                          badge.tokenBadge
+                            ? badge.tokenBadge.totalPerkClaims < (badge.tokenBadge.maxClaims ?? 0)
+                            : false
+                        }
                       />
                     ))}
                   </Stack>

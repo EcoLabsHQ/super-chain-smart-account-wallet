@@ -57,7 +57,12 @@ export interface CampaignBadge {
   currentLevel: number
   maxLevel: number
   image: string
-  tokenBadge?: boolean
+  tokenBadge?: {
+    symbol: string
+    amount: string
+    maxClaims?: number
+    totalPerkClaims: number
+  }
   season?: number
   completed?: boolean
   currentPoints: number
