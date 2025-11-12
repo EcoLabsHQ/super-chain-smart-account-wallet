@@ -391,6 +391,11 @@ const Home: NextPage = () => {
                         }}
                         myPoints={[{ id: Number(badge.badgeId), points: sumPoints(badge) }]}
                         pointsOnHover={true}
+                        showGiftIcon={
+                          badge.tokenBadge
+                            ? badge.tokenBadge.totalPerkClaims < (badge.tokenBadge.maxClaims ?? 0)
+                            : false
+                        }
                       />
                     </Box>
                   </Grid>

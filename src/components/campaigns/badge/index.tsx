@@ -12,13 +12,14 @@ type Props = {
   badge: CampaignBadge
   myPoints?: { id: number; points: number }[]
   pointsOnHover?: boolean
+  showGiftIcon: boolean
 }
 
 const handlePickBadge = (id: string) => {
   router.push({ pathname: `${AppRoutes.badges.allTime}/${id}`, query: { safe: router.query.safe } })
 }
 
-export default function CampaignBadge({ badge, myPoints, pointsOnHover }: Props) {
+export default function CampaignBadge({ badge, myPoints, pointsOnHover, showGiftIcon }: Props) {
   const [hovered, setHovered] = useState(false)
 
   const truncateText = (text: string, maxLength: number) => {
@@ -69,7 +70,7 @@ export default function CampaignBadge({ badge, myPoints, pointsOnHover }: Props)
                 <Typography variant="body1" fontWeight={600} fontSize={{ xs: '12px', sm: '16px' }} lineHeight="24px">
                   {badge.badgeName}
                 </Typography>
-                {badge.tokenBadge && <GiftIcon style={{ width: '20px', height: '20px' }} />}
+                {showGiftIcon && <GiftIcon style={{ width: '20px', height: '20px' }} />}
               </Stack>
 
               {myPoints && (
