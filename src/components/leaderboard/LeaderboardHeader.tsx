@@ -9,7 +9,7 @@ function getNextDeadlineUTC(): Date {
   const result: Date = new Date(now)
 
   result.setUTCDate(now.getUTCDate() + 1)
-  result.setUTCHours(13, 40, 0, 0)
+  result.setUTCHours(13, 0, 0, 0)
 
   return result
 }
