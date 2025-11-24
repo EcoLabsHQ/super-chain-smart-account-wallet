@@ -10,6 +10,14 @@ import { formatXP } from '../badge'
 import { tokens } from '@/config/tokens'
 import { formatBeautifulAmount } from '@/utils/formatNumber'
 
+const ethBadgeLabels = [
+  'Deposit 0.01 ETH for 7 days',
+  'Deposit 0.05 ETH for 7 days',
+  'Deposit 0.1 ETH for 7 days',
+  'Deposit 1 ETH for 7 days',
+  'Deposit 1 ETH for 28 days',
+]
+
 type Props = {
   tier: BadgeTierDto
   currentBadge: BadgeWithPrize
@@ -87,7 +95,9 @@ export default function BadgeTierCard({ tier, currentBadge }: Props) {
             </Typography>
           </Stack>
           <Typography variant="h5" fontWeight={500} sx={{ fontSize: { xs: '12px', sm: '16px' } }}>
-            {currentBadge.metadata.condition.replace('{{variable}}', formatXP(tier.metadata.minValue))}
+            {currentBadge.metadata.name == 'ETH Vault Deposits'
+              ? ethBadgeLabels[parseInt(tier.tier) - 1]
+              : currentBadge.metadata.condition.replace('{{variable}}', formatXP(tier.metadata.minValue))}
           </Typography>
         </Stack>
       </Stack>

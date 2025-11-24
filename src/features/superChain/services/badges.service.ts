@@ -60,6 +60,15 @@ class BadgesService {
       if (aIsLastTier === bIsLastTier) return 0
       return aIsLastTier ? 1 : -1
     })
+
+    response.data.currentBadges.forEach((badge) => {
+      badge.metadata.name = badge.metadata.name.replaceAll('FarCaster', 'Farcaster')
+      badge.metadata.description = badge.metadata.description.replaceAll('FarCaster', 'Farcaster')
+      badge.metadata.name = badge.metadata.name.replaceAll('Aidrop', 'Airdrop')
+      if (badge.metadata.name == 'Self verification') {
+        badge.metadata.condition = 'Verified with Self Protocol'
+      }
+    })
     return response.data
   }
   public async getBadges(account?: Address): Promise<{
