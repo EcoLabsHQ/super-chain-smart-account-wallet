@@ -269,6 +269,7 @@ const Home: NextPage = () => {
                     <MenuItem value="Optimism">OP Mainnet</MenuItem>
                     <MenuItem value="Mode">Mode</MenuItem>
                     <MenuItem value="Unichain">Unichain</MenuItem>
+                    <MenuItem value="Celo">Celo</MenuItem>
                   </Select>
 
                   <Select
