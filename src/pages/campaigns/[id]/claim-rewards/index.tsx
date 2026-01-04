@@ -225,10 +225,10 @@ export default function Page() {
   const label = isPending
     ? 'Claiming Rewards...'
     : isChecking
-      ? 'Checking eligibility...'
-      : isError
-        ? 'Error! Try Again'
-        : 'Claim Rewards'
+    ? 'Checking eligibility...'
+    : isError
+    ? 'Error! Try Again'
+    : 'Claim Rewards'
 
   return (
     <>
