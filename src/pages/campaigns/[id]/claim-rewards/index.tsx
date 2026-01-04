@@ -28,6 +28,7 @@ const getTokenIcon = (symbol: string) => {
   const usdc = '/images/currencies/usdc.svg'
   const usdt = '/images/currencies/usdt.svg'
   const weth = '/images/currencies/weth.svg'
+  const op = '/images/currencies/optimism.svg'
   switch (symbol) {
     case 'USDC':
       return usdc
@@ -35,6 +36,8 @@ const getTokenIcon = (symbol: string) => {
       return usdt
     case 'WETH':
       return weth
+    case 'OP':
+      return op
     default:
       return usdc
   }
@@ -222,10 +225,10 @@ export default function Page() {
   const label = isPending
     ? 'Claiming Rewards...'
     : isChecking
-    ? 'Checking eligibility...'
-    : isError
-    ? 'Error! Try Again'
-    : 'Claim Rewards'
+      ? 'Checking eligibility...'
+      : isError
+        ? 'Error! Try Again'
+        : 'Claim Rewards'
 
   return (
     <>
