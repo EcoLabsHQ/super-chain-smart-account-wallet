@@ -563,7 +563,7 @@ export default function Page() {
                           placement="top"
                           title={
                             <Typography variant="caption" component="div">
-                              25 OP for 400–499 points
+                              25 OP for 500–599 points
                               <br />
                               70 OP for 600–749 points
                               <br />
