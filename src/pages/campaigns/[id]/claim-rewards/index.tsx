@@ -1,7 +1,19 @@
 'use client'
 import Head from 'next/head'
 import React from 'react'
-import { Button, Card, Dialog, Divider, Skeleton, Stack, Typography, Grid, Box, CircularProgress } from '@mui/material'
+import {
+  Button,
+  Card,
+  Dialog,
+  Divider,
+  Skeleton,
+  Stack,
+  Typography,
+  Grid,
+  Box,
+  CircularProgress,
+  Tooltip,
+} from '@mui/material'
 import InfoIcon from '@/public/images/common/info-light.svg'
 import CheckCircleIcon from '@/public/images/common/check-circle-outlined.svg'
 import SuperchainPointIcon from '@/public/images/common/superChain.svg'
@@ -546,7 +558,21 @@ export default function Page() {
                         <Typography variant="caption" color="#75757A">
                           Reward Formula{' '}
                         </Typography>
-                        <InfoIcon sx={{ width: 16, height: 16 }} />
+                        <Tooltip
+                          arrow
+                          placement="top"
+                          title={
+                            <Typography variant="caption" component="div">
+                              25 OP for 400–499 points
+                              <br />
+                              70 OP for 600–749 points
+                              <br />
+                              125 OP for 750 points
+                            </Typography>
+                          }
+                        >
+                          <InfoIcon sx={{ width: 16, height: 16 }} />
+                        </Tooltip>
                       </Stack>
                     </>
                   )}
