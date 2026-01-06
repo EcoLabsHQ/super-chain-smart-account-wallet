@@ -500,7 +500,7 @@ export default function Page() {
                               >
                                 Claim your rewards{' '}
                                 <Box component="span" sx={{ fontWeight: 500, color: '#4B4B4E' }}>
-                                  by December 15, 2025
+                                  by Feb 6, 2026
                                 </Box>
                               </Typography>
                             </>
