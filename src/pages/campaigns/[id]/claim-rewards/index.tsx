@@ -571,7 +571,9 @@ export default function Page() {
                             </Typography>
                           }
                         >
-                          <InfoIcon sx={{ width: 16, height: 16 }} />
+                          <Box component="span" sx={{ display: 'inline-flex', cursor: 'pointer' }}>
+                            <InfoIcon width={16} height={16} />
+                          </Box>
                         </Tooltip>
                       </Stack>
                     </>
