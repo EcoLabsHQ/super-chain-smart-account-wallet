@@ -86,33 +86,19 @@ const fakeSafeApps: SafeAppData[] = [
   },
   {
     id: 48,
-    url: 'https://app.superfluid.finance/',
-    name: 'Superfluid',
-    iconUrl: 'https://safe-transaction-assets.safe.global/safe_apps/48/icon.png',
+    url: 'https://eco-vaulti;-v2.vercel.app',
+    name: 'EcoVaults Beta',
+    iconUrl: 'https://eco-vaults-v2.vercel.app/favicon.ico?57646a737cc87321',
     description:
-      'Superfluid is a new Ethereum Protocol that extends Ethereum tokens to include novel functionalities. Superfluid enables functionalities like money streaming and reward distribution.',
-    chainIds: ['10'],
+      'This is a Beta app produced by EcoLabs providing the best cross-chain yield opportunities from Optimism Mainnet. Use with caution.',
+    chainIds: ['10', '1135'],
     accessControl: {
       type: 'NO_RESTRICTIONS' as SafeAppAccessPolicyTypes,
       value: [],
     },
-    tags: ['Accounting', 'Payments'],
+    tags: ['Yield', 'Vaults'],
     features: [],
-    developerWebsite: 'https://superfluid.finance',
-    socialProfiles: [
-      {
-        platform: 'DISCORD' as SafeAppSocialPlatforms,
-        url: 'http://discord.superfluid.finance',
-      },
-      {
-        platform: 'GITHUB' as SafeAppSocialPlatforms,
-        url: 'https://github.com/superfluid-finance',
-      },
-      {
-        platform: 'TWITTER' as SafeAppSocialPlatforms,
-        url: 'https://twitter.com/Superfluid_HQ',
-      },
-    ],
+    socialProfiles: [],
   },
   {
     id: 152,
