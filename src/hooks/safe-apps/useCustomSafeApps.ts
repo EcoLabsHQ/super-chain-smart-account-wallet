@@ -86,7 +86,7 @@ const fakeSafeApps: SafeAppData[] = [
   },
   {
     id: 48,
-    url: 'https://eco-vaulti;-v2.vercel.app',
+    url: 'https://eco-vaulti-v2.vercel.app',
     name: 'EcoVaults Beta',
     iconUrl: 'https://eco-vaults-v2.vercel.app/favicon.ico?57646a737cc87321',
     description:
