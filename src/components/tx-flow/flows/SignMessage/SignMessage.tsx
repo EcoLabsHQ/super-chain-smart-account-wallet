@@ -257,8 +257,6 @@ const SignMessage = ({ message, safeAppId, requestId }: ProposeProps | ConfirmPr
               <MessageHashField label="SafeMessage hash" hashValue={safeMessageHash} />
             </AccordionDetails>
           </Accordion>
-
-          <Redefine />
         </CardContent>
       </TxCard>
 
