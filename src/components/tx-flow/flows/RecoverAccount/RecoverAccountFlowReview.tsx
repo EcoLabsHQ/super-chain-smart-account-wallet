@@ -10,7 +10,6 @@ import DecodedTx from '@/components/tx/DecodedTx'
 import ErrorMessage from '@/components/tx/ErrorMessage'
 import { RedefineBalanceChanges } from '@/components/tx/security/redefine/RedefineBalanceChange'
 import ConfirmationTitle, { ConfirmationTitleTypes } from '@/components/tx/SignOrExecuteForm/ConfirmationTitle'
-import TxChecks from '@/components/tx/SignOrExecuteForm/TxChecks'
 import { WrongChainWarning } from '@/components/tx/WrongChainWarning'
 import useDecodeTx from '@/hooks/useDecodeTx'
 import TxCard from '../../common/TxCard'
@@ -134,10 +133,6 @@ export function RecoverAccountFlowReview({ params }: { params: RecoverAccountFlo
         />
 
         <RedefineBalanceChanges />
-      </TxCard>
-
-      <TxCard>
-        <TxChecks executionOwner={safe.owners[0].value} />
       </TxCard>
 
       <TxCard>

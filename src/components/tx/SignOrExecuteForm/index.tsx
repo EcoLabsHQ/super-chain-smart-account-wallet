@@ -7,7 +7,6 @@ import { useImmediatelyExecutable, useValidateNonce } from './hooks'
 import ExecuteForm from './ExecuteForm'
 import { SafeTxContext } from '@/components/tx-flow/SafeTxProvider'
 import ErrorMessage from '../ErrorMessage'
-import TxChecks from './TxChecks'
 import TxCard from '@/components/tx-flow/common/TxCard'
 import ConfirmationTitle, { ConfirmationTitleTypes } from '@/components/tx/SignOrExecuteForm/ConfirmationTitle'
 import { useAppSelector } from '@/store'
@@ -107,12 +106,6 @@ export const SignOrExecuteForm = ({
 
         {!isCounterfactualSafe && <RedefineBalanceChanges />}
       </TxCard>
-
-      {!isCounterfactualSafe && (
-        <TxCard>
-          <TxChecks />
-        </TxCard>
-      )}
 
       <TxCard>
         <ConfirmationTitle
