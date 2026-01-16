@@ -88,7 +88,7 @@ const fakeSafeApps: SafeAppData[] = [
     id: 48,
     url: 'https://eco-vaults-v2.vercel.app/',
     name: 'EcoVaults Beta',
-    iconUrl: 'https://eco-vaults-v2.vercel.app/favicon.ico?57646a737cc87321',
+    iconUrl: 'https://account.superchain.eco/images/apps/eco-vaults.png',
     description:
       'This is a Beta app produced by EcoLabs providing the best cross-chain yield opportunities from Optimism Mainnet. Use with caution.',
     chainIds: ['10', '1135'],
