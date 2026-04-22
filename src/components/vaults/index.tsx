@@ -1,4 +1,16 @@
-import { Box, Button, Card, CardContent, Divider, Grid, Skeleton, Stack, SvgIcon, Typography } from '@mui/material'
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  Grid,
+  Skeleton,
+  Stack,
+  SvgIcon,
+  Tooltip,
+  Typography,
+} from '@mui/material'
 import React, { useState } from 'react'
 import USDC_OP from '@/public/images/vaults/icons/USDC-OP.png'
 import USDT_OP from '@/public/images/vaults/icons/USDT-OP.png'
@@ -41,6 +53,7 @@ function VaultCard({
   depreciated = false,
   minDepositAmount = '100',
   decimals = 6,
+  isWeth = false,
 }: {
   title: string
   value: number
@@ -53,6 +66,7 @@ function VaultCard({
   depreciated?: boolean
   minDepositAmount?: string
   decimals: number
+  isWeth?: boolean
 }) {
   const [isDepositModalOpen, setIsDepositModalOpen] = useState(false)
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false)
@@ -217,34 +231,41 @@ function VaultCard({
         <Box sx={{ display: 'flex', gap: 2, p: 2 }}>
           {value > 0 ? (
             depreciated ? (
-              <Button fullWidth sx={{ borderRadius: 10, backgroundColor: '#F1F2F5' }} onClick={handleOpenWithdrawModal}>
+              <Button sx={{ flex: 1, borderRadius: 10, backgroundColor: '#F1F2F5' }} onClick={handleOpenWithdrawModal}>
                 Withdraw
               </Button>
             ) : (
               <>
                 <Button
-                  fullWidth
-                  sx={{ borderRadius: 10, backgroundColor: '#F1F2F5' }}
+                  sx={{ flex: 1, borderRadius: 10, backgroundColor: '#F1F2F5' }}
                   onClick={handleOpenWithdrawModal}
                 >
                   Withdraw
                 </Button>
-                <Button variant="contained" fullWidth sx={{ borderRadius: 10 }} onClick={handleOpenDepositModal}>
-                  Deposit
-                </Button>
+                <Tooltip
+                  title="Due to Lending Market stress as a result of the KelpDAO Hack no new deposits can be made via this UI."
+                  arrow
+                >
+                  <span style={{ flex: 1, display: 'flex' }}>
+                    <Button variant="contained" fullWidth disabled sx={{ borderRadius: 10, flex: 1 }}>
+                      Deposit
+                    </Button>
+                  </span>
+                </Tooltip>
               </>
             )
           ) : (
             !depreciated && (
-              <Button
-                variant="contained"
-                color="secondary"
-                fullWidth
-                sx={{ borderRadius: 10 }}
-                onClick={handleOpenDepositModal}
+              <Tooltip
+                title="Due to Lending Market stress as a result of the KelpDAO Hack no new deposits can be made via this UI."
+                arrow
               >
-                Activate
-              </Button>
+                <span style={{ width: '100%' }}>
+                  <Button variant="contained" color="secondary" fullWidth disabled sx={{ borderRadius: 10 }}>
+                    Activate
+                  </Button>
+                </span>
+              </Tooltip>
             )
           )}
         </Box>
@@ -275,6 +296,7 @@ function VaultCard({
         supplyTokenAddress={comet as Address}
         onSuccess={handleWithdrawSuccess}
         onError={handleWithdrawError}
+        isWeth={isWeth}
       />
 
       <SuccessModal
@@ -444,6 +466,7 @@ function Vaults() {
               depreciated={vault.depreciated}
               minDepositAmount={vault.min_deposit}
               decimals={vault.decimals}
+              isWeth={vault.symbol === 'WETH'}
             />
           )
         })}

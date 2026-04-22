@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
 import {
+  Alert,
   Dialog,
   DialogTitle,
   DialogContent,
   Box,
+  Link,
   Typography,
   TextField,
   Button,
@@ -60,6 +62,7 @@ interface WithdrawModalProps {
   supplyTokenAddress: Address
   onSuccess: (amount: string, hash: string, balance: string) => void
   onError: () => void
+  isWeth?: boolean
 }
 
 function WithdrawModal({
@@ -72,6 +75,7 @@ function WithdrawModal({
   supplyTokenAddress,
   onSuccess,
   onError,
+  isWeth = false,
 }: WithdrawModalProps) {
   const address = useSafeAddress()
   const queryClient = useQueryClient()
@@ -230,7 +234,19 @@ function WithdrawModal({
               </Stack>
             </Box>
           </Box>
-          <Divider />
+          {isWeth && (
+            <Box px="24px" pt="16px">
+              <Alert severity="warning" sx={{ borderRadius: 2, fontSize: '13px' }}>
+                Out of precaution, the Compound team has temporarily paused the wETH market on OP Mainnet. Stay informed
+                through the Compound forum{' '}
+                <Link href="https://www.comp.xyz/" target="_blank" rel="noopener noreferrer" underline="always">
+                  here
+                </Link>
+                .
+              </Alert>
+            </Box>
+          )}
+          <Divider sx={{ mt: isWeth ? 2 : 0 }} />
           <Box padding="24px" display="flex" flexDirection="column" gap="8px">
             <Button
               variant="contained"
