@@ -9,7 +9,6 @@ import { CREATION_MODAL_QUERY_PARAM } from '../new-safe/create/logic'
 import { useIsRecoverySupported } from '@/features/recovery/hooks/useIsRecoverySupported'
 import Balances from '@/pages/_balances'
 import SuperChainEOAS from '../common/SuperChainEOAS'
-import SafeAppsDashboardSection from './SafeAppsDashboardSection/SafeAppsDashboardSection'
 import EOAAddedModal from './EOAAddedModal'
 import { ADD_OWNER_MODAL_QUERY_PARAM } from '../accept-invite/alert-modal'
 import useWallet from '@/hooks/wallets/useWallet'
@@ -64,12 +63,6 @@ const Dashboard = (): ReactElement => {
               <SuperChainEOAS />
             </Grid>
           </Grid>
-        )}
-
-        {safe.deployed && (
-          <Box sx={{ mt: 5 }}>
-            <SafeAppsDashboardSection />
-          </Box>
         )}
       </Box>
       {showCreationModal ? <CreationDialog /> : null}

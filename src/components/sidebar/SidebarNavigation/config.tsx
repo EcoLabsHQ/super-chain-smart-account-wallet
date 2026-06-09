@@ -7,7 +7,6 @@ import LeaderboardIcon from '@/public/images/sidebar/leaderboard.svg'
 import ContactsIcon from '@/public/images/sidebar/contacts.svg'
 import TransactionIcon from '@/public/images/sidebar/transactions.svg'
 import Encrypted from '@/public/images/vaults/encrypted.svg'
-import CampaignOutlinedIcon from '@mui/icons-material/CampaignOutlined'
 
 import { SvgIcon } from '@mui/material'
 
@@ -25,12 +24,6 @@ export const navItems: NavItem[] = [
     icon: <SvgIcon component={AccountIcon} inheritViewBox />,
     href: AppRoutes.home,
   },
-  {
-    label: 'Campaigns',
-    icon: <SvgIcon component={CampaignOutlinedIcon} inheritViewBox />,
-    href: AppRoutes.campaigns,
-  },
-
   {
     label: 'Badges',
     icon: <SvgIcon component={BadgesIcon} inheritViewBox />,
